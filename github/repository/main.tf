@@ -114,6 +114,12 @@ resource "github_repository_file" "file_readme" {
   content = templatefile("${path.module}/files/README.md", {
     repository_name = github_repository.repository.name
   })
+
+  lifecycle {
+    ignore_changes = [
+      content
+    ]
+  }
 }
 
 resource "github_repository_file" "file_codeowners" {

@@ -1,7 +1,28 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.44"
+    }
+  }
+
+  required_version = ">= 1.3.0"
+}
+
+module "environment" {
+  source = "../../shared/environment"
+  conventions = var.conventions  
+}
+
+module "conventions" {
+  source = "../../shared/conventions"
+  conventions = var.conventions
+}
+
 resource "aws_cognito_user_pool" "cognito_user_pool" {
-  name                     = local.cognito_userpool_name
+  name                     = module.conventions.aws_naming_conventions.cognito_userpool_name
   auto_verified_attributes = ["email"]
-  deletion_protection      = local.is_production ? "ACTIVE" : "INACTIVE"
+  deletion_protection      = module.environment.is_production ? "ACTIVE" : "INACTIVE"
   mfa_configuration        = "OPTIONAL"
   username_attributes      = ["email"]
 
@@ -26,7 +47,7 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   }
 
   email_configuration {
-    email_sending_account = "COGNITO_DEFAULT"
+    email_sending_account = "COGNITO_DEFAULT" # @todo use a real SES account here
     #configuration_set = ""
     #source_arn = ""
     #from_email_address = ""

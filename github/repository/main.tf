@@ -9,6 +9,39 @@ terraform {
   required_version = ">= 1.3.0"
 }
 
+locals {
+  advanced_features = var.repository_basics.visibility == "public"
+}
+
+locals {
+  labels = {
+    breaking = {
+      color       = "FFC107",
+      description = "Breaking change"
+    },
+    enhancement = {
+      color       = "4CAF50",
+      description = "New feature or request"
+    },
+    bug = {
+      color       = "FF5252",
+      description = "Something isn't working"
+    },
+    minor = {
+      color       = "424242",
+      description = "Minor change"
+    },
+    documentation = {
+      color       = "2196F3",
+      description = "Improvements or additions to documentation"
+    },
+    "good first issue" = {
+      color       = "1976D2",
+      description = "Good for newcomers"
+    }
+  }
+}
+
 resource "github_repository" "repository" {
   name                   = var.repository_basics.name
   description            = "${var.repository_basics.description}${var.description_suffix}"

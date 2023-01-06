@@ -48,6 +48,11 @@ variable "description_suffix" {
 }
 
 locals {
+  environment_name = startswith(var.host_name, "shd") ? "Shared" : startswith(var.host_name, "prd") ? "Production" : startswith(var.host_name, "stg") ? "Staging" : "Development"
+  is_production    = environment_name == "Shared" || environment_name == "Production"
+}
+
+locals {
   advanced_features = var.repository_basics.visibility == "public"
 }
 

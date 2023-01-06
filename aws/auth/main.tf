@@ -1,7 +1,7 @@
 resource "aws_cognito_user_pool" "cognito_user_pool" {
   name                     = local.cognito_userpool_name
   auto_verified_attributes = ["email"]
-  deletion_protection      = "INACTIVE" # todo make "ACTIVE" in production
+  deletion_protection      = local.is_production ? "ACTIVE" : "INACTIVE"
   mfa_configuration        = "OPTIONAL"
   username_attributes      = ["email"]
 

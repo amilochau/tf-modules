@@ -28,7 +28,7 @@ variable "repository_environments" {
   description = "Environments settings for repository"
   type = map(object({
     protected_branches_only = optional(bool, true)
-    reviewers_ids = optional(set(number), [])
+    reviewers_ids           = optional(set(number), [])
   }))
   default = {}
 }

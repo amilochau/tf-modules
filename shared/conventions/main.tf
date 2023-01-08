@@ -23,6 +23,7 @@ locals {
     apigateway_authorizer_name                 = "${local.aws_default_base.prefix}-apigateway-authorizer"
     apigateway_stage_name                      = var.conventions.host_name
     cognito_userpool_client_api_name           = "${local.aws_default_base.prefix}-cognito-client-api"
+    s3_bucket_name = "${local.aws_default_base.prefix}-s3-bucket"
   }
 }
 

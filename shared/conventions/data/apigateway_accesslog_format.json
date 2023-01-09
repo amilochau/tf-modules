@@ -1,0 +1,12 @@
+{
+  "requestId": "$context.requestId",
+  "sourceIp": "$context.identity.sourceIp",
+  "requestTime": "$context.requestTime",
+  "protocol": "$context.protocol",
+  "httpMethod": "$context.httpMethod",
+  "resourcePath": "$context.resourcePath",
+  "routeKey": "$context.routeKey",
+  "status": "$context.status",
+  "responseLength": "$context.responseLength",
+  "integrationErrorMessage": "$context.integrationErrorMessage"
+}

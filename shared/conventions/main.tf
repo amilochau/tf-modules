@@ -30,6 +30,7 @@ locals {
 locals {
   aws_format = {
     cloudwatch_log_group_retention_days = 30
+    mime_types                  = jsondecode(file("${path.module}/data/mime.json"))
     apigateway_accesslog_format = jsonencode(file("${path.module}/data/apigateway_accesslog_format.json"))
   }
 }

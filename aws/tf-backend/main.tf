@@ -20,7 +20,7 @@ module "conventions" {
 }
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = module.conventions.s3_bucket_name
+  bucket = module.conventions.aws_naming_conventionss3_bucket_name
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {

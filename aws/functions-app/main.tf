@@ -22,7 +22,7 @@ module "conventions" {
 data "aws_region" "current" {}
 
 data "aws_cognito_user_pools" "cognito_userpool" {
-  name = module.conventions.aws_naming_conventions.cognito_userpool_name
+  name = module.conventions.aws_existing_conventions.cognito_userpool_name
 }
 
 data "aws_iam_policy_document" "lambda_iam_policy_document" {
@@ -54,8 +54,8 @@ data "aws_iam_policy_document" "lambda_logging_policy_document" {
 }
 
 locals {
-  apigateway_authorizer_audience             = aws_cognito_user_pool_client.cognito_userpool_client_ui.id
-  apigateway_authorizer_issuer               = "https://cognito-idp.${data.aws_region.current.name}.amazonaws.com/${data.aws_cognito_user_pools.cognito_userpool.ids[0]}"
+  apigateway_authorizer_audience = values(aws_cognito_user_pool_client.cognito_userpool_client)[*].id
+  apigateway_authorizer_issuer   = "https://cognito-idp.${data.aws_region.current.name}.amazonaws.com/${data.aws_cognito_user_pools.cognito_userpool.ids[0]}"
 }
 
 # ===== LAMBDA =====
@@ -64,13 +64,13 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = module.conventions.aws_naming_conventions.lambda_function_name
   role          = aws_iam_role.lambda_iam_role.arn
 
-  filename         = local.deployment_absolute_file_path_api
-  source_code_hash = filebase64sha256(local.deployment_absolute_file_path_api)
-  runtime          = "provided.al2"
-  architectures    = ["x86_64"]
-  timeout          = 10              # seconds
-  memory_size      = var.lambda_settings.memory_size # MB
-  handler          = "bootstrap"
+  filename         = var.lambda_settings.deployment_file_path
+  source_code_hash = filebase64sha256(var.lambda_settings.deployment_file_path)
+  runtime          = var.lambda_settings.runtime
+  architectures    = [var.lambda_settings.architecture]
+  timeout          = var.lambda_settings.timeout_s
+  memory_size      = var.lambda_settings.memory_size_mb
+  handler          = var.lambda_settings.handler
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
@@ -99,26 +99,26 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 
 # ===== COGNITO CLIENT FOR API =====
 
-resource "aws_cognito_user_pool_client" "cognito_userpool_client_api" {
-  name         = module.conventions.aws_naming_conventions.cognito_userpool_client_api_name
-  user_pool_id = data.aws_cognito_user_pools.cognito_userpool.ids[0]
-  allowed_oauth_flows = [
-    "code"
-  ]
-  allowed_oauth_scopes = [
-    "email",
-    "openid"
-  ]
-  allowed_oauth_flows_user_pool_client = true
-  callback_urls = [
-    aws_apigatewayv2_stage.apigateway_stage.invoke_url
-  ]
-  explicit_auth_flows = [
-    "ALLOW_USER_PASSWORD_AUTH",
-    "ALLOW_REFRESH_TOKEN_AUTH"
-  ]
-  supported_identity_providers = ["COGNITO"]
-}
+#resource "aws_cognito_user_pool_client" "cognito_userpool_client_api" {
+#  name         = module.conventions.aws_naming_conventions.cognito_userpool_client_api_name
+#  user_pool_id = data.aws_cognito_user_pools.cognito_userpool.ids[0]
+#  allowed_oauth_flows = [
+#    "code"
+#  ]
+#  allowed_oauth_scopes = [
+#    "email",
+#    "openid"
+#  ]
+#  allowed_oauth_flows_user_pool_client = true
+#  callback_urls = [
+#    aws_apigatewayv2_stage.apigateway_stage.invoke_url
+#  ]
+#  explicit_auth_flows = [
+#    "ALLOW_USER_PASSWORD_AUTH",
+#    "ALLOW_REFRESH_TOKEN_AUTH"
+#  ]
+#  supported_identity_providers = ["COGNITO"]
+#}
 
 # ===== API GATEWAY =====
 
@@ -156,10 +156,8 @@ resource "aws_apigatewayv2_authorizer" "apigateway_authorizer" {
   identity_sources = ["$request.header.Authorization"]
 
   jwt_configuration {
-    audience = [
-      local.apigateway_authorizer_audience
-    ]
-    issuer = local.apigateway_authorizer_issuer
+    audience = local.apigateway_authorizer_audience
+    issuer   = local.apigateway_authorizer_issuer
   }
 }
 
@@ -191,4 +189,21 @@ resource "aws_lambda_permission" "apigateway_permission" {
 resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_apigateway" {
   name              = "/aws/api-gateway/${aws_apigatewayv2_api.apigateway_api.name}/${module.conventions.aws_naming_conventions.apigateway_stage_name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
+}
+
+# ===== COGNITO CLIENTS =====
+
+resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
+  for_each = var.clients
+  name     = each.key
+
+  user_pool_id                  = data.aws_cognito_user_pools.cognito_userpool.ids[0]
+  generate_secret               = false
+  enable_token_revocation       = true
+  prevent_user_existence_errors = "ENABLED"
+
+  explicit_auth_flows = [
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
 }

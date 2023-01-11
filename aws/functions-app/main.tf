@@ -10,12 +10,12 @@ terraform {
 }
 
 module "environment" {
-  source = "../../shared/environment"
-  conventions = var.conventions  
+  source      = "../../shared/environment"
+  conventions = var.conventions
 }
 
 module "conventions" {
-  source = "../../shared/conventions"
+  source      = "../../shared/conventions"
   conventions = var.conventions
 }
 
@@ -170,11 +170,11 @@ resource "aws_apigatewayv2_route" "apigateway_route_cors" {
 }
 
 resource "aws_apigatewayv2_route" "apigateway_route_default" {
-  api_id             = aws_apigatewayv2_api.apigateway_api.id
-  route_key          = "ANY /{proxy+}"
-  target             = "integrations/${aws_apigatewayv2_integration.apigateway_integration.id}"
-  authorizer_id      = aws_apigatewayv2_authorizer.apigateway_authorizer.id
-  authorization_type = "JWT"
+  api_id               = aws_apigatewayv2_api.apigateway_api.id
+  route_key            = "ANY /{proxy+}"
+  target               = "integrations/${aws_apigatewayv2_integration.apigateway_integration.id}"
+  authorizer_id        = aws_apigatewayv2_authorizer.apigateway_authorizer.id
+  authorization_type   = "JWT"
   authorization_scopes = []
 }
 

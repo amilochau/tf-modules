@@ -7,7 +7,7 @@ variable "conventions" {
   })
 }
 
-variable lambda_settings {
+variable "lambda_settings" {
   description = "Settings to configuration the Lambda"
   type = object({
     memory_size = number

@@ -5,5 +5,5 @@ output "aws_naming_conventions" {
 
 output "aws_format_conventions" {
   description = "Format conventions for AWS"
-  value = local.aws_format
+  value       = local.aws_format
 }

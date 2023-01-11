@@ -10,12 +10,12 @@ terraform {
 }
 
 module "environment" {
-  source = "../../shared/environment"
-  conventions = var.conventions  
+  source      = "../../shared/environment"
+  conventions = var.conventions
 }
 
 module "conventions" {
-  source = "../../shared/conventions"
+  source      = "../../shared/conventions"
   conventions = var.conventions
 }
 
@@ -32,8 +32,8 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
 }
 
 resource "aws_s3_bucket_versioning" "s3_bucket_versioning" {
-  bucket                  = aws_s3_bucket.s3_bucket.id
-  
+  bucket = aws_s3_bucket.s3_bucket.id
+
   versioning_configuration {
     status = "Enabled"
   }
@@ -43,7 +43,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_bucket_lifecycle" {
   bucket = aws_s3_bucket.s3_bucket.id
 
   rule {
-    id = "expire-old-versions"
+    id     = "expire-old-versions"
     status = "Enabled"
 
     expiration {
@@ -51,7 +51,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_bucket_lifecycle" {
     }
 
     noncurrent_version_expiration {
-      noncurrent_days = 30
+      noncurrent_days           = 30
       newer_noncurrent_versions = 5
     }
   }

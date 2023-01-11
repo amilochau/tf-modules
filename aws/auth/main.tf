@@ -10,12 +10,12 @@ terraform {
 }
 
 module "environment" {
-  source = "../../shared/environment"
-  conventions = var.conventions  
+  source      = "../../shared/environment"
+  conventions = var.conventions
 }
 
 module "conventions" {
-  source = "../../shared/conventions"
+  source      = "../../shared/conventions"
   conventions = var.conventions
 }
 

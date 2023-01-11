@@ -69,7 +69,7 @@ resource "aws_lambda_function" "lambda_function" {
   runtime          = "provided.al2"
   architectures    = ["x86_64"]
   timeout          = 10              # seconds
-  memory_size      = var.memory_size # MB
+  memory_size      = var.lambda_settings.memory_size # MB
   handler          = "bootstrap"
 }
 

@@ -3,21 +3,6 @@ module "conventions" {
   conventions = var.conventions
 }
 
-data "aws_iam_policy_document" "lambda_iam_policy_document" {
-  statement {
-    actions = [
-      "sts:AssumeRole"
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "lambda.amazonaws.com"
-      ]
-    }
-    effect = "Allow"
-  }
-}
-
 data "aws_iam_policy_document" "lambda_logging_policy_document" {
   statement {
     actions = [
@@ -34,8 +19,8 @@ data "aws_iam_policy_document" "lambda_logging_policy_document" {
 # ===== LAMBDA =====
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = module.conventions.aws_naming_conventions.lambda_function_name
-  role          = aws_iam_role.lambda_iam_role.arn
+  function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.settings.function_key}"
+  role          = var.iam_role_settings.arn
 
   filename         = var.settings.deployment_file_path
   source_code_hash = filebase64sha256(var.settings.deployment_file_path)
@@ -46,12 +31,6 @@ resource "aws_lambda_function" "lambda_function" {
   handler          = var.settings.handler
 }
 
-resource "aws_iam_role" "lambda_iam_role" {
-  name               = module.conventions.aws_naming_conventions.lambda_iam_role_name
-  description        = "IAM role used by the lambda"
-  assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document.json
-}
-
 # ===== LAMBDA LOGGING =====
 
 resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
@@ -60,12 +39,33 @@ resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
 }
 
 resource "aws_iam_policy" "lambda_logging_role" {
-  name        = module.conventions.aws_naming_conventions.lambda_logging_role_name
+  name        = "${module.conventions.aws_naming_conventions.lambda_logging_policy_name_prefix}-${var.settings.function_key}"
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.lambda_logging_policy_document.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = aws_iam_role.lambda_iam_role.name
+  role       = var.iam_role_settings.name
   policy_arn = aws_iam_policy.lambda_logging_role.arn
+}
+
+# ===== API GATEWAY ROUTE =====
+
+module "api_gateway_route" {
+  count  = var.settings.http_trigger != null ? 1 : 0
+  source = "../api-gateway-route"
+
+  route_settings = {
+    function_name = aws_lambda_function.lambda_function.function_name
+    invoke_arn    = aws_lambda_function.lambda_function.invoke_arn
+    method        = var.settings.http_trigger.method
+    route         = var.settings.http_trigger.route
+    anonymous     = var.settings.http_trigger.anonymous
+    enable_cors   = var.settings.http_trigger.enable_cors
+  }
+  apigateway_settings = {
+    api_id            = var.apigateway_settings.api_id
+    api_execution_arn = var.apigateway_settings.api_execution_arn
+    authorizer_id     = var.apigateway_settings.authorizer_id
+  }
 }

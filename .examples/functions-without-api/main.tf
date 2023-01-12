@@ -33,11 +33,13 @@ module "functions_app" {
   conventions = var.conventions
 
   lambda_settings = {
-    memory_size_mb       = 128
     architecture         = "arm64"
     runtime              = "nodejs18.x"
     deployment_file_path = "data/app.zip"
-    handler              = "handler.get"
-    expose_apis          = false
+    functions = {
+      "get" = {
+        handler = "handler.get"
+      }
+    }
   }
 }

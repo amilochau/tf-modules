@@ -10,12 +10,11 @@ locals {
 
   aws_naming = {
     cognito_userpool_name            = "${local.aws_default_base.prefix}-cognito-userpool"
-    lambda_function_name             = "${local.aws_default_base.prefix}-lambda-fn"
-    lambda_iam_role_name             = "${local.aws_default_base.prefix}-lambda-role-iam"
-    lambda_logging_role_name         = "${local.aws_default_base.prefix}-lambda-role-logging"
+    lambda_iam_role_name             = "${local.aws_default_base.prefix}-lambda-iam-role"
+    lambda_function_name_prefix             = "${local.aws_default_base.prefix}-lambda-fn"
+    lambda_logging_policy_name_prefix         = "${local.aws_default_base.prefix}-lambda-iam-policy-logging"
     apigateway_api_name              = "${local.aws_default_base.prefix}-apigateway-api"
     apigateway_authorizer_name       = "${local.aws_default_base.prefix}-apigateway-authorizer"
-    apigateway_stage_name            = var.conventions.host_name
     cognito_userpool_client_api_name = "${local.aws_default_base.prefix}-cognito-client-api"
     s3_bucket_name                   = "${local.aws_default_base.prefix}-s3-bucket"
   }

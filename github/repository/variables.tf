@@ -5,6 +5,21 @@ variable "conventions" {
     application_name  = string
     host_name         = string
   })
+
+  validation {
+    condition = length(var.conventions.organization_name) > 2 && length(var.conventions.organization_name) < 8 && can(regex("^[a-z]+$", var.conventions.organization_name))
+    error_message = "Organization name must use between 2 and 8 characters, only with lowercase letters"
+  }
+
+  validation {
+    condition = length(var.conventions.application_name) > 2 && length(var.conventions.application_name) < 12 && can(regex("^[a-z]+$", var.conventions.organization_name))
+    error_message = "Application name must use between 2 and 12 characters, only with lowercase letters"
+  }
+
+  validation {
+    condition = length(var.conventions.host_name) > 3 && length(var.conventions.host_name) < 8 && can(regex("^[a-z0-9]+$", var.conventions.organization_name))
+    error_message = "Host name must use between 2 and 8 characters, only with lowercase letters and numbers"
+  }
 }
 
 variable "repository_basics" {

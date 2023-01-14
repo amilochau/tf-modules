@@ -35,9 +35,9 @@ module "functions_app" {
   lambda_settings = {
     architecture         = "arm64"
     runtime              = "nodejs18.x"
-    deployment_file_path = "data/app.zip"
     functions = {
       "get" = {
+        deployment_file_path = "data/app.zip"
         handler = "handler.get"
         http_trigger = {
           method = "GET"

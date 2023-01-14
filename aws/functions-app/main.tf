@@ -46,10 +46,10 @@ module "lambda_functions" {
   settings = {
     runtime              = var.lambda_settings.runtime
     architecture         = var.lambda_settings.architecture
-    deployment_file_path = var.lambda_settings.deployment_file_path
     function_key         = each.key
     memory_size_mb       = each.value.memory_size_mb
     timeout_s            = each.value.timeout_s
+    deployment_file_path = each.value.deployment_file_path
     handler              = each.value.handler
     http_trigger = each.value.http_trigger == null ? null : {
       method      = each.value.http_trigger.method

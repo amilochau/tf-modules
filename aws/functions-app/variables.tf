@@ -27,11 +27,11 @@ variable "lambda_settings" {
   type = object({
     runtime              = string
     architecture         = string
-    deployment_file_path = string
 
     functions = map(object({
       memory_size_mb = optional(number, 128)
       timeout_s      = optional(number, 10)
+      deployment_file_path = string
       handler        = string
       http_trigger = optional(object({
         method      = string

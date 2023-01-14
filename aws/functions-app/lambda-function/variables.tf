@@ -12,10 +12,10 @@ variable "settings" {
   type = object({
     runtime              = string
     architecture         = string
-    deployment_file_path = string
     function_key         = string
     memory_size_mb       = number
     timeout_s            = number
+    deployment_file_path = string
     handler              = string
     http_trigger = optional(object({
       method      = string

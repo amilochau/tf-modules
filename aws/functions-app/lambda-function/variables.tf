@@ -26,14 +26,6 @@ variable "settings" {
   })
 }
 
-variable "iam_role_settings" {
-  description = "Settings of the previously deployed IAM role, used by the lambda function"
-  type = object({
-    arn  = string
-    name = string
-  })
-}
-
 variable "apigateway_settings" {
   description = "Settings for the previously deployed API Gateway v2"
   type = object({
@@ -41,4 +33,12 @@ variable "apigateway_settings" {
     api_execution_arn = string
     authorizer_id     = string
   })
+}
+
+variable "dynamodb_settings" {
+  description = "Settings for the previously deployed DynamoDB"
+  type = map(object({
+    table_name = string
+    table_arn = string
+  }))
 }

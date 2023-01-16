@@ -86,10 +86,18 @@ variable "lambda_settings" {
   }
 }
 
-variable "clients" {
+variable "cognito_clients_settings" {
   description = "Settings to configure identity clients for the API"
   type = map(object({
     purpose = string
+  }))
+  default = {}
+}
+
+variable "dynamodb_tables_settings" {
+  description = "Settings to configure DynamoDB tables for the API"
+  type = map(object({
+    primary_key = optional(string, "id")
   }))
   default = {}
 }

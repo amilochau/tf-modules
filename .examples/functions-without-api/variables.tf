@@ -7,7 +7,7 @@ variable "conventions" {
   })
   default = {
     organization_name = "mil"
-    application_name  = "emails"
+    application_name  = "sample"
     host_name         = "default"
   }
 }

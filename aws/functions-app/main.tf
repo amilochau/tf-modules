@@ -17,7 +17,18 @@ module "cognito_clients" {
   source = "./cognito-clients"
 
   conventions = var.conventions
-  clients     = var.clients
+  clients_settings     = var.cognito_clients_settings
+}
+
+module "dynamodb_tables" {
+  for_each = var.dynamodb_tables_settings
+  source = "./dynamodb-table"
+  
+  conventions = var.conventions
+  table_settings = {
+    name = each.key
+    primary_key = each.value.primary_key
+  }
 }
 
 module "api_gateway_api" {
@@ -30,12 +41,6 @@ module "api_gateway_api" {
     user_pool_id = module.cognito_clients.cognito_user_pool_id
     client_ids   = module.cognito_clients.cognito_client_ids
   }
-}
-
-module "lambda_iam_role" {
-  source = "./lambda-iam-role"
-
-  conventions = var.conventions
 }
 
 module "lambda_functions" {
@@ -58,14 +63,16 @@ module "lambda_functions" {
       enable_cors = each.value.http_trigger.enable_cors
     }
   }
-  iam_role_settings = {
-    arn  = module.lambda_iam_role.iam_role_arn
-    name = module.lambda_iam_role.iam_role_name
-  }
   apigateway_settings = {
     api_id            = local.has_http_triggers ? module.api_gateway_api[0].apigateway_api_id : null
     api_execution_arn = local.has_http_triggers ? module.api_gateway_api[0].apigateway_api_execution_arn : null
     authorizer_id     = local.has_http_triggers ? module.api_gateway_api[0].apigateway_authorizer_id : null
+  }
+  dynamodb_settings = {
+    for k, v in module.dynamodb_tables: k => {
+      table_name = v.table_name
+      table_arn = v.table_arn
+    }
   }
 }
 

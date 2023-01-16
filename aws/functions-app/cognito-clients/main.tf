@@ -14,8 +14,8 @@ locals {
 # ===== COGNITO CLIENTS =====
 
 resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
-  for_each = var.clients
-  name     = each.key
+  for_each = var.clients_settings
+  name     = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-${each.key}"
 
   user_pool_id                  = local.cognito_user_pool_id
   generate_secret               = false

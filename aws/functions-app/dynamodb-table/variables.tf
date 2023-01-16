@@ -6,3 +6,11 @@ variable "conventions" {
     host_name         = string
   })
 }
+
+variable "table_settings" {
+  description = "Settings for the DynamoDB table"
+  type = object({
+    name = string
+    primary_key = string
+  })
+}

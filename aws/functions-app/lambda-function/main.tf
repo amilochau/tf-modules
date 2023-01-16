@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document" {
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
-  name               = module.conventions.aws_naming_conventions.lambda_iam_role_name
+  name               = "${module.conventions.aws_naming_conventions.lambda_iam_role_name_prefix}-${var.settings.function_key}"
   description        = "IAM role used by the lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document.json
 }

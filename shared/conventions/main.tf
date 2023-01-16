@@ -10,13 +10,13 @@ locals {
 
   aws_naming = {
     cognito_userpool_name            = "${local.aws_default_base.prefix}-cognito-userpool"
-    cognito_userpool_client_name_prefix = "${local.aws_default_base.prefix}-cognito-userpool-client"
-    lambda_iam_role_name             = "${local.aws_default_base.prefix}-lambda-iam-role"
-    lambda_function_name_prefix             = "${local.aws_default_base.prefix}-lambda-fn"
-    lambda_logging_policy_name_prefix         = "${local.aws_default_base.prefix}-lambda-iam-policy-logging"
     apigateway_api_name              = "${local.aws_default_base.prefix}-apigateway-api"
     apigateway_authorizer_name       = "${local.aws_default_base.prefix}-apigateway-authorizer"
-    cognito_userpool_client_api_name = "${local.aws_default_base.prefix}-cognito-client-api"
+    cognito_userpool_client_api_name = "${local.aws_default_base.prefix}-cognito-userpool-client-api"
+    cognito_userpool_client_name_prefix = "${local.aws_default_base.prefix}-cognito-userpool-client"
+    lambda_iam_role_name_prefix             = "${local.aws_default_base.prefix}-lambda-iam-role"
+    lambda_function_name_prefix             = "${local.aws_default_base.prefix}-lambda-fn"
+    lambda_logging_policy_name_prefix         = "${local.aws_default_base.prefix}-lambda-iam-policy-logging"
     dynamodb_table_name_prefix = "${local.aws_default_base.prefix}-dynamodb-table"
     lambda_dynamodb_policy_name_prefix = "${local.aws_default_base.prefix}-lambda-iam-policy-dynamodb"
     s3_bucket_name                   = "${local.aws_default_base.prefix}-s3-bucket"

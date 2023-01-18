@@ -28,7 +28,7 @@ module "dynamodb_tables" {
   table_settings = {
     name = each.key
     primary_key = each.value.primary_key
-    ttl_attribute_name = each.value.ttl_attribute_name
+    ttl = each.value.ttl
   }
 }
 

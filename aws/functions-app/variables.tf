@@ -98,7 +98,19 @@ variable "dynamodb_tables_settings" {
   description = "Settings to configure DynamoDB tables for the API"
   type = map(object({
     primary_key = optional(string, "id")
-    ttl_attribute_name = optional(string, null)
+    ttl = optional(object({
+      enabled = bool
+      attribute_name = optional(string, "ttl")
+    }), {
+      enabled = false
+    })
   }))
   default = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.dynamodb_tables_settings : can(regex("^[a-z0-9_]+$", k))
+    ])
+    error_message = "Table key must use only lowercase letters, numbers and underscores ('_')"
+  }
 }

@@ -20,6 +20,7 @@ module "conventions" {
 }
 
 resource "aws_ses_domain_identity" "domain_identity" {
+  count = var.emails_domain != null ? 1 : 0
   domain = var.emails_domain
 }
 

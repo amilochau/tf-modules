@@ -25,6 +25,7 @@ variable "conventions" {
 variable "emails_domain" {
   description = "Domain to use as emails identity"
   type = string
+  default = null
 }
 
 variable "templates" {

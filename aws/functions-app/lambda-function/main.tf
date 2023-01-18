@@ -42,7 +42,10 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = {
-      for k, v in var.dynamodb_settings : upper("DYNAMODB_TABLE__${k}") => v.table_name
+      "CONVENTION__PREFIX" = "${var.conventions.organization_name}-${var.conventions.application_name}-${var.conventions.host_name}"
+      "CONVENTION__ORGANIZATION" = var.conventions.organization_name
+      "CONVENTION__APPLICATION" = var.conventions.application_name
+      "CONVENTION__HOST" = var.conventions.host_name
     }
   }
 }

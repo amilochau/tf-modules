@@ -28,9 +28,11 @@ module "checks" {
   conventions = var.conventions
 }
 
-module "functions_app" {
+module "emails" {
   source      = "../../aws/emails"
   conventions = var.conventions
+
+  emails_domain = "example.com"
 
   templates = {
     "template1" = {

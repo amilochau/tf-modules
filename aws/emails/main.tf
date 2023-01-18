@@ -19,6 +19,10 @@ module "conventions" {
   conventions = var.conventions
 }
 
+resource "aws_ses_domain_identity" "domain_identity" {
+  domain = var.emails_domain
+}
+
 resource "aws_ses_template" "templates" {
   for_each = var.templates
 

@@ -22,6 +22,11 @@ variable "conventions" {
   }
 }
 
+variable "emails_domain" {
+  description = "Domain to use as emails identity"
+  type = string
+}
+
 variable "templates" {
   description = "Email templates to use in SES"
   type = map(object({

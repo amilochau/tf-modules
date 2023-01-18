@@ -22,7 +22,7 @@ module "conventions" {
 resource "aws_ses_template" "templates" {
   for_each = var.templates
 
-  name = "${module.conventions.aws_naming_conventions.ses_template_name_prefix}${each.key}"
+  name = "${module.conventions.aws_naming_conventions.ses_template_name_prefix}-${each.key}"
   subject = each.value.subject
   html = each.value.html
   text = each.value.text

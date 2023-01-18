@@ -1,0 +1,6 @@
+Hello {{name}},
+
+Here you use the TEXT email content!
+
+Thanks,
+Regards.

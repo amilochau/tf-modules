@@ -12,5 +12,6 @@ variable "table_settings" {
   type = object({
     name = string
     primary_key = string
+    ttl_attribute_name = string
   })
 }

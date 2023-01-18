@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.44"
+      version = ">= 4.50, < 5.0.0"
     }
   }
 
@@ -28,6 +28,7 @@ module "dynamodb_tables" {
   table_settings = {
     name = each.key
     primary_key = each.value.primary_key
+    ttl_attribute_name = each.value.ttl_attribute_name
   }
 }
 

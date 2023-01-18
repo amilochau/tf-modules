@@ -98,6 +98,7 @@ variable "dynamodb_tables_settings" {
   description = "Settings to configure DynamoDB tables for the API"
   type = map(object({
     primary_key = optional(string, "id")
+    ttl_attribute_name = optional(string, null)
   }))
   default = {}
 }

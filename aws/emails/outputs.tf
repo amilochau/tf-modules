@@ -8,7 +8,7 @@ output "domain_verification_record" {
 }
 
 output "domain_dkim_records" {
-  description = "CNAME record to add, so that domain can be authenticated"
+  description = "CNAME record to add, so that domain can be authenticated with DKIM"
   value = var.domain != null ? [
     for v in aws_ses_domain_dkim.domain_dkim[0].dkim_tokens : {
       type = "CNAME"
@@ -32,4 +32,13 @@ output "domain_mail_from_records" {
       record = "v=spf1 include:amazonses.com ~all"
     }
   ] : null
+}
+
+output "domain_dmarc_records" {
+  description = "TXT to add, so that domain can be authenticated with DMARC"
+  value = var.domain != null ? {
+    type = "TXT"
+    name = "_dmarc.${aws_ses_domain_identity.domain_identity[0].domain}"
+    record = "v=DMARC1;p=none" # see https://www.rfc-editor.org/rfc/rfc7489#section-6.3
+  } : null
 }

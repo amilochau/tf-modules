@@ -120,9 +120,9 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_dyn
 
 module "api_gateway_route" {
   count  = var.settings.http_trigger != null ? 1 : 0
-  source = "../api-gateway-route"
+  source = "./api-gateway-route"
 
-  route_settings = {
+  function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name
     invoke_arn    = aws_lambda_function.lambda_function.invoke_arn
     method        = var.settings.http_trigger.method
@@ -134,5 +134,20 @@ module "api_gateway_route" {
     api_id            = var.apigateway_settings.api_id
     api_execution_arn = var.apigateway_settings.api_execution_arn
     authorizer_id     = var.apigateway_settings.authorizer_id
+  }
+}
+
+# ===== SNS TRIGGER =====
+
+module "sns_subscription" {
+  count  = var.settings.sns_trigger != null ? 1 : 0
+  source = "./sns-topic-subscription"
+
+  function_settings = {
+    function_name = aws_lambda_function.lambda_function.function_name
+    function_arn    = aws_lambda_function.lambda_function.arn
+  }
+  sns_settings = {
+    topic_name = var.settings.sns_trigger.topic_name
   }
 }

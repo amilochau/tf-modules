@@ -17,12 +17,15 @@ variable "settings" {
     timeout_s            = number
     deployment_file_path = string
     handler              = string
-    http_trigger = optional(object({
+    http_trigger = object({
       method      = string
       route       = string
       anonymous   = bool
       enable_cors = bool
-    }), null)
+    })
+    sns_trigger = object({
+      topic_name = string
+    })
   })
 }
 

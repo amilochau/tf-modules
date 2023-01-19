@@ -63,6 +63,9 @@ module "lambda_functions" {
       anonymous   = each.value.http_trigger.anonymous
       enable_cors = each.value.http_trigger.enable_cors
     }
+    sns_trigger = each.value.sns_trigger == null ? null : {
+      topic_name = each.value.sns_trigger.topic_name
+    }
   }
   apigateway_settings = {
     api_id            = local.has_http_triggers ? module.api_gateway_api[0].apigateway_api_id : null

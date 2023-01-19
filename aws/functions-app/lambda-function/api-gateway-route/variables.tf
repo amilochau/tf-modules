@@ -1,4 +1,4 @@
-variable "route_settings" {
+variable "function_settings" {
   description = "Settings to use for the API Gateway route"
   type = object({
     function_name = string

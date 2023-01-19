@@ -39,6 +39,9 @@ variable "lambda_settings" {
         anonymous   = optional(bool, false)
         enable_cors = optional(bool, false)
       }), null)
+      sns_trigger = optional(object({
+        topic_name = string
+      }), null)
     }))
   })
 
@@ -83,6 +86,16 @@ variable "lambda_settings" {
       for v in var.lambda_settings.functions : v.timeout_s >= 1 && v.timeout_s <= 900
     ])
     error_message = "Memory size must be between 1 second and 900 seconds"
+  }
+
+  validation {
+    condition = alltrue([
+      for v in var.lambda_settings.functions :
+        v.http_trigger != null && v.sns_trigger == null ||
+        v.http_trigger == null && v.sns_trigger != null ||
+        v.http_trigger == null && v.sns_trigger == null
+    ])
+    error_message = "At most one trigger can be set for a function"
   }
 }
 

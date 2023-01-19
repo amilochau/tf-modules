@@ -24,6 +24,19 @@ resource "aws_ses_domain_identity" "domain_identity" {
   domain = var.emails_domain
 }
 
+resource "aws_ses_domain_identity_verification" "example_verification" {
+  count = var.emails_domain != null ? 1 : 0
+  domain = aws_ses_domain_identity.domain_identity[0].domain
+}
+
+resource "aws_ses_domain_dkim" "domain_dkim" {
+  count = var.emails_domain != null ? 1 : 0
+  depends_on = [
+    aws_ses_domain_identity_verification.example_verification[0]
+  ]
+  domain = var.emails_domain != null ? aws_ses_domain_identity.domain_identity[0].domain : null
+}
+
 resource "aws_ses_template" "templates" {
   for_each = var.templates
 

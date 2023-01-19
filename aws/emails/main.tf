@@ -19,36 +19,6 @@ module "conventions" {
   conventions = var.conventions
 }
 
-data "aws_region" "current" {}
-
-resource "aws_ses_domain_identity" "domain_identity" {
-  count = var.domain != null ? 1 : 0
-  domain = var.domain
-}
-
-resource "aws_ses_domain_identity_verification" "example_verification" {
-  count = var.domain != null ? 1 : 0
-  domain = aws_ses_domain_identity.domain_identity[0].domain
-}
-
-resource "aws_ses_domain_dkim" "domain_dkim" {
-  count = var.domain != null ? 1 : 0
-  depends_on = [
-    aws_ses_domain_identity_verification.example_verification[0]
-  ]
-  domain = var.domain != null ? aws_ses_domain_identity.domain_identity[0].domain : null
-}
-
-resource "aws_ses_domain_mail_from" "domain_mail_from" {
-  count = var.domain != null && var.mail_from_subdomain != null ? 1 : 0
-  depends_on = [
-    aws_ses_domain_identity_verification.example_verification[0]
-  ]
-  domain = aws_ses_domain_identity.domain_identity[0].domain
-  mail_from_domain = "${var.mail_from_subdomain}.${aws_ses_domain_identity.domain_identity[0].domain}"
-  behavior_on_mx_failure = "RejectMessage"
-}
-
 resource "aws_ses_template" "templates" {
   for_each = var.templates
 
@@ -56,4 +26,17 @@ resource "aws_ses_template" "templates" {
   subject = each.value.subject
   html = each.value.html
   text = each.value.text
+}
+
+resource "aws_sns_topic" "notifications_topic" {
+  name = "${module.conventions.aws_naming_conventions.sns_topic_name_prefix}-notifications"
+}
+
+module "domains" {
+  for_each = var.domains
+  source = "./domain"
+
+  domain = each.key
+  mail_from_subdomain = each.value.mail_from_subdomain
+  notifications_sns_topic_arn = aws_sns_topic.notifications_topic.arn
 }

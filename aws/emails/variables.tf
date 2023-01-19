@@ -22,16 +22,11 @@ variable "conventions" {
   }
 }
 
-variable "domain" {
-  description = "Domain to use as emails identity"
-  type = string
-  default = null
-}
-
-variable "mail_from_subdomain" {
-  description = "Subdomain to use for MAIL FROM authentication"
-  type = string
-  default = null
+variable "domains" {
+  description = "Domains to use as emails identity"
+  type = map(object({
+    mail_from_subdomain = string
+  }))
 }
 
 variable "templates" {

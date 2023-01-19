@@ -32,7 +32,8 @@ module "emails" {
   source      = "../../aws/emails"
   conventions = var.conventions
 
-  emails_domain = "example.com"
+  domain = "example.com"
+  mail_from_subdomain = "mail"
 
   templates = {
     "template1" = {

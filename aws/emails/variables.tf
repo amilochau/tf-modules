@@ -22,8 +22,14 @@ variable "conventions" {
   }
 }
 
-variable "emails_domain" {
+variable "domain" {
   description = "Domain to use as emails identity"
+  type = string
+  default = null
+}
+
+variable "mail_from_subdomain" {
+  description = "Subdomain to use for MAIL FROM authentication"
   type = string
   default = null
 }

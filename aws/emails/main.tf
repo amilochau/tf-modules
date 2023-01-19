@@ -19,22 +19,34 @@ module "conventions" {
   conventions = var.conventions
 }
 
+data "aws_region" "current" {}
+
 resource "aws_ses_domain_identity" "domain_identity" {
-  count = var.emails_domain != null ? 1 : 0
-  domain = var.emails_domain
+  count = var.domain != null ? 1 : 0
+  domain = var.domain
 }
 
 resource "aws_ses_domain_identity_verification" "example_verification" {
-  count = var.emails_domain != null ? 1 : 0
+  count = var.domain != null ? 1 : 0
   domain = aws_ses_domain_identity.domain_identity[0].domain
 }
 
 resource "aws_ses_domain_dkim" "domain_dkim" {
-  count = var.emails_domain != null ? 1 : 0
+  count = var.domain != null ? 1 : 0
   depends_on = [
     aws_ses_domain_identity_verification.example_verification[0]
   ]
-  domain = var.emails_domain != null ? aws_ses_domain_identity.domain_identity[0].domain : null
+  domain = var.domain != null ? aws_ses_domain_identity.domain_identity[0].domain : null
+}
+
+resource "aws_ses_domain_mail_from" "domain_mail_from" {
+  count = var.domain != null && var.mail_from_subdomain != null ? 1 : 0
+  depends_on = [
+    aws_ses_domain_identity_verification.example_verification[0]
+  ]
+  domain = aws_ses_domain_identity.domain_identity[0].domain
+  mail_from_domain = "${var.mail_from_subdomain}.${aws_ses_domain_identity.domain_identity[0].domain}"
+  behavior_on_mx_failure = "RejectMessage"
 }
 
 resource "aws_ses_template" "templates" {

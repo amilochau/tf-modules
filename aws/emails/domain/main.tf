@@ -24,7 +24,19 @@ resource "aws_ses_domain_mail_from" "domain_mail_from" {
   behavior_on_mx_failure = "RejectMessage"
 }
 
-resource "aws_ses_identity_notification_topic" "identity_notification_topic" {
+resource "aws_ses_identity_notification_topic" "identity_notification_topic_bounce" {
+  identity = aws_ses_domain_identity.domain_identity.domain
+  topic_arn = var.notifications_sns_topic_arn
+  notification_type = "Bounce"
+}
+
+resource "aws_ses_identity_notification_topic" "identity_notification_topic_complaint" {
+  identity = aws_ses_domain_identity.domain_identity.domain
+  topic_arn = var.notifications_sns_topic_arn
+  notification_type = "Complaint"
+}
+
+resource "aws_ses_identity_notification_topic" "identity_notification_topic_delivery" {
   identity = aws_ses_domain_identity.domain_identity.domain
   topic_arn = var.notifications_sns_topic_arn
   notification_type = "Delivery"

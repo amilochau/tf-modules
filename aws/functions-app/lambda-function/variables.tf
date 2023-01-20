@@ -17,6 +17,7 @@ variable "settings" {
     timeout_s            = number
     deployment_file_path = string
     handler              = string
+    environment_variables = map(string)
     http_trigger = object({
       method      = string
       route       = string

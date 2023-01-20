@@ -57,6 +57,7 @@ module "lambda_functions" {
     timeout_s            = each.value.timeout_s
     deployment_file_path = each.value.deployment_file_path
     handler              = each.value.handler
+    environment_variables = each.value.environment_variables
     http_trigger = each.value.http_trigger == null ? null : {
       method      = each.value.http_trigger.method
       route       = each.value.http_trigger.route

@@ -39,6 +39,10 @@ module "functions_app" {
       "get" = {
         deployment_file_path = "data/app.zip"
         handler = "handler.get"
+        environment_variables = {
+          "CONVENTION__HOST" = "THIS VALUE SHOULD NOT BE USED - AS IT MUST BE OVERRIDED BY TEMPLATE",
+          "key1" = "value1"
+        }
       }
     }
   }

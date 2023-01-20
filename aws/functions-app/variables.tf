@@ -33,6 +33,7 @@ variable "lambda_settings" {
       timeout_s      = optional(number, 10)
       deployment_file_path = string
       handler        = string
+      environment_variables = optional(map(string), {})
       http_trigger = optional(object({
         method      = string
         route       = string

@@ -111,7 +111,8 @@ variable "cognito_clients_settings" {
 variable "dynamodb_tables_settings" {
   description = "Settings to configure DynamoDB tables for the API"
   type = map(object({
-    primary_key = optional(string, "id")
+    partition_key = string
+    sort_key = optional(string, null)
     ttl = optional(object({
       enabled = bool
       attribute_name = optional(string, "ttl")

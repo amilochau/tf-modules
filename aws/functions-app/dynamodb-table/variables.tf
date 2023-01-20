@@ -11,7 +11,8 @@ variable "table_settings" {
   description = "Settings for the DynamoDB table"
   type = object({
     name = string
-    primary_key = string
+    partition_key = string
+    sort_key = string
     ttl = object({
       enabled = bool
       attribute_name = string

@@ -27,7 +27,8 @@ module "dynamodb_tables" {
   conventions = var.conventions
   table_settings = {
     name = each.key
-    primary_key = each.value.primary_key
+    partition_key = each.value.partition_key
+    sort_key = each.value.sort_key
     ttl = each.value.ttl
   }
 }

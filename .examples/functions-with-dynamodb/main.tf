@@ -33,7 +33,10 @@ module "functions_app" {
   conventions = var.conventions
 
   dynamodb_tables_settings = {
-    "table1" = {}
+    "table1" = {
+      partition_key = "hash"
+      sort_key = "range"
+    }
   }
 
   lambda_settings = {

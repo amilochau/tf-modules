@@ -21,6 +21,7 @@ locals {
     lambda_dynamodb_policy_name_prefix = "${local.aws_default_base.prefix}-lambda-iam-policy-dynamodb"
     s3_bucket_name                   = "${local.aws_default_base.prefix}-s3-bucket"
     ses_template_name_prefix = "${local.aws_default_base.prefix}-ses-template"
+    ses_configuration_set_name = "${local.aws_default_base.prefix}-ses-configuration-set"
     sns_topic_name_prefix = "${local.aws_default_base.prefix}-sns-topic"
   }
 }

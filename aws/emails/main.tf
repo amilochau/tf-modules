@@ -36,13 +36,41 @@ resource "aws_ses_template" "templates" {
   text = each.value.text
 }
 
-module "domains" {
+resource "aws_sesv2_configuration_set" "configuration_set" {
+  configuration_set_name = module.conventions.aws_naming_conventions.ses_configuration_set_name
+
+  sending_options {
+    sending_enabled = true
+  }
+  reputation_options {
+    reputation_metrics_enabled = true
+  }
+}
+
+resource "aws_sesv2_configuration_set_event_destination" "configuration_set_event_destination" {
+  depends_on = [
+    aws_sns_topic_policy.notification_topic_policy // We need to authorize SES to publish to SNS first
+  ]
+  configuration_set_name = aws_sesv2_configuration_set.configuration_set.configuration_set_name
+  event_destination_name = aws_sns_topic.notifications_topic.name
+
+  event_destination {
+    sns_destination {
+      topic_arn = aws_sns_topic.notifications_topic.arn
+    }
+
+    enabled              = true
+    matching_event_types = ["BOUNCE", "COMPLAINT", "DELIVERY_DELAY", "REJECT", "RENDERING_FAILURE", "SUBSCRIPTION"]
+  }
+}
+
+module "identities" {
   for_each = var.domains
-  source = "./domain"
+  source = "./identity"
 
   domain = each.key
+  configuration_set_name = aws_sesv2_configuration_set.configuration_set.configuration_set_name
   mail_from_subdomain = each.value.mail_from_subdomain
-  notifications_sns_topic_arn = aws_sns_topic.notifications_topic.arn
 }
 
 # ===== SES identities to SNS topic =====
@@ -82,7 +110,7 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
       variable = "AWS:SourceArn"
 
       values = [
-        for v in module.domains : v.domain_identity_arn
+        aws_sesv2_configuration_set.configuration_set.arn
       ]
     }
   }

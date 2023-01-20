@@ -36,4 +36,11 @@ variable "templates" {
     html = string
     text = string
   }))
+
+  validation {
+    condition = alltrue([
+      for v in var.templates : can(regex("{{unsubscribe_url}}", v.html)) && can(regex("{{unsubscribe_url}}", v.text))
+    ])
+    error_message = "Template data are required."
+  }
 }

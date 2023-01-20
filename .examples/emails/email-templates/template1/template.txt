@@ -4,3 +4,5 @@ Here you use the TEXT email content!
 
 Thanks,
 Regards.
+
+To unsubscribe: {{unsubscribe_url}}

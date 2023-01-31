@@ -119,6 +119,11 @@ variable "dynamodb_tables_settings" {
     }), {
       enabled = false
     })
+    global_secondary_indexes = optional(map(object({
+      partition_key = string
+      sort_key = string
+      non_key_attributes = list(string)
+    })), {})
   }))
   default = {}
 

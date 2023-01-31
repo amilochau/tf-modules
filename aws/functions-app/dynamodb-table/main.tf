@@ -33,4 +33,15 @@ resource "aws_dynamodb_table" "dynamodb_table" {
       attribute_name = var.table_settings.ttl.attribute_name
     }
   }
+  
+  dynamic global_secondary_index {
+    for_each = var.table_settings.global_secondary_indexes
+    content {
+      name               = global_secondary_index.key
+      hash_key           = global_secondary_index.value.partition_key
+      range_key          = global_secondary_index.value.sort_key
+      projection_type    = "INCLUDE"
+      non_key_attributes = global_secondary_index.value.non_key_attributes
+    }
+  }
 }

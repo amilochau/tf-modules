@@ -17,5 +17,10 @@ variable "table_settings" {
       enabled = bool
       attribute_name = string
     })
+    global_secondary_indexes = map(object({
+      partition_key = string
+      sort_key = string
+      non_key_attributes = list(string)
+    }))
   })
 }

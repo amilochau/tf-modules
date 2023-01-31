@@ -29,7 +29,9 @@ module "dynamodb_tables" {
     name = each.key
     partition_key = each.value.partition_key
     sort_key = each.value.sort_key
+    attributes = each.value.attributes
     ttl = each.value.ttl
+    global_secondary_indexes = each.value.global_secondary_indexes
   }
 }
 

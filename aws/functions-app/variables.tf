@@ -113,6 +113,9 @@ variable "dynamodb_tables_settings" {
   type = map(object({
     partition_key = string
     sort_key = optional(string, null)
+    attributes = optional(map(object({
+      type = string
+    })), {})
     ttl = optional(object({
       enabled = bool
       attribute_name = optional(string, "ttl")

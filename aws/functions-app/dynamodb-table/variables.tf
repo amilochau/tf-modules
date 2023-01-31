@@ -13,6 +13,9 @@ variable "table_settings" {
     name = string
     partition_key = string
     sort_key = string
+    attributes = map(object({
+      type = string
+    }))
     ttl = object({
       enabled = bool
       attribute_name = string

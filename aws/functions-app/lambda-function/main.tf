@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document" {
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
-  name               = "${module.conventions.aws_naming_conventions.lambda_iam_role_name_prefix}-${var.settings.function_key}"
+  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-lambda-${var.settings.function_key}"
   description        = "IAM role used by the lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document.json
 }
@@ -42,8 +42,7 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = merge(var.settings.environment_variables, {
-      "CONVENTION__PREFIX" = "${var.conventions.organization_name}-${var.conventions.application_name}-${var.conventions.host_name}"
-      "CONVENTION__ORGANIZATION" = var.conventions.organization_name
+      "CONVENTION__PREFIX" = "${var.conventions.application_name}-${var.conventions.host_name}"
       "CONVENTION__APPLICATION" = var.conventions.application_name
       "CONVENTION__HOST" = var.conventions.host_name
     })
@@ -71,7 +70,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
 }
 
 resource "aws_iam_policy" "lambda_iam_policy_logging" {
-  name        = "${module.conventions.aws_naming_conventions.lambda_logging_policy_name_prefix}-${var.settings.function_key}"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-logging-${var.settings.function_key}"
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.lambda_iam_policy_document_logging.json
 }
@@ -104,7 +103,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_dynamodb" {
 resource "aws_iam_policy" "lambda_iam_policy_dynamodb" {
   for_each = data.aws_iam_policy_document.lambda_iam_policy_document_dynamodb
 
-  name = "${module.conventions.aws_naming_conventions.lambda_dynamodb_policy_name_prefix}-${each.key}-${var.settings.function_key}"
+  name = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-dynamodb-${each.key}-${var.settings.function_key}"
   description = "IAM policy for using a DynamoDB table from a lambda"
   policy      = each.value.json
 }

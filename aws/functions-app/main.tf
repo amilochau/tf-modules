@@ -87,7 +87,7 @@ module "lambda_functions" {
 # ===== COGNITO CLIENT FOR API =====
 
 #resource "aws_cognito_user_pool_client" "cognito_userpool_client_api" {
-#  name         = module.conventions.aws_naming_conventions.cognito_userpool_client_api_name
+#  name         = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-api"
 #  user_pool_id = data.aws_cognito_user_pools.cognito_userpool.ids[0]
 #  allowed_oauth_flows = [
 #    "code"

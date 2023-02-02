@@ -15,7 +15,6 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
       application  = var.conventions.application_name
       host         = var.conventions.host_name
       creator      = "AMI"

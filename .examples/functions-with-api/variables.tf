@@ -1,12 +1,10 @@
 variable "conventions" {
   description = "Conventions to use"
   type = object({
-    organization_name = string
     application_name  = string
     host_name         = string
   })
   default = {
-    organization_name = "mil"
     application_name  = "sample"
     host_name         = "default"
   }

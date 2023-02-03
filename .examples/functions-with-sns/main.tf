@@ -15,9 +15,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
-      creator      = "AMI"
+      application = var.conventions.application_name
+      host        = var.conventions.host_name
     }
   }
 }
@@ -40,12 +39,12 @@ module "functions_app" {
   ]
 
   lambda_settings = {
-    architecture         = "arm64"
-    runtime              = "nodejs18.x"
+    architecture = "arm64"
+    runtime      = "nodejs18.x"
     functions = {
       "get" = {
         deployment_file_path = "data/app.zip"
-        handler = "handler.get"
+        handler              = "handler.get"
         sns_trigger = {
           topic_name = aws_sns_topic.sns_topic.name
         }

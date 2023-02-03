@@ -15,9 +15,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
-      creator      = "AMI"
+      application = var.conventions.application_name
+      host        = var.conventions.host_name
     }
   }
 }
@@ -40,8 +39,8 @@ module "emails" {
   templates = {
     "template1" = {
       subject = "Welcome {{name}}!"
-      html = file("${path.module}/email-templates/template1/template.html")
-      text = file("${path.module}/email-templates/template1/template.txt")
+      html    = file("${path.module}/email-templates/template1/template.html")
+      text    = file("${path.module}/email-templates/template1/template.txt")
     }
   }
 }

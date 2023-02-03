@@ -1,8 +1,8 @@
 variable "conventions" {
   description = "Conventions to use"
   type = object({
-    application_name  = string
-    host_name         = string
+    application_name = string
+    host_name        = string
   })
 
   validation {
@@ -19,14 +19,14 @@ variable "conventions" {
 variable "lambda_settings" {
   description = "Settings to configuration the Lambda"
   type = object({
-    runtime              = string
-    architecture         = string
+    runtime      = string
+    architecture = string
 
     functions = map(object({
-      memory_size_mb = optional(number, 128)
-      timeout_s      = optional(number, 10)
-      deployment_file_path = string
-      handler        = string
+      memory_size_mb        = optional(number, 128)
+      timeout_s             = optional(number, 10)
+      deployment_file_path  = string
+      handler               = string
       environment_variables = optional(map(string), {})
       http_trigger = optional(object({
         method      = string
@@ -86,9 +86,9 @@ variable "lambda_settings" {
   validation {
     condition = alltrue([
       for v in var.lambda_settings.functions :
-        v.http_trigger != null && v.sns_trigger == null ||
-        v.http_trigger == null && v.sns_trigger != null ||
-        v.http_trigger == null && v.sns_trigger == null
+      v.http_trigger != null && v.sns_trigger == null ||
+      v.http_trigger == null && v.sns_trigger != null ||
+      v.http_trigger == null && v.sns_trigger == null
     ])
     error_message = "At most one trigger can be set for a function"
   }
@@ -106,19 +106,19 @@ variable "dynamodb_tables_settings" {
   description = "Settings to configure DynamoDB tables for the API"
   type = map(object({
     partition_key = string
-    sort_key = optional(string, null)
+    sort_key      = optional(string, null)
     attributes = optional(map(object({
       type = string
     })), {})
     ttl = optional(object({
-      enabled = bool
+      enabled        = bool
       attribute_name = optional(string, "ttl")
-    }), {
+      }), {
       enabled = false
     })
     global_secondary_indexes = optional(map(object({
-      partition_key = string
-      sort_key = string
+      partition_key      = string
+      sort_key           = string
       non_key_attributes = list(string)
     })), {})
   }))

@@ -1,8 +1,8 @@
 variable "conventions" {
   description = "Conventions to use"
   type = object({
-    application_name  = string
-    host_name         = string
+    application_name = string
+    host_name        = string
   })
 
   validation {
@@ -27,8 +27,8 @@ variable "templates" {
   description = "Email templates to use in SES"
   type = map(object({
     subject = string
-    html = string
-    text = string
+    html    = string
+    text    = string
   }))
 
   validation {

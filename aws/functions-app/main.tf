@@ -16,21 +16,21 @@ locals {
 module "cognito_clients" {
   source = "./cognito-clients"
 
-  conventions = var.conventions
-  clients_settings     = var.cognito_clients_settings
+  conventions      = var.conventions
+  clients_settings = var.cognito_clients_settings
 }
 
 module "dynamodb_tables" {
   for_each = var.dynamodb_tables_settings
-  source = "./dynamodb-table"
-  
+  source   = "./dynamodb-table"
+
   conventions = var.conventions
   table_settings = {
-    name = each.key
-    partition_key = each.value.partition_key
-    sort_key = each.value.sort_key
-    attributes = each.value.attributes
-    ttl = each.value.ttl
+    name                     = each.key
+    partition_key            = each.value.partition_key
+    sort_key                 = each.value.sort_key
+    attributes               = each.value.attributes
+    ttl                      = each.value.ttl
     global_secondary_indexes = each.value.global_secondary_indexes
   }
 }
@@ -53,13 +53,13 @@ module "lambda_functions" {
 
   conventions = var.conventions
   settings = {
-    runtime              = var.lambda_settings.runtime
-    architecture         = var.lambda_settings.architecture
-    function_key         = each.key
-    memory_size_mb       = each.value.memory_size_mb
-    timeout_s            = each.value.timeout_s
-    deployment_file_path = each.value.deployment_file_path
-    handler              = each.value.handler
+    runtime               = var.lambda_settings.runtime
+    architecture          = var.lambda_settings.architecture
+    function_key          = each.key
+    memory_size_mb        = each.value.memory_size_mb
+    timeout_s             = each.value.timeout_s
+    deployment_file_path  = each.value.deployment_file_path
+    handler               = each.value.handler
     environment_variables = each.value.environment_variables
     http_trigger = each.value.http_trigger == null ? null : {
       method      = each.value.http_trigger.method
@@ -77,9 +77,9 @@ module "lambda_functions" {
     authorizer_id     = local.has_http_triggers ? module.api_gateway_api[0].apigateway_authorizer_id : null
   }
   dynamodb_settings = {
-    for k, v in module.dynamodb_tables: k => {
+    for k, v in module.dynamodb_tables : k => {
       table_name = v.table_name
-      table_arn = v.table_arn
+      table_arn  = v.table_arn
     }
   }
 }

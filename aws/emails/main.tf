@@ -30,10 +30,10 @@ resource "aws_sns_topic" "notifications_topic" {
 resource "aws_ses_template" "templates" {
   for_each = var.templates
 
-  name = "${module.conventions.aws_naming_conventions.ses_template_name_prefix}-${each.key}"
+  name    = "${module.conventions.aws_naming_conventions.ses_template_name_prefix}-${each.key}"
   subject = each.value.subject
-  html = each.value.html
-  text = each.value.text
+  html    = each.value.html
+  text    = each.value.text
 }
 
 resource "aws_sesv2_configuration_set" "configuration_set" {
@@ -66,11 +66,11 @@ resource "aws_sesv2_configuration_set_event_destination" "configuration_set_even
 
 module "identities" {
   for_each = var.domains
-  source = "./identity"
+  source   = "./identity"
 
-  domain = each.key
+  domain                 = each.key
   configuration_set_name = aws_sesv2_configuration_set.configuration_set.configuration_set_name
-  mail_from_subdomain = each.value.mail_from_subdomain
+  mail_from_subdomain    = each.value.mail_from_subdomain
 }
 
 # ===== SES identities to SNS topic =====
@@ -117,6 +117,6 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
 }
 
 resource "aws_sns_topic_policy" "notification_topic_policy" {
-  arn = aws_sns_topic.notifications_topic.arn
+  arn    = aws_sns_topic.notifications_topic.arn
   policy = data.aws_iam_policy_document.sns_topic_iam_policy_document.json
 }

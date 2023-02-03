@@ -42,9 +42,9 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = merge(var.settings.environment_variables, {
-      "CONVENTION__PREFIX" = "${var.conventions.application_name}-${var.conventions.host_name}"
+      "CONVENTION__PREFIX"      = "${var.conventions.application_name}-${var.conventions.host_name}"
       "CONVENTION__APPLICATION" = var.conventions.application_name
-      "CONVENTION__HOST" = var.conventions.host_name
+      "CONVENTION__HOST"        = var.conventions.host_name
     })
   }
 }
@@ -103,7 +103,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_dynamodb" {
 resource "aws_iam_policy" "lambda_iam_policy_dynamodb" {
   for_each = data.aws_iam_policy_document.lambda_iam_policy_document_dynamodb
 
-  name = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-dynamodb-${each.key}-${var.settings.function_key}"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-dynamodb-${each.key}-${var.settings.function_key}"
   description = "IAM policy for using a DynamoDB table from a lambda"
   policy      = each.value.json
 }
@@ -144,7 +144,7 @@ module "sns_subscription" {
 
   function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name
-    function_arn    = aws_lambda_function.lambda_function.arn
+    function_arn  = aws_lambda_function.lambda_function.arn
   }
   sns_settings = {
     topic_name = var.settings.sns_trigger.topic_name

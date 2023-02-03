@@ -1,21 +1,21 @@
 variable "conventions" {
   description = "Conventions to use"
   type = object({
-    application_name  = string
-    host_name         = string
+    application_name = string
+    host_name        = string
   })
 }
 
 variable "settings" {
   description = "Settings to configuration the Lambda"
   type = object({
-    runtime              = string
-    architecture         = string
-    function_key         = string
-    memory_size_mb       = number
-    timeout_s            = number
-    deployment_file_path = string
-    handler              = string
+    runtime               = string
+    architecture          = string
+    function_key          = string
+    memory_size_mb        = number
+    timeout_s             = number
+    deployment_file_path  = string
+    handler               = string
     environment_variables = map(string)
     http_trigger = object({
       method      = string
@@ -42,6 +42,6 @@ variable "dynamodb_settings" {
   description = "Settings for the previously deployed DynamoDB"
   type = map(object({
     table_name = string
-    table_arn = string
+    table_arn  = string
   }))
 }

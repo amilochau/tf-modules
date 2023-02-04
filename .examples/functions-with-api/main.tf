@@ -30,6 +30,12 @@ module "functions_app" {
   source      = "../../aws/functions-app"
   conventions = var.conventions
 
+  cognito_clients_settings = {
+    "client" = {
+      purpose = "Web UI"
+    }
+  }
+
   lambda_settings = {
     architecture = "arm64"
     runtime      = "nodejs18.x"

@@ -23,6 +23,14 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_ses" {
         data.aws_caller_identity.caller_identity.account_id
       ]
     }
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+
+      values = [
+        var.function_arn
+      ]
+    }
     effect = "Allow"
   }
 }
@@ -39,7 +47,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_ses2" {
       "ses:SendTemplatedEmail"
     ]
     resources = [
-      data.aws_ses_domain_identity.ses_identity.arn
+      "*" # Allow to send emails to any email address
     ]
     effect = "Allow"
   }

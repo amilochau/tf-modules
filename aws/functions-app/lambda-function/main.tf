@@ -97,6 +97,7 @@ module "access_ses_identities" {
 
   conventions = var.conventions
   ses_domain = each.value
+  function_arn = aws_lambda_function.lambda_function.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_ses_identities" {

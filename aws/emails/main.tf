@@ -84,18 +84,15 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
     actions = [
       "sns:Publish",
     ]
+    resources = [
+      aws_sns_topic.notifications_topic.arn,
+    ]
     principals {
       type = "Service"
       identifiers = [
         "ses.amazonaws.com"
       ]
     }
-    effect = "Allow"
-
-    resources = [
-      aws_sns_topic.notifications_topic.arn,
-    ]
-
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceAccount"
@@ -104,7 +101,6 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
         data.aws_caller_identity.caller_identity.account_id
       ]
     }
-
     condition {
       test     = "ForAnyValue:StringEquals"
       variable = "AWS:SourceArn"
@@ -113,6 +109,7 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
         aws_sesv2_configuration_set.configuration_set.arn
       ]
     }
+    effect = "Allow"
   }
 }
 

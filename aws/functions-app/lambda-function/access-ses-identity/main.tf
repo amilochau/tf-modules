@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_ses" {
     }
     condition {
       test     = "StringEquals"
-      variable = "AWS:SourceArn"
+      variable = "aws:SourceArn" # Case is important here!
 
       values = [
         var.function_arn

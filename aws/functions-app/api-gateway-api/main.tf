@@ -37,7 +37,6 @@ resource "aws_apigatewayv2_authorizer" "apigateway_authorizer" {
   api_id           = aws_apigatewayv2_api.apigateway_api.id
   authorizer_type  = "JWT"
   identity_sources = ["$request.header.Authorization"]
-  authorizer_payload_format_version = "2.0"
 
   jwt_configuration {
     audience = local.apigateway_authorizer_audience

@@ -16,6 +16,7 @@ locals {
     dynamodb_table_name_prefix          = "${local.aws_default_base.prefix}-table"             # aws_dynamodb_table
     iam_policy_name_prefix              = "${local.aws_default_base.prefix}-policy"            # aws_iam_policy
     iam_role_name_prefix                = "${local.aws_default_base.prefix}-role"              # aws_iam_role
+    ses_identity_policy_name_prefix     = "${local.aws_default_base.prefix}-ses-policy"        # aws_ses_identity_policy
     lambda_function_name_prefix         = "${local.aws_default_base.prefix}-fn"                # aws_lambda_function
     s3_bucket_name                      = "${local.aws_default_base.prefix}-bucket"            # aws_s3_bucket
     ses_template_name_prefix            = "${local.aws_default_base.prefix}-template"          # aws_ses_template

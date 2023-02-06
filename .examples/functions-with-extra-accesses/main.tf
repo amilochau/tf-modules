@@ -30,12 +30,6 @@ module "functions_app" {
   source      = "../../aws/functions-app"
   conventions = var.conventions
 
-  extra_accesses_settings = {
-    ses = [{
-      domain = "dev.milochau.com"
-    }]
-  }
-
   lambda_settings = {
     architecture = "arm64"
     runtime      = "nodejs18.x"
@@ -48,6 +42,9 @@ module "functions_app" {
           method = "GET"
           route  = "/{proxy+}"
         }
+        ses_accesses = [{
+          domain = "dev.milochau.com"
+        }]
       }
     }
   }

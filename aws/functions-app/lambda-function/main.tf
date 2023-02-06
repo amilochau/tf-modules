@@ -82,13 +82,21 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_log
   policy_arn = aws_iam_policy.lambda_iam_policy_logging.arn
 }
 
-# ===== LAMBDA ACCESSES
+# ===== LAMBDA IAM POLICY ACCESSES
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments" {
-  for_each = { for k, v in var.accesses_settings: k => v }  
+  for_each = { for k, v in var.accesses_settings.iam_policy_arns: k => v }
 
   role       = aws_iam_role.lambda_iam_role.name
-  policy_arn = each.value.iam_policy_arn
+  policy_arn = each.value
+}
+
+module "access_ses_identities" {
+  for_each = { for k, v in var.accesses_settings.ses_domains: k => v }
+  source = "./access-ses-identity"
+
+  conventions = var.conventions
+  ses_domain = each.value
 }
 
 # ===== API GATEWAY TRIGGER =====

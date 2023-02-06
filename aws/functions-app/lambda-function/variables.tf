@@ -40,7 +40,8 @@ variable "triggers_settings" {
 
 variable "accesses_settings" {
   description = "Settings for the accesses to grant to the Function"
-  type = list(object({
-    iam_policy_arn = string
-  }))
+  type = object({
+    iam_policy_arns = list(string)
+    ses_domains = list(string)
+  })
 }

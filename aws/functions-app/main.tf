@@ -76,25 +76,10 @@ module "lambda_functions" {
       topic_name = each.value.sns_trigger.topic_name
     }]
   }
-  accesses_settings = concat([
-    for k, v in module.dynamodb_tables : {
-      iam_policy_arn = v.iam_policy_arn
-    }
-  ], [
-    for k, v in module.access_ses_accounts : {
-      iam_policy_arn = v.iam_policy_arn
-    }
-  ])
-}
-
-# ===== EXTRA ACCESSES =====
-
-module "access_ses_accounts" {
-  for_each = { for k, v in var.extra_accesses_settings.ses: k => v }
-  source = "./access-ses-identity"
-  
-  conventions = var.conventions
-  ses_domain = each.value.domain
+  accesses_settings = {
+    iam_policy_arns = [ for k, v in module.dynamodb_tables : v.iam_policy_arn ]
+    ses_domains = [ for k, v in each.value.ses_accesses : v.domain ]
+  }
 }
 
 # ===== COGNITO CLIENT FOR API =====

@@ -99,6 +99,13 @@ module "access_ses_identities" {
   ses_domain = each.value
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_ses_identities" {
+  for_each = { for k, v in module.access_ses_identities: k => v }
+
+  role       = aws_iam_role.lambda_iam_role.name
+  policy_arn = each.value.iam_policy_arn
+}
+
 # ===== API GATEWAY TRIGGER =====
 
 module "trigger_api_gateway_routes" {

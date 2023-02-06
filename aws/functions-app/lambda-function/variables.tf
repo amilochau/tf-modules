@@ -6,7 +6,7 @@ variable "conventions" {
   })
 }
 
-variable "settings" {
+variable "function_settings" {
   description = "Settings to configuration the Lambda"
   type = object({
     runtime               = string
@@ -17,31 +17,30 @@ variable "settings" {
     deployment_file_path  = string
     handler               = string
     environment_variables = map(string)
-    http_trigger = object({
+  })
+}
+
+variable "triggers_settings" {
+  description = "Settings for the triggers in front of the Function"
+  type = object({
+    api_gateway_routes = list(object({
+      api_id            = string
+      api_execution_arn = string
+      authorizer_id     = string
       method      = string
       route       = string
       anonymous   = bool
       enable_cors = bool
-    })
-    sns_trigger = object({
+    }))
+    sns_topics = list(object({
       topic_name = string
-    })
+    }))
   })
 }
 
-variable "apigateway_settings" {
-  description = "Settings for the previously deployed API Gateway v2"
-  type = object({
-    api_id            = string
-    api_execution_arn = string
-    authorizer_id     = string
-  })
-}
-
-variable "dynamodb_settings" {
-  description = "Settings for the previously deployed DynamoDB"
-  type = map(object({
-    table_name = string
-    table_arn  = string
+variable "accesses_settings" {
+  description = "Settings for the accesses to grant to the Function"
+  type = list(object({
+    iam_policy_arn = string
   }))
 }

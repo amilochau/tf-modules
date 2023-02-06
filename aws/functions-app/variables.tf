@@ -131,3 +131,13 @@ variable "dynamodb_tables_settings" {
     error_message = "Table key must use only lowercase letters, numbers and underscores ('_')"
   }
 }
+
+variable "extra_accesses_settings" {
+  description = "Settings to configure accesses to external, existing resources"
+  type = object({
+    ses = optional(list(object({
+      domain = string
+    })), [])
+  })
+  default = {}
+}

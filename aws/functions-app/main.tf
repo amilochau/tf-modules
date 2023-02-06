@@ -52,7 +52,7 @@ module "lambda_functions" {
   source   = "./lambda-function"
 
   conventions = var.conventions
-  settings = {
+  function_settings = {
     runtime               = var.lambda_settings.runtime
     architecture          = var.lambda_settings.architecture
     function_key          = each.key
@@ -61,27 +61,40 @@ module "lambda_functions" {
     deployment_file_path  = each.value.deployment_file_path
     handler               = each.value.handler
     environment_variables = each.value.environment_variables
-    http_trigger = each.value.http_trigger == null ? null : {
+  }
+  triggers_settings = {
+    api_gateway_routes = each.value.http_trigger == null ? [] : [{
+      api_id            = module.api_gateway_api[0].apigateway_api_id
+      api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
+      authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
       method      = each.value.http_trigger.method
       route       = each.value.http_trigger.route
       anonymous   = each.value.http_trigger.anonymous
       enable_cors = each.value.http_trigger.enable_cors
-    }
-    sns_trigger = each.value.sns_trigger == null ? null : {
+    }]
+    sns_topics = each.value.sns_trigger == null ? [] : [{
       topic_name = each.value.sns_trigger.topic_name
+    }]
+  }
+  accesses_settings = concat([
+    for k, v in module.dynamodb_tables : {
+      iam_policy_arn = v.iam_policy_arn
     }
-  }
-  apigateway_settings = {
-    api_id            = local.has_http_triggers ? module.api_gateway_api[0].apigateway_api_id : null
-    api_execution_arn = local.has_http_triggers ? module.api_gateway_api[0].apigateway_api_execution_arn : null
-    authorizer_id     = local.has_http_triggers ? module.api_gateway_api[0].apigateway_authorizer_id : null
-  }
-  dynamodb_settings = {
-    for k, v in module.dynamodb_tables : k => {
-      table_name = v.table_name
-      table_arn  = v.table_arn
+  ], [
+    for k, v in module.access_ses_accounts : {
+      iam_policy_arn = v.iam_policy_arn
     }
-  }
+  ])
+}
+
+# ===== EXTRA ACCESSES =====
+
+module "access_ses_accounts" {
+  for_each = { for k, v in var.extra_accesses_settings.ses: k => v }
+  source = "./access-ses-identity"
+  
+  conventions = var.conventions
+  ses_domain = each.value.domain
 }
 
 # ===== COGNITO CLIENT FOR API =====

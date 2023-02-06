@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document" {
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
-  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-lambda-${var.settings.function_key}"
+  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-lambda-${var.function_settings.function_key}"
   description        = "IAM role used by the lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document.json
 }
@@ -29,19 +29,19 @@ resource "aws_iam_role" "lambda_iam_role" {
 # ===== LAMBDA =====
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.settings.function_key}"
+  function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
   role          = aws_iam_role.lambda_iam_role.arn
 
-  filename         = var.settings.deployment_file_path
-  source_code_hash = filebase64sha256(var.settings.deployment_file_path)
-  runtime          = var.settings.runtime
-  architectures    = [var.settings.architecture]
-  timeout          = var.settings.timeout_s
-  memory_size      = var.settings.memory_size_mb
-  handler          = var.settings.handler
+  filename         = var.function_settings.deployment_file_path
+  source_code_hash = filebase64sha256(var.function_settings.deployment_file_path)
+  runtime          = var.function_settings.runtime
+  architectures    = [var.function_settings.architecture]
+  timeout          = var.function_settings.timeout_s
+  memory_size      = var.function_settings.memory_size_mb
+  handler          = var.function_settings.handler
 
   environment {
-    variables = merge(var.settings.environment_variables, {
+    variables = merge(var.function_settings.environment_variables, {
       "CONVENTION__PREFIX"      = "${var.conventions.application_name}-${var.conventions.host_name}"
       "CONVENTION__APPLICATION" = var.conventions.application_name
       "CONVENTION__HOST"        = var.conventions.host_name
@@ -49,7 +49,14 @@ resource "aws_lambda_function" "lambda_function" {
   }
 }
 
-# ===== LAMBDA LOGGING =====
+# ===== CLOUDWATCH LOG GROUP =====
+
+resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
+  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
+}
+
+# ===== LAMBDA ACCESS TO LOG GROUP =====
 
 data "aws_iam_policy_document" "lambda_iam_policy_document_logging" {
   statement {
@@ -64,13 +71,8 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_logging" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
-  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
-}
-
 resource "aws_iam_policy" "lambda_iam_policy_logging" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-logging-${var.settings.function_key}"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-logging-${var.function_settings.function_key}"
   description = "IAM policy for logging from a lambda"
   policy      = data.aws_iam_policy_document.lambda_iam_policy_document_logging.json
 }
@@ -80,73 +82,37 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_log
   policy_arn = aws_iam_policy.lambda_iam_policy_logging.arn
 }
 
-# ===== LAMBDA ACCESS TO DYNAMODB
+# ===== LAMBDA ACCESSES
 
-data "aws_iam_policy_document" "lambda_iam_policy_document_dynamodb" {
-  for_each = var.dynamodb_settings
-  statement {
-    actions = [
-      "dynamodb:Query",
-      "dynamodb:Scan",
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:UpdateItem",
-      "dynamodb:DeleteItem"
-    ]
-    resources = [
-      each.value.table_arn
-    ]
-    effect = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "lambda_iam_policy_dynamodb" {
-  for_each = data.aws_iam_policy_document.lambda_iam_policy_document_dynamodb
-
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-dynamodb-${each.key}-${var.settings.function_key}"
-  description = "IAM policy for using a DynamoDB table from a lambda"
-  policy      = each.value.json
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_dynamodb" {
-  for_each = aws_iam_policy.lambda_iam_policy_dynamodb
+resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments" {
+  for_each = { for k, v in var.accesses_settings: k => v }  
 
   role       = aws_iam_role.lambda_iam_role.name
-  policy_arn = each.value.arn
+  policy_arn = each.value.iam_policy_arn
 }
 
-# ===== API GATEWAY ROUTE =====
+# ===== API GATEWAY TRIGGER =====
 
-module "api_gateway_route" {
-  count  = var.settings.http_trigger != null ? 1 : 0
-  source = "./api-gateway-route"
+module "trigger_api_gateway_routes" {
+  for_each = { for k, v in var.triggers_settings.api_gateway_routes: k => v }  
+  source = "./trigger-api-gateway-route"
 
   function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name
     invoke_arn    = aws_lambda_function.lambda_function.invoke_arn
-    method        = var.settings.http_trigger.method
-    route         = var.settings.http_trigger.route
-    anonymous     = var.settings.http_trigger.anonymous
-    enable_cors   = var.settings.http_trigger.enable_cors
   }
-  apigateway_settings = {
-    api_id            = var.apigateway_settings.api_id
-    api_execution_arn = var.apigateway_settings.api_execution_arn
-    authorizer_id     = var.apigateway_settings.authorizer_id
-  }
+  api_gateway_settings = each.value
 }
 
 # ===== SNS TRIGGER =====
 
-module "sns_subscription" {
-  count  = var.settings.sns_trigger != null ? 1 : 0
-  source = "./sns-topic-subscription"
+module "trigger_sns_topics" {
+  for_each = { for k, v in var.triggers_settings.sns_topics: k => v }
+  source = "./trigger-sns-topic"
 
   function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name
     function_arn  = aws_lambda_function.lambda_function.arn
   }
-  sns_settings = {
-    topic_name = var.settings.sns_trigger.topic_name
-  }
+  sns_settings = each.value
 }

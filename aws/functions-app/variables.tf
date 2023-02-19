@@ -25,6 +25,7 @@ variable "lambda_settings" {
     functions = map(object({
       memory_size_mb        = optional(number, 128)
       timeout_s             = optional(number, 10)
+      deployment_source_file_path  = string
       deployment_file_path  = string
       handler               = string
       environment_variables = optional(map(string), {})

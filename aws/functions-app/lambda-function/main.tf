@@ -28,7 +28,16 @@ resource "aws_iam_role" "lambda_iam_role" {
 
 # ===== LAMBDA =====
 
+data "archive_file" "package_files" {
+  type = "zip"
+  source_file = var.function_settings.deployment_source_file_path
+  output_path = var.function_settings.deployment_file_path
+}
+
 resource "aws_lambda_function" "lambda_function" {
+  depends_on = [
+    data.archive_file.package_files
+  ]
   function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
   role          = aws_iam_role.lambda_iam_role.arn
 

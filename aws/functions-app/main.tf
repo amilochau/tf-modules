@@ -58,6 +58,7 @@ module "lambda_functions" {
     function_key          = each.key
     memory_size_mb        = each.value.memory_size_mb
     timeout_s             = each.value.timeout_s
+    deployment_source_file_path = each.value.deployment_source_file_path
     deployment_file_path  = each.value.deployment_file_path
     handler               = each.value.handler
     environment_variables = each.value.environment_variables

@@ -41,6 +41,7 @@ module "functions_app" {
     runtime      = "nodejs18.x"
     functions = {
       "get" = {
+        deployment_source_file_path = "data/get.js"
         deployment_file_path = "data/app.zip"
         handler              = "handler.get"
         http_trigger = {

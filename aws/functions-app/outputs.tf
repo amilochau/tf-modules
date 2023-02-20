@@ -5,5 +5,5 @@ output "apigateway_invoke_domain" {
 
 output "apigateway_invoke_origin_path" {
   description = "Invoke URL of the default API Gateway stage"
-  value       = module.api_gateway_api.apigateway_stage_name
+  value       = local.has_http_triggers ? "/${module.api_gateway_api[0].apigateway_stage_name}" : ""
 }

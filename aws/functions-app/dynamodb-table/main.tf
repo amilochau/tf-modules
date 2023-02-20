@@ -66,7 +66,8 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_dynamodb" {
       "dynamodb:DeleteItem"
     ]
     resources = [
-      aws_dynamodb_table.dynamodb_table.arn
+      aws_dynamodb_table.dynamodb_table.arn,
+      "${aws_dynamodb_table.dynamodb_table.arn}/*"
     ]
     effect = "Allow"
   }

@@ -18,6 +18,11 @@ output "apigateway_invoke_url" {
   value       = aws_apigatewayv2_stage.apigateway_stage.invoke_url
 }
 
+output "apigateway_invoke_domain" {
+  description = "Invoke URL of the default API Gateway stage"
+  value       = regex(module.conventions.aws_format_conventions.urlparse_regex, aws_apigatewayv2_stage.apigateway_stage.invoke_url).authority
+}
+
 output "apigateway_stage_name" {
   description = "Name of the default API Gateway stage"
   value       = aws_apigatewayv2_stage.apigateway_stage.name

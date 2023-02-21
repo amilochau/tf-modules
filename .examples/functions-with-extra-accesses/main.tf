@@ -39,10 +39,10 @@ module "functions_app" {
         deployment_source_file_path = "data/get.js"
         deployment_file_path = "data/app.zip"
         handler              = "handler.get"
-        http_trigger = {
+        http_triggers = [{
           method = "GET"
           route  = "/{proxy+}"
-        }
+        }]
         ses_accesses = [{
           domain = "dev.milochau.com"
         }]

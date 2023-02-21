@@ -10,7 +10,7 @@ terraform {
 }
 
 locals {
-  has_http_triggers = anytrue([for v in var.lambda_settings.functions : v.http_trigger != null])
+  has_http_triggers = anytrue([for v in var.lambda_settings.functions : length(v.http_triggers) > 0])
 }
 
 module "cognito_clients" {
@@ -40,7 +40,7 @@ module "api_gateway_api" {
   source = "./api-gateway-api"
 
   conventions       = var.conventions
-  enable_authorizer = anytrue([for v in var.lambda_settings.functions : !v.http_trigger.anonymous if v.http_trigger != null])
+  enable_authorizer = anytrue([for v in var.lambda_settings.functions : anytrue([for v2 in v.http_triggers : !v2.anonymous]) if length(v.http_triggers) > 0])
   cognito_settings = {
     user_pool_id = module.cognito_clients.cognito_user_pool_id
     client_ids   = module.cognito_clients.cognito_client_ids
@@ -64,17 +64,17 @@ module "lambda_functions" {
     environment_variables = each.value.environment_variables
   }
   triggers_settings = {
-    api_gateway_routes = each.value.http_trigger == null ? [] : [{
+    api_gateway_routes = [ for v in each.value.http_triggers : {
       api_id            = module.api_gateway_api[0].apigateway_api_id
       api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
       authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
-      method      = each.value.http_trigger.method
-      route       = each.value.http_trigger.route
-      anonymous   = each.value.http_trigger.anonymous
-      enable_cors = each.value.http_trigger.enable_cors
+      method      = v.method
+      route       = v.route
+      anonymous   = v.anonymous
+      enable_cors = v.enable_cors
     }]
-    sns_topics = each.value.sns_trigger == null ? [] : [{
-      topic_name = each.value.sns_trigger.topic_name
+    sns_topics = [ for v in each.value.sns_triggers : {
+      topic_name = v.topic_name
     }]
   }
   accesses_settings = {

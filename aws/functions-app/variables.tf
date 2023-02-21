@@ -29,15 +29,15 @@ variable "lambda_settings" {
       deployment_file_path  = string
       handler               = string
       environment_variables = optional(map(string), {})
-      http_trigger = optional(object({
+      http_triggers = optional(list(object({
         method      = string
         route       = string
         anonymous   = optional(bool, false)
         enable_cors = optional(bool, false)
-      }), null)
-      sns_trigger = optional(object({
+      })), [])
+      sns_triggers = optional(list(object({
         topic_name = string
-      }), null)
+      })), [])
       ses_accesses = optional(list(object({
         domain = string
       })), [])
@@ -75,7 +75,9 @@ variable "lambda_settings" {
 
   validation {
     condition = alltrue([
-      for v in var.lambda_settings.functions : contains(["ANY", "GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"], v.http_trigger.method) if v.http_trigger != null
+      for v in var.lambda_settings.functions : alltrue([
+        for v2 in v.http_triggers : contains(["ANY", "GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"], v2.method)
+      ]) if length(v.http_triggers) > 0
     ])
     error_message = "Function HTTP trigger methods must be one of ANY, GET, POST, PUT, PATCH, HEAD, DELETE"
   }
@@ -85,16 +87,6 @@ variable "lambda_settings" {
       for v in var.lambda_settings.functions : v.timeout_s >= 1 && v.timeout_s <= 900
     ])
     error_message = "Memory size must be between 1 second and 900 seconds"
-  }
-
-  validation {
-    condition = alltrue([
-      for v in var.lambda_settings.functions :
-      v.http_trigger != null && v.sns_trigger == null ||
-      v.http_trigger == null && v.sns_trigger != null ||
-      v.http_trigger == null && v.sns_trigger == null
-    ])
-    error_message = "At most one trigger can be set for a function"
   }
 }
 

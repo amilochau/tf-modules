@@ -46,9 +46,9 @@ module "functions_app" {
         deployment_source_file_path = "data/get.js"
         deployment_file_path = "data/app.zip"
         handler              = "handler.get"
-        sns_trigger = {
+        sns_triggers = [{
           topic_name = aws_sns_topic.sns_topic.name
-        }
+        }]
       }
     }
   }

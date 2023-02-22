@@ -35,14 +35,11 @@ data "archive_file" "package_files" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  depends_on = [
-    data.archive_file.package_files
-  ]
   function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
   role          = aws_iam_role.lambda_iam_role.arn
 
-  filename         = var.function_settings.deployment_file_path
-  source_code_hash = filebase64sha256(var.function_settings.deployment_file_path)
+  filename         = data.archive_file.package_files.output_path
+  source_code_hash = data.archive_file.package_files.output_base64sha256
   runtime          = var.function_settings.runtime
   architectures    = [var.function_settings.architecture]
   timeout          = var.function_settings.timeout_s

@@ -1,7 +1,6 @@
 variable "function_settings" {
   description = "Settings to use for the API Gateway route"
   type = object({
-    function_name = string
     invoke_arn    = string
   })
 }

@@ -115,6 +115,15 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_se
 
 # ===== API GATEWAY TRIGGER =====
 
+resource "aws_lambda_permission" "apigateway_permission" {
+  count = length(var.triggers_settings.api_gateway_routes) > 0 ? 1 : 0
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/default/*" # Allow invocation from the '$default' stage, any method, any resource path @todo restrict that?
+}
+
 module "trigger_api_gateway_routes" {
   for_each = { for k, v in var.triggers_settings.api_gateway_routes: k => v }  
   source = "./trigger-api-gateway-route"

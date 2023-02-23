@@ -8,14 +8,6 @@ resource "aws_apigatewayv2_integration" "apigateway_integration" {
   payload_format_version = "2.0"
 }
 
-resource "aws_lambda_permission" "apigateway_permission" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = var.function_settings.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.api_gateway_settings.api_execution_arn}/*/*" # Allow invocation from any stage, any method, any resource path @todo restrict that?
-}
-
 resource "aws_apigatewayv2_route" "apigateway_route_cors" {
   count     = var.api_gateway_settings.enable_cors ? 1 : 0
   api_id    = var.api_gateway_settings.api_id

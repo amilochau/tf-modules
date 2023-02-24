@@ -9,15 +9,15 @@ variable "conventions" {
 variable "function_settings" {
   description = "Settings to configuration the Lambda"
   type = object({
-    runtime               = string
-    architecture          = string
-    function_key          = string
-    memory_size_mb        = number
-    timeout_s             = number
+    runtime                     = string
+    architecture                = string
+    function_key                = string
+    memory_size_mb              = number
+    timeout_s                   = number
     deployment_source_file_path = string
-    deployment_file_path  = string
-    handler               = string
-    environment_variables = map(string)
+    deployment_file_path        = string
+    handler                     = string
+    environment_variables       = map(string)
   })
 }
 
@@ -28,10 +28,10 @@ variable "triggers_settings" {
       api_id            = string
       api_execution_arn = string
       authorizer_id     = string
-      method      = string
-      route       = string
-      anonymous   = bool
-      enable_cors = bool
+      method            = string
+      route             = string
+      anonymous         = bool
+      enable_cors       = bool
     }))
     sns_topics = list(object({
       topic_name = string
@@ -43,6 +43,6 @@ variable "accesses_settings" {
   description = "Settings for the accesses to grant to the Function"
   type = object({
     iam_policy_arns = list(string)
-    ses_domains = list(string)
+    ses_domains     = list(string)
   })
 }

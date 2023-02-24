@@ -1,0 +1,20 @@
+name: Build
+run-name: Build - ${{ github.ref }}
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build_iac:
+    name: Build IaC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate Terraform files
+        shell: pwsh
+        run: ${{ github.action_path }}/build_iac.ps1

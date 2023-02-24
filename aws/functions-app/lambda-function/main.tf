@@ -29,7 +29,7 @@ resource "aws_iam_role" "lambda_iam_role" {
 # ===== LAMBDA =====
 
 data "archive_file" "package_files" {
-  type = "zip"
+  type        = "zip"
   source_file = var.function_settings.deployment_source_file_path
   output_path = var.function_settings.deployment_file_path
 }
@@ -91,23 +91,23 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_log
 # ===== LAMBDA IAM POLICY ACCESSES
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments" {
-  for_each = { for k, v in var.accesses_settings.iam_policy_arns: k => v }
+  for_each = { for k, v in var.accesses_settings.iam_policy_arns : k => v }
 
   role       = aws_iam_role.lambda_iam_role.name
   policy_arn = each.value
 }
 
 module "access_ses_identities" {
-  for_each = { for k, v in var.accesses_settings.ses_domains: k => v }
-  source = "./access-ses-identity"
+  for_each = { for k, v in var.accesses_settings.ses_domains : k => v }
+  source   = "./access-ses-identity"
 
-  conventions = var.conventions
-  ses_domain = each.value
+  conventions  = var.conventions
+  ses_domain   = each.value
   function_arn = aws_lambda_function.lambda_function.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_ses_identities" {
-  for_each = { for k, v in module.access_ses_identities: k => v }
+  for_each = { for k, v in module.access_ses_identities : k => v }
 
   role       = aws_iam_role.lambda_iam_role.name
   policy_arn = each.value.iam_policy_arn
@@ -116,7 +116,7 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_se
 # ===== API GATEWAY TRIGGER =====
 
 resource "aws_lambda_permission" "apigateway_permission" {
-  count = length(var.triggers_settings.api_gateway_routes) > 0 ? 1 : 0
+  count         = length(var.triggers_settings.api_gateway_routes) > 0 ? 1 : 0
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function.function_name
@@ -125,8 +125,8 @@ resource "aws_lambda_permission" "apigateway_permission" {
 }
 
 module "trigger_api_gateway_routes" {
-  for_each = { for k, v in var.triggers_settings.api_gateway_routes: k => v }  
-  source = "./trigger-api-gateway-route"
+  for_each = { for k, v in var.triggers_settings.api_gateway_routes : k => v }
+  source   = "./trigger-api-gateway-route"
 
   function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name
@@ -138,8 +138,8 @@ module "trigger_api_gateway_routes" {
 # ===== SNS TRIGGER =====
 
 module "trigger_sns_topics" {
-  for_each = { for k, v in var.triggers_settings.sns_topics: k => v }
-  source = "./trigger-sns-topic"
+  for_each = { for k, v in var.triggers_settings.sns_topics : k => v }
+  source   = "./trigger-sns-topic"
 
   function_settings = {
     function_name = aws_lambda_function.lambda_function.function_name

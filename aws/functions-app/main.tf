@@ -53,33 +53,33 @@ module "lambda_functions" {
 
   conventions = var.conventions
   function_settings = {
-    runtime               = var.lambda_settings.runtime
-    architecture          = var.lambda_settings.architecture
-    function_key          = each.key
-    memory_size_mb        = each.value.memory_size_mb
-    timeout_s             = each.value.timeout_s
+    runtime                     = var.lambda_settings.runtime
+    architecture                = var.lambda_settings.architecture
+    function_key                = each.key
+    memory_size_mb              = each.value.memory_size_mb
+    timeout_s                   = each.value.timeout_s
     deployment_source_file_path = each.value.deployment_source_file_path
-    deployment_file_path  = each.value.deployment_file_path
-    handler               = each.value.handler
-    environment_variables = each.value.environment_variables
+    deployment_file_path        = each.value.deployment_file_path
+    handler                     = each.value.handler
+    environment_variables       = each.value.environment_variables
   }
   triggers_settings = {
-    api_gateway_routes = [ for v in each.value.http_triggers : {
+    api_gateway_routes = [for v in each.value.http_triggers : {
       api_id            = module.api_gateway_api[0].apigateway_api_id
       api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
       authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
-      method      = v.method
-      route       = v.route
-      anonymous   = v.anonymous
-      enable_cors = v.enable_cors
+      method            = v.method
+      route             = v.route
+      anonymous         = v.anonymous
+      enable_cors       = v.enable_cors
     }]
-    sns_topics = [ for v in each.value.sns_triggers : {
+    sns_topics = [for v in each.value.sns_triggers : {
       topic_name = v.topic_name
     }]
   }
   accesses_settings = {
-    iam_policy_arns = [ for k, v in module.dynamodb_tables : v.iam_policy_arn ]
-    ses_domains = [ for k, v in each.value.ses_accesses : v.domain ]
+    iam_policy_arns = [for k, v in module.dynamodb_tables : v.iam_policy_arn]
+    ses_domains     = [for k, v in each.value.ses_accesses : v.domain]
   }
 }
 

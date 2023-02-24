@@ -23,10 +23,10 @@ locals {
     ses_configuration_set_name          = "${local.aws_default_base.prefix}-configuration-set" # aws_sesv2_configuration_set
     sns_topic_name_prefix               = "${local.aws_default_base.prefix}-topic"             # aws_sns_topic
 
-    cloudfront_distribution_comment = "${local.aws_default_base.prefix}-cf" # aws_cloudfront_distribution
-    cloudfront_origin_access_control_name = "${local.aws_default_base.prefix}-cf-oac"  # aws_cloudfront_origin_access_control
-    cloudfront_cache_policy_name = "${local.aws_default_base.prefix}-cf-cache-policy" # aws_cloudfront_cache_policy
-    cloudfront_origin_request_policy_name = "${local.aws_default_base.prefix}-cf-request-policy" # aws_cloudfront_origin_request_policy
+    cloudfront_distribution_comment        = "${local.aws_default_base.prefix}-cf"                 # aws_cloudfront_distribution
+    cloudfront_origin_access_control_name  = "${local.aws_default_base.prefix}-cf-oac"             # aws_cloudfront_origin_access_control
+    cloudfront_cache_policy_name           = "${local.aws_default_base.prefix}-cf-cache-policy"    # aws_cloudfront_cache_policy
+    cloudfront_origin_request_policy_name  = "${local.aws_default_base.prefix}-cf-request-policy"  # aws_cloudfront_origin_request_policy
     cloudfront_response_header_policy_name = "${local.aws_default_base.prefix}-cf-response-policy" # aws_cloudfront_response_headers_policy
   }
 }
@@ -37,9 +37,9 @@ locals {
   }
 
   aws_existing = {
-    cognito_userpool_name = "identity-${local.aws_environment_base.host}-userpool"
-    cloudfront_cache_policy_disabled_id    = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"                                                                                  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
-    cloudfront_cache_policy_optimized_id   = "658327ea-f89d-4fab-a63d-7e88639e58f6"                                                                                  # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
+    cognito_userpool_name                = "identity-${local.aws_environment_base.host}-userpool"
+    cloudfront_cache_policy_disabled_id  = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
+    cloudfront_cache_policy_optimized_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
   }
 }
 
@@ -48,6 +48,6 @@ locals {
     cloudwatch_log_group_retention_days = 30
     mime_types                          = jsondecode(file("${path.module}/data/mime.json"))
     apigateway_accesslog_format         = jsonencode(file("${path.module}/data/apigateway_accesslog_format.json"))
-    urlparse_regex = "(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?" # https://github.com/hashicorp/terraform/issues/23893
+    urlparse_regex                      = "(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?" # https://github.com/hashicorp/terraform/issues/23893
   }
 }

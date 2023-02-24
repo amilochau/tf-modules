@@ -36,9 +36,9 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_ses" {
 }
 
 resource "aws_ses_identity_policy" "lambda_ses_identity_policy" {
-  identity    = data.aws_ses_domain_identity.ses_identity.arn
-  name        = "${module.conventions.aws_naming_conventions.ses_identity_policy_name_prefix}-lambda-ses-${replace(var.ses_domain, ".", "_")}"
-  policy      = data.aws_iam_policy_document.lambda_iam_policy_document_ses.json
+  identity = data.aws_ses_domain_identity.ses_identity.arn
+  name     = "${module.conventions.aws_naming_conventions.ses_identity_policy_name_prefix}-lambda-ses-${replace(var.ses_domain, ".", "_")}"
+  policy   = data.aws_iam_policy_document.lambda_iam_policy_document_ses.json
 }
 
 data "aws_iam_policy_document" "lambda_iam_policy_document_ses2" {

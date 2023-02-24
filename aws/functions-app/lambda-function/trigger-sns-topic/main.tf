@@ -4,8 +4,8 @@ data "aws_sns_topic" "sns_topic" {
 
 resource "aws_sns_topic_subscription" "sns_topic_subscription" {
   topic_arn = data.aws_sns_topic.sns_topic.arn
-  protocol = "lambda"
-  endpoint = var.function_settings.function_arn
+  protocol  = "lambda"
+  endpoint  = var.function_settings.function_arn
 }
 
 resource "aws_lambda_permission" "sns_topic_permission" {

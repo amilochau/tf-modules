@@ -9,12 +9,18 @@ on:
     branches:
     - main
 
+env:
+  IAC_PATH: '.example'
+  IAC_DEPTH: 2
+
 jobs:
   build_iac:
-    name: Build IaC
+    name: Build (IaC)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Validate Terraform files
-        shell: pwsh
-        run: ./.github/workflows/build_iac.ps1
+      - name: Build and test projects
+        uses: amilochau/github-actions/build/terraform@v3
+        with:
+          modulesPath: ${{ env.IAC_PATH }}
+          modulesPathDepth: ${{ env.IAC_DEPTH }}

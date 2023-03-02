@@ -37,8 +37,10 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
     }
     condition {
       test = "StringEquals"
-      variable = "tokens.actions.githubusercontent.com:aud"
-      values = ["sts.amazonaws.com"]
+      variable = "token.actions.githubusercontent.com:aud"
+      values = [
+        "sts.amazonaws.com"
+      ]
     }
     condition {
       test = "StringLike"

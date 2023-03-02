@@ -2,7 +2,7 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = ">= 5.15.0, < 6.0.0"
+      version = ">= 5.18.0, < 6.0.0"
     }
   }
 
@@ -102,15 +102,14 @@ resource "github_issue_label" "repository_issue_label" {
 }
 
 resource "github_repository_environment" "repository_environment" {
-  # @todo only if public
-  for_each = var.repository_environments
+  for_each = local.advanced_features ? var.repository_environments : {}
 
   repository  = github_repository.repository.name
   environment = each.key
 
   deployment_branch_policy {
     protected_branches     = each.value.protected_branches_only
-    custom_branch_policies = false
+    custom_branch_policies = !each.value.protected_branches_only
   }
 
   reviewers {

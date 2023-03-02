@@ -63,12 +63,13 @@ resource "aws_iam_role" "iam_role" {
 data "aws_iam_policy_document" "iam_policy_document_github" {
   statement {
     actions = [
-      
+      "*"
     ]
     resources = [
       "*"
     ]
     # @todo add condition here - see https://dev.to/mmiranda/github-actions-authenticating-on-aws-using-oidc-3d2n
+    # See also https://docs.aws.amazon.com/IAM/latest/UserGuide/access_iam-tags.html#access_iam-tags
     effect = "Allow"
   }
 }

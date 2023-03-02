@@ -3,6 +3,9 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
     }
+    github = {
+      source = "integrations/github"
+    }
   }
 
   required_version = ">= 1.3.0"
@@ -20,26 +23,18 @@ provider "aws" {
   }
 }
 
+provider "github" {
+  owner = var.github_provider_settings.owner
+}
+
 module "checks" {
   source      = "../../shared/checks"
   conventions = var.conventions
 }
 
-module "emails" {
-  source      = "../../aws/emails"
+module "identity_provider" {
+  source      = "../../github/identity-provider"
   conventions = var.conventions
 
-  domains = {
-    "example.com" = {
-      mail_from_subdomain = "mail"
-    }
-  }
-
-  templates = {
-    "template1" = {
-      subject = "Welcome {{name}}!"
-      html    = file("${path.module}/email-templates/template1/template.html")
-      text    = file("${path.module}/email-templates/template1/template.txt")
-    }
-  }
+  account_name = "amilochau"
 }

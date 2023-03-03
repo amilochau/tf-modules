@@ -21,7 +21,7 @@ module "conventions" {
 
 resource "aws_s3_bucket" "s3_bucket" {
   bucket = module.conventions.aws_naming_conventions.s3_bucket_name
-  
+
   lifecycle {
     prevent_destroy = true
   }

@@ -32,18 +32,18 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
       "sts:AssumeRoleWithWebIdentity"
     ]
     principals {
-      type = "Federated"
+      type        = "Federated"
       identifiers = [aws_iam_openid_connect_provider.github_identity_provider.arn]
     }
     condition {
-      test = "StringEquals"
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:aud"
       values = [
         "sts.amazonaws.com"
       ]
     }
     condition {
-      test = "StringLike"
+      test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
         "repo:${var.account_name}/*:*"
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
 }
 
 resource "aws_iam_role" "iam_role" {
-  name = module.conventions.aws_naming_conventions.iam_role_name_prefix
+  name               = module.conventions.aws_naming_conventions.iam_role_name_prefix
   description        = "IAM role used by GitHub Actions to execute"
   assume_role_policy = data.aws_iam_policy_document.iam_policy_document_github_assume.json
 }
@@ -77,9 +77,9 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
 }
 
 resource "aws_iam_policy" "iam_policy" {
-  name = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-actions"
-  description        = "IAM policy used by GitHub Actions to deploy AWS resources"
-  policy = data.aws_iam_policy_document.iam_policy_document_github.json
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-actions"
+  description = "IAM policy used by GitHub Actions to deploy AWS resources"
+  policy      = data.aws_iam_policy_document.iam_policy_document_github.json
 }
 
 resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment" {

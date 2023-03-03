@@ -18,5 +18,5 @@ variable "conventions" {
 
 variable "account_name" {
   description = "The name of the GitHub account"
-  type = string
+  type        = string
 }

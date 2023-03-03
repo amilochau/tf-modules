@@ -26,4 +26,8 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH"
   ]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }

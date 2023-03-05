@@ -122,7 +122,7 @@ resource "aws_lambda_permission" "apigateway_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/default/*" # Allow invocation from the '$default' stage, any method, any resource path @todo restrict that?
+  source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/*/*" # Allow invocation from any stage, any method, any resource path @todo restrict that?
 }
 
 module "trigger_api_gateway_routes" {

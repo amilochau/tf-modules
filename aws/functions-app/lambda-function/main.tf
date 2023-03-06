@@ -28,7 +28,14 @@ resource "aws_iam_role" "lambda_iam_role" {
 
 # ===== LAMBDA =====
 
+locals {
+  to_archive       = var.function_settings.deployment_source_file_path != null && length(var.function_settings.deployment_source_file_path) > 0
+  filename         = local.to_archive ? data.archive_file.package_files[0].output_path : var.function_settings.deployment_file_path
+  source_code_hash = local.to_archive ? data.archive_file.package_files[0].output_base64sha256 : filebase64(var.function_settings.deployment_file_path)
+}
+
 data "archive_file" "package_files" {
+  count       = local.to_archive ? 1 : 0
   type        = "zip"
   source_file = var.function_settings.deployment_source_file_path
   output_path = var.function_settings.deployment_file_path
@@ -38,8 +45,8 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
   role          = aws_iam_role.lambda_iam_role.arn
 
-  filename         = data.archive_file.package_files.output_path
-  source_code_hash = data.archive_file.package_files.output_base64sha256
+  filename         = local.filename
+  source_code_hash = local.source_code_hash
   runtime          = var.function_settings.runtime
   architectures    = [var.function_settings.architecture]
   timeout          = var.function_settings.timeout_s

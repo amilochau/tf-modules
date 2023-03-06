@@ -14,7 +14,7 @@ variable "function_settings" {
     function_key                = string
     memory_size_mb              = number
     timeout_s                   = number
-    deployment_source_file_path = string
+    deployment_source_file_path = optional(string, "")
     deployment_file_path        = string
     handler                     = string
     environment_variables       = map(string)

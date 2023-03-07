@@ -46,6 +46,7 @@ variable "workflows" {
   description = "Workflows to add"
   type = object({
     enable_dependency_review = optional(bool, false)
+    enable_clean             = optional(bool, true)
   })
   default = {}
 }

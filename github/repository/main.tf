@@ -179,3 +179,13 @@ resource "github_repository_file" "file_workflow_dependency_review" {
   content             = file("${path.module}/files/workflows/dependency-review.yml")
   overwrite_on_create = true
 }
+
+resource "github_repository_file" "file_workflow_clean" {
+  count = var.workflows.enable_clean ? 1 : 0
+
+  repository          = github_repository.repository.name
+  branch              = "main"
+  file                = "./.github/workflows/clean.yml"
+  content             = file("${path.module}/files/workflows/clean.yml")
+  overwrite_on_create = true
+}

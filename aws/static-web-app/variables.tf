@@ -19,7 +19,7 @@ variable "conventions" {
 variable "client_settings" {
   description = "Settings to configure the client"
   type = object({
-    package_source_file        = string
+    package_source_file = string
     default_root_object = optional(string, "index.html")
   })
 }
@@ -27,8 +27,8 @@ variable "client_settings" {
 variable "api_settings" {
   description = "Settings to configure the integration with a previously deployed API"
   type = object({
-    domain_name = string
-    origin_path = string
+    domain_name     = string
+    origin_path     = string
     allowed_origins = optional(list(string), [])
   })
   default = null

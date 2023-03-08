@@ -31,7 +31,7 @@ resource "aws_iam_role" "lambda_iam_role" {
 locals {
   to_archive       = var.function_settings.deployment_source_file_path != null && length(var.function_settings.deployment_source_file_path) > 0
   filename         = local.to_archive ? data.archive_file.package_files[0].output_path : var.function_settings.deployment_file_path
-  source_code_hash = local.to_archive ? data.archive_file.package_files[0].output_base64sha256 : filebase64(var.function_settings.deployment_file_path)
+  source_code_hash = local.to_archive ? data.archive_file.package_files[0].output_base64sha256 : filebase64sha256(var.function_settings.deployment_file_path)
 }
 
 data "archive_file" "package_files" {

@@ -7,7 +7,7 @@ variable "conventions" {
 }
 
 variable "function_settings" {
-  description = "Settings to configuration the Lambda"
+  description = "Settings to configuren the Lambda"
   type = object({
     runtime                     = string
     architecture                = string

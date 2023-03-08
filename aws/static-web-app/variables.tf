@@ -15,3 +15,21 @@ variable "conventions" {
     error_message = "Host name must use between 2 and 8 characters, only lowercase letters and numbers"
   }
 }
+
+variable "client_settings" {
+  description = "Settings to configure the client"
+  type = object({
+    package_source_file        = string
+    default_root_object = optional(string, "index.html")
+  })
+}
+
+variable "api_settings" {
+  description = "Settings to configure the integration with a previously deployed API"
+  type = object({
+    domain_name = string
+    origin_path = string
+    allowed_origins = optional(list(string), [])
+  })
+  default = null
+}

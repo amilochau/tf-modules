@@ -1,3 +1,8 @@
+module "environment" {
+  source      = "../../shared/environment"
+  conventions = var.conventions
+}
+
 module "conventions" {
   source      = "../../../shared/conventions"
   conventions = var.conventions
@@ -16,10 +21,11 @@ locals {
 }
 
 resource "aws_dynamodb_table" "dynamodb_table" {
-  name         = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-${var.table_settings.name}"
-  hash_key     = var.table_settings.partition_key
-  range_key    = var.table_settings.sort_key
-  billing_mode = "PAY_PER_REQUEST"
+  name                        = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-${var.table_settings.name}"
+  hash_key                    = var.table_settings.partition_key
+  range_key                   = var.table_settings.sort_key
+  billing_mode                = "PAY_PER_REQUEST"
+  deletion_protection_enabled = module.environment.is_production
 
   dynamic "attribute" {
     for_each = local.attributes

@@ -62,6 +62,7 @@ resource "github_repository" "repository" {
   delete_branch_on_merge = true
   gitignore_template     = "VisualStudio"
   vulnerability_alerts   = true
+  archive_on_destroy     = true
 
   /*security_and_analysis {
     advanced_security {
@@ -74,10 +75,6 @@ resource "github_repository" "repository" {
       status = "enabled"
     }
   }*/
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "github_actions_repository_permissions" "repository_actions_permissions" {

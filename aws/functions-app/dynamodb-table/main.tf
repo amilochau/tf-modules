@@ -1,5 +1,5 @@
 module "environment" {
-  source      = "../../shared/environment"
+  source      = "../../../shared/environment"
   conventions = var.conventions
 }
 

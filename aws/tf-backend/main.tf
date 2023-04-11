@@ -66,7 +66,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_bucket_lifecycle" {
 # ===== DYNAMODB TABLE =====
 
 resource "aws_dynamodb_table" "dynamodb_table" {
-  name                        = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-lock"
+  name                        = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-locks"
   hash_key                    = "LockID"
   billing_mode                = "PAY_PER_REQUEST"
   deletion_protection_enabled = module.environment.is_production

@@ -47,6 +47,8 @@ locals {
   aws_format = {
     cloudwatch_log_group_retention_days = 30
     mime_types                          = jsondecode(file("${path.module}/data/mime.json"))
+    apigateway_throttling_burst_limit   = 10
+    apigateway_throttling_rate_limit    = 10
     apigateway_accesslog_format         = jsonencode(file("${path.module}/data/apigateway_accesslog_format.json"))
     urlparse_regex                      = "(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?" # https://github.com/hashicorp/terraform/issues/23893
   }

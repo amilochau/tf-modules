@@ -19,6 +19,9 @@ variable "schedule_settings" {
   description = "Settings for the previously deployed EventBridge Schedule group"
   type = object({
     schedule_group_name = string
-    schedule_expressions = list(string)
+    schedules = list(object({
+      description = string
+      schedule_expression = string
+    }))
   })
 }

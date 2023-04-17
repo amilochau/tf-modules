@@ -56,12 +56,13 @@ resource "aws_iam_role_policy_attachment" "schedule_iam_role_policy_attachment" 
 # ===== SCHEDULE =====
 
 resource "aws_scheduler_schedule" "schedule" {
-  for_each = { for k, v in var.schedule_settings.schedule_expressions : k => v }
+  for_each = { for k, v in var.schedule_settings.schedules : k => v }
 
   name = "${module.conventions.aws_naming_conventions.eventbridge_schedule_name_prefix}-${var.function_settings.function_key}-${each.key}"
   group_name = var.schedule_settings.schedule_group_name
 
-  schedule_expression = each.value
+  description = each.value.description
+  schedule_expression = each.value.schedule_expression
 
   flexible_time_window {
     mode = "FLEXIBLE"

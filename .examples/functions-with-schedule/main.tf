@@ -37,7 +37,8 @@ module "functions_app" {
         deployment_file_path = "data/app.zip"
         handler              = "handler.get"
         scheduler_triggers = [{
-          schedule_expression = "cron(* * * * ? *)"
+          description = "Sample Scheduler for Lambda trigger"
+          schedule_expression = "cron(0 * * * ? *)"
         }]
       }
     }

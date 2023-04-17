@@ -8,6 +8,7 @@ variable "function_settings" {
 variable "api_gateway_settings" {
   description = "Settings for the previously deployed API Gateway v2"
   type = object({
+    description       = string
     api_id            = string
     api_execution_arn = string
     authorizer_id     = string

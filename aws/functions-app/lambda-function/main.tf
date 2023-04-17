@@ -160,6 +160,7 @@ module "trigger_sns_topics" {
 # ===== SCHEDULE TRIGGER =====
 
 module "trigger_schedule" {
+  count = length(var.triggers_settings.schedules) > 0 ? 1 : 0
   source   = "./trigger-schedule"
 
   conventions       = var.conventions
@@ -169,6 +170,9 @@ module "trigger_schedule" {
   }
   schedule_settings = {
     schedule_group_name = var.accesses_settings.schedule_group_name
-    schedule_expressions = [ for v in var.triggers_settings.schedules : v.schedule_expression ]
+    schedules = [ for v in var.triggers_settings.schedules : {
+      description = v.description
+      schedule_expression = v.schedule_expression
+    }]
   }
 }

@@ -43,6 +43,7 @@ module "functions_app" {
         deployment_file_path = "data/app.zip"
         handler              = "handler.get"
         http_triggers = [{
+          description = "Sample HTTP API for Lambda trigger"
           method = "GET"
           route  = "/{proxy+}"
         }]

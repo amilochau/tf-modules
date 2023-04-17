@@ -9,6 +9,7 @@ variable "function_settings" {
 variable "sns_settings" {
   description = "Settings for the previously deployed SNS"
   type = object({
+    description = string
     topic_name = string
   })
 }

@@ -73,6 +73,7 @@ module "lambda_functions" {
   }
   triggers_settings = {
     api_gateway_routes = [for v in each.value.http_triggers : {
+      description = v.description
       api_id            = module.api_gateway_api[0].apigateway_api_id
       api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
       authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
@@ -82,9 +83,11 @@ module "lambda_functions" {
       enable_cors       = v.enable_cors
     }]
     sns_topics = [for v in each.value.sns_triggers : {
+      description = v.description
       topic_name = v.topic_name
     }]
     schedules = [for v in each.value.scheduler_triggers : {
+      description = v.description
       schedule_expression = v.schedule_expression
     }]
   }

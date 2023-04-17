@@ -26,6 +26,11 @@ resource "aws_apigatewayv2_stage" "apigateway_stage" {
   api_id      = aws_apigatewayv2_api.apigateway_api.id
   auto_deploy = true
 
+  default_route_settings {
+    throttling_burst_limit = module.conventions.aws_format_conventions.apigateway_throttling_burst_limit
+    throttling_rate_limit = module.conventions.aws_format_conventions.apigateway_throttling_rate_limit
+  }
+
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_apigateway.arn
     format          = module.conventions.aws_format_conventions.apigateway_accesslog_format

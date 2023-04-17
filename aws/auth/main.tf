@@ -22,7 +22,7 @@ module "conventions" {
 resource "aws_cognito_user_pool" "cognito_user_pool" {
   name                     = module.conventions.aws_naming_conventions.cognito_userpool_name
   auto_verified_attributes = ["email"]
-  deletion_protection      = module.environment.is_production ? "ACTIVE" : "INACTIVE"
+  deletion_protection      = !var.conventions.temporary && module.environment.is_production ? "ACTIVE" : "INACTIVE"
   mfa_configuration        = "OPTIONAL"
   username_attributes      = ["email"]
 
@@ -106,9 +106,5 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   verification_message_template {
     #email_subject = "Confirm your account!"
     #email_message = "Hi {username}, here is your code: {####}."
-  }
-
-  lifecycle {
-    prevent_destroy = true
   }
 }

@@ -3,10 +3,12 @@ variable "conventions" {
   type = object({
     application_name = string
     host_name        = string
+    temporary        = optional(bool, false)
   })
   default = {
     application_name = "sample"
     host_name        = "default"
+    temporary        = true
   }
 }
 

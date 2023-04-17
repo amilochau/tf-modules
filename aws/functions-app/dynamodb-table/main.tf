@@ -25,7 +25,7 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   hash_key                    = var.table_settings.partition_key
   range_key                   = var.table_settings.sort_key
   billing_mode                = "PAY_PER_REQUEST"
-  deletion_protection_enabled = module.environment.is_production
+  deletion_protection_enabled = !var.conventions.temporary && module.environment.is_production
 
   dynamic "attribute" {
     for_each = local.attributes
@@ -56,10 +56,6 @@ resource "aws_dynamodb_table" "dynamodb_table" {
       projection_type    = length(global_secondary_index.value.non_key_attributes) > 0 ? "INCLUDE" : "KEYS_ONLY"
       non_key_attributes = global_secondary_index.value.non_key_attributes
     }
-  }
-
-  lifecycle {
-    prevent_destroy = true
   }
 }
 

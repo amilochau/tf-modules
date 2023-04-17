@@ -22,11 +22,8 @@ module "conventions" {
 # ===== S3 BUCKET =====
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = module.conventions.aws_naming_conventions.s3_bucket_name
-
-  lifecycle {
-    prevent_destroy = true
-  }
+  bucket        = module.conventions.aws_naming_conventions.s3_bucket_name
+  force_destroy = var.conventions.temporary
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
@@ -69,7 +66,7 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   name                        = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-locks"
   hash_key                    = "LockID"
   billing_mode                = "PAY_PER_REQUEST"
-  deletion_protection_enabled = module.environment.is_production
+  deletion_protection_enabled = !var.conventions.temporary && module.environment.is_production
 
   attribute {
     name = "LockID"

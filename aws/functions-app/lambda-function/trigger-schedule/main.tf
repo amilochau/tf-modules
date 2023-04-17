@@ -64,8 +64,8 @@ resource "aws_scheduler_schedule" "schedule" {
   schedule_expression = each.value
 
   flexible_time_window {
-    mode = "OFF" # "FLEXIBLE"
-    #maximum_window_in_minutes = module.conventions.aws_format_conventions.eventbridge_schedule_flexible_window_min
+    mode = "FLEXIBLE"
+    maximum_window_in_minutes = module.conventions.aws_format_conventions.eventbridge_schedule_flexible_window_min
   }
 
   target {

@@ -57,10 +57,6 @@ resource "aws_dynamodb_table" "dynamodb_table" {
       non_key_attributes = global_secondary_index.value.non_key_attributes
     }
   }
-
-  lifecycle {
-    prevent_destroy = !var.conventions.temporary
-  }
 }
 
 # ===== IAM POLICY =====

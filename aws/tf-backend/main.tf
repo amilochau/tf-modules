@@ -22,11 +22,8 @@ module "conventions" {
 # ===== S3 BUCKET =====
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = module.conventions.aws_naming_conventions.s3_bucket_name
-
-  lifecycle {
-    prevent_destroy = !var.conventions.temporary
-  }
+  bucket        = module.conventions.aws_naming_conventions.s3_bucket_name
+  force_destroy = var.conventions.temporary
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {

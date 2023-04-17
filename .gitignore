@@ -350,4 +350,5 @@ MigrationBackup/
 .ionide/
 
 # Terraform
-.terraform
+terraform.*
+.terraform*

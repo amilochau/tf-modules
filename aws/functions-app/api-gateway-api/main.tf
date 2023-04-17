@@ -18,7 +18,7 @@ resource "aws_apigatewayv2_api" "apigateway_api" {
 resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_apigateway" {
   name              = "/aws/api-gateway/${aws_apigatewayv2_api.apigateway_api.name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
-  skip_destroy      = true
+  skip_destroy      = !var.conventions.temporary
 }
 
 resource "aws_apigatewayv2_stage" "apigateway_stage" {

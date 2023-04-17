@@ -61,7 +61,6 @@ resource "aws_iam_role" "iam_role" {
 
 // IAM Policy & role to allow GitHub deploying resources
 
-
 data "aws_iam_policy_document" "iam_policy_document_github" {
   statement {
     actions = [

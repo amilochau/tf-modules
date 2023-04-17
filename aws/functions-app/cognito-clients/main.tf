@@ -28,6 +28,6 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   ]
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = !var.conventions.temporary
   }
 }

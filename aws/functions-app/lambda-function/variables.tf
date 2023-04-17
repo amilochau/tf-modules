@@ -37,6 +37,9 @@ variable "triggers_settings" {
     sns_topics = list(object({
       topic_name = string
     }))
+    schedules = list(object({
+      schedule_expression = string
+    }))
   })
 }
 
@@ -45,5 +48,6 @@ variable "accesses_settings" {
   type = object({
     iam_policy_arns = list(string)
     ses_domains     = list(string)
+    schedule_group_name = string
   })
 }

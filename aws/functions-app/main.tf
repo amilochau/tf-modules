@@ -11,6 +11,7 @@ terraform {
 
 locals {
   has_http_triggers = anytrue([for v in var.lambda_settings.functions : length(v.http_triggers) > 0])
+  has_schedules = anytrue([for v in var.lambda_settings.functions : length(v.scheduler_triggers) > 0])
 }
 
 module "cognito_clients" {
@@ -47,6 +48,13 @@ module "api_gateway_api" {
   }
 }
 
+module "schedule_group" {
+  count  = local.has_schedules ? 1 : 0
+  source = "./schedule-group"
+
+  conventions = var.conventions
+}
+
 module "lambda_functions" {
   for_each = var.lambda_settings.functions
   source   = "./lambda-function"
@@ -76,32 +84,13 @@ module "lambda_functions" {
     sns_topics = [for v in each.value.sns_triggers : {
       topic_name = v.topic_name
     }]
+    schedules = [for v in each.value.scheduler_triggers : {
+      schedule_expression = v.schedule_expression
+    }]
   }
   accesses_settings = {
     iam_policy_arns = [for k, v in module.dynamodb_tables : v.iam_policy_arn]
     ses_domains     = [for k, v in each.value.ses_accesses : v.domain]
+    schedule_group_name = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
   }
 }
-
-# ===== COGNITO CLIENT FOR API =====
-
-#resource "aws_cognito_user_pool_client" "cognito_userpool_client_api" {
-#  name         = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-api"
-#  user_pool_id = data.aws_cognito_user_pools.cognito_userpool.ids[0]
-#  allowed_oauth_flows = [
-#    "code"
-#  ]
-#  allowed_oauth_scopes = [
-#    "email",
-#    "openid"
-#  ]
-#  allowed_oauth_flows_user_pool_client = true
-#  callback_urls = [
-#    aws_apigatewayv2_stage.apigateway_stage.invoke_url
-#  ]
-#  explicit_auth_flows = [
-#    "ALLOW_USER_PASSWORD_AUTH",
-#    "ALLOW_REFRESH_TOKEN_AUTH"
-#  ]
-#  supported_identity_providers = ["COGNITO"]
-#}

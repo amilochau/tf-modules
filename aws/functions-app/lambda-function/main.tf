@@ -17,6 +17,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document" {
       ]
     }
     effect = "Allow"
+    # @todo Add condition: only from current account
   }
 }
 
@@ -154,4 +155,20 @@ module "trigger_sns_topics" {
     function_arn  = aws_lambda_function.lambda_function.arn
   }
   sns_settings = each.value
+}
+
+# ===== SCHEDULE TRIGGER =====
+
+module "trigger_schedule" {
+  source   = "./trigger-schedule"
+
+  conventions       = var.conventions
+  function_settings = {
+    function_key = var.function_settings.function_key
+    function_arn  = aws_lambda_function.lambda_function.arn
+  }
+  schedule_settings = {
+    schedule_group_name = var.accesses_settings.schedule_group_name
+    schedule_expressions = [ for v in var.triggers_settings.schedules : v.schedule_expression ]
+  }
 }

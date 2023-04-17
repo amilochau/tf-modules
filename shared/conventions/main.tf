@@ -22,6 +22,8 @@ locals {
     ses_template_name_prefix            = "${local.aws_default_base.prefix}-template"          # aws_ses_template
     ses_configuration_set_name          = "${local.aws_default_base.prefix}-configuration-set" # aws_sesv2_configuration_set
     sns_topic_name_prefix               = "${local.aws_default_base.prefix}-topic"             # aws_sns_topic
+    eventbridge_schedule_group_name     = "${local.aws_default_base.prefix}-schedule-group"          # aws_scheduler_schedule
+    eventbridge_schedule_name_prefix    = "${local.aws_default_base.prefix}-schedule"          # aws_scheduler_schedule
 
     cloudfront_distribution_comment        = "${local.aws_default_base.prefix}-cf"                 # aws_cloudfront_distribution
     cloudfront_origin_access_control_name  = "${local.aws_default_base.prefix}-cf-oac"             # aws_cloudfront_origin_access_control
@@ -47,6 +49,9 @@ locals {
   aws_format = {
     cloudwatch_log_group_retention_days = 30
     mime_types                          = jsondecode(file("${path.module}/data/mime.json"))
+    eventbridge_schedule_flexible_window_min = 10
+    eventbridge_schedule_retries = 2
+    eventbridge_schedule_event_age_sec = 600 # 10 min
     apigateway_throttling_burst_limit   = 10
     apigateway_throttling_rate_limit    = 10
     apigateway_accesslog_format         = jsonencode(file("${path.module}/data/apigateway_accesslog_format.json"))

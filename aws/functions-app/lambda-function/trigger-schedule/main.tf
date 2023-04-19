@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "schedule_iam_policy_document" {
       ]
     }
     effect = "Allow"
-    # @todo Add condition: only from current account
+    # @todo Add condition: only from current account + only from the current schedule?
   }
 }
 

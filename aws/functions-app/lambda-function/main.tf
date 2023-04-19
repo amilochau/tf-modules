@@ -3,37 +3,24 @@ module "conventions" {
   conventions = var.conventions
 }
 
-# ===== LAMBDA IAM ROLE =====
-
-data "aws_iam_policy_document" "lambda_iam_policy_document" {
-  statement {
-    actions = [
-      "sts:AssumeRole"
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "lambda.amazonaws.com"
-      ]
-    }
-    effect = "Allow"
-    # @todo Add condition: only from current account
-  }
-}
-
-resource "aws_iam_role" "lambda_iam_role" {
-  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-lambda-${var.function_settings.function_key}"
-  description        = "IAM role used by the lambda"
-  assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document.json
-}
-
-# ===== LAMBDA =====
-
 locals {
   to_archive       = var.function_settings.deployment_source_file_path != null && length(var.function_settings.deployment_source_file_path) > 0
   filename         = local.to_archive ? data.archive_file.package_files[0].output_path : var.function_settings.deployment_file_path
   source_code_hash = local.to_archive ? data.archive_file.package_files[0].output_base64sha256 : filebase64sha256(var.function_settings.deployment_file_path)
 }
+
+# ===== LAMBDA IAM ROLE =====
+
+module "lambda_iam_role" {
+  source = "./iam-role-assume"
+
+  conventions = var.conventions
+  function_settings = {
+    function_key = var.function_settings.function_key
+  }
+}
+
+# ===== LAMBDA =====
 
 data "archive_file" "package_files" {
   count       = local.to_archive ? 1 : 0
@@ -44,7 +31,7 @@ data "archive_file" "package_files" {
 
 resource "aws_lambda_function" "lambda_function" {
   function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
-  role          = aws_iam_role.lambda_iam_role.arn
+  role          = module.lambda_iam_role.iam_role_arn
 
   filename         = local.filename
   source_code_hash = local.source_code_hash
@@ -65,36 +52,21 @@ resource "aws_lambda_function" "lambda_function" {
 
 # ===== CLOUDWATCH LOG GROUP =====
 
-resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
-  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
-  skip_destroy      = !var.conventions.temporary
+module cloudwatch_log_group {
+  source = "./cloudwatch-log-group"
+
+  conventions = var.conventions
+  function_settings = {
+    function_key = var.function_settings.function_key
+    function_name = aws_lambda_function.lambda_function.function_name
+  }
 }
 
 # ===== LAMBDA ACCESS TO LOG GROUP =====
 
-data "aws_iam_policy_document" "lambda_iam_policy_document_logging" {
-  statement {
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = [
-      "${aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn}:*"
-    ]
-    effect = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "lambda_iam_policy_logging" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-logging-${var.function_settings.function_key}"
-  description = "IAM policy for logging from a lambda"
-  policy      = data.aws_iam_policy_document.lambda_iam_policy_document_logging.json
-}
-
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_logging" {
-  role       = aws_iam_role.lambda_iam_role.name
-  policy_arn = aws_iam_policy.lambda_iam_policy_logging.arn
+  role       = module.lambda_iam_role.iam_role_name
+  policy_arn = module.cloudwatch_log_group.iam_policy_arn
 }
 
 # ===== LAMBDA IAM POLICY ACCESSES
@@ -102,7 +74,7 @@ resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_log
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments" {
   for_each = { for k, v in var.accesses_settings.iam_policy_arns : k => v }
 
-  role       = aws_iam_role.lambda_iam_role.name
+  role       = module.lambda_iam_role.iam_role_name
   policy_arn = each.value
 }
 
@@ -118,7 +90,7 @@ module "access_ses_identities" {
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_ses_identities" {
   for_each = { for k, v in module.access_ses_identities : k => v }
 
-  role       = aws_iam_role.lambda_iam_role.name
+  role       = module.lambda_iam_role.iam_role_name
   policy_arn = each.value.iam_policy_arn
 }
 
@@ -132,6 +104,31 @@ resource "aws_lambda_permission" "apigateway_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/*/*" # Allow invocation from any stage, any method, any resource path @todo restrict that?
 }
+
+/*
+data "aws_iam_policy_document" "api_gateway_iam_policy_document_lambda" {
+  statement {
+    actions = [
+      "lambda:InvokeFunction"
+    ]
+    resources = [
+      var.function_settings.function_arn,
+      "${var.function_settings.function_arn}:*"
+    ]
+    effect = "Allow"
+  }
+}
+
+resource "aws_iam_policy" "api_gateway_iam_policy_lambda" {
+  name = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-gateway-lambda-${var.function_settings.function_key}"
+  description = "IAM policy for invoking a lambda from an API Gateway"
+  policy = data.aws_iam_policy_document.api_gateway_iam_policy_document_lambda.json
+}
+
+resource "aws_iam_policy" "name" {
+  
+}
+*/
 
 module "trigger_api_gateway_routes" {
   for_each = { for k, v in var.triggers_settings.api_gateway_routes : k => v }

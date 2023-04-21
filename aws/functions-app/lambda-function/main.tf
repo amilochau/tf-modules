@@ -12,7 +12,7 @@ locals {
 # ===== LAMBDA IAM ROLE =====
 
 module "lambda_iam_role" {
-  source = "./iam-role-assume"
+  source = "./iam-role"
 
   conventions = var.conventions
   function_settings = {
@@ -52,46 +52,39 @@ resource "aws_lambda_function" "lambda_function" {
 
 # ===== CLOUDWATCH LOG GROUP =====
 
-module cloudwatch_log_group {
-  source = "./cloudwatch-log-group"
-
-  conventions = var.conventions
-  function_settings = {
-    function_key = var.function_settings.function_key
-    function_name = aws_lambda_function.lambda_function.function_name
-  }
+resource "aws_cloudwatch_log_group" "cloudwatch_log_group_lambda" {
+  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
+  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
+  skip_destroy      = !var.conventions.temporary
 }
 
-# ===== LAMBDA ACCESS TO LOG GROUP =====
+# ===== LAMBDA SES DOMAIN IDENTITY POLICIES
 
-resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment_logging" {
-  role       = module.lambda_iam_role.iam_role_name
-  policy_arn = module.cloudwatch_log_group.iam_policy_arn
-}
-
-# ===== LAMBDA IAM POLICY ACCESSES
-
-resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments" {
-  for_each = { for k, v in var.accesses_settings.iam_policy_arns : k => v }
-
-  role       = module.lambda_iam_role.iam_role_name
-  policy_arn = each.value
-}
-
-module "access_ses_identities" {
+module "ses_identity_policies" {
   for_each = { for k, v in var.accesses_settings.ses_domains : k => v }
-  source   = "./access-ses-identity"
+  source   = "./ses-identity-policy"
 
   conventions  = var.conventions
   ses_domain   = each.value
   function_arn = aws_lambda_function.lambda_function.arn
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachments_ses_identities" {
-  for_each = { for k, v in module.access_ses_identities : k => v }
+# ===== LAMBDA IAM POLICY =====
 
-  role       = module.lambda_iam_role.iam_role_name
-  policy_arn = each.value.iam_policy_arn
+module "lambda_iam_policy" {
+  source = "./iam-policy"
+
+  conventions = var.conventions
+  function_settings = {
+    function_key = var.function_settings.function_key
+    function_arn = aws_lambda_function.lambda_function.arn
+    role_name = module.lambda_iam_role.iam_role_name
+  }
+  accesses_settings = {
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_log_group_lambda.arn
+    dynamodb_table_arns = var.accesses_settings.dynamodb_table_arns
+    ses_domain_identity_arns = values(module.ses_identity_policies[*]).ses_identity_arn
+  }
 }
 
 # ===== API GATEWAY TRIGGER =====
@@ -105,37 +98,11 @@ resource "aws_lambda_permission" "apigateway_permission" {
   source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/*/*" # Allow invocation from any stage, any method, any resource path @todo restrict that?
 }
 
-/*
-data "aws_iam_policy_document" "api_gateway_iam_policy_document_lambda" {
-  statement {
-    actions = [
-      "lambda:InvokeFunction"
-    ]
-    resources = [
-      var.function_settings.function_arn,
-      "${var.function_settings.function_arn}:*"
-    ]
-    effect = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "api_gateway_iam_policy_lambda" {
-  name = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-gateway-lambda-${var.function_settings.function_key}"
-  description = "IAM policy for invoking a lambda from an API Gateway"
-  policy = data.aws_iam_policy_document.api_gateway_iam_policy_document_lambda.json
-}
-
-resource "aws_iam_policy" "name" {
-  
-}
-*/
-
 module "trigger_api_gateway_routes" {
   for_each = { for k, v in var.triggers_settings.api_gateway_routes : k => v }
   source   = "./trigger-api-gateway-route"
 
   function_settings = {
-    function_name = aws_lambda_function.lambda_function.function_name
     invoke_arn    = aws_lambda_function.lambda_function.invoke_arn
   }
   api_gateway_settings = each.value

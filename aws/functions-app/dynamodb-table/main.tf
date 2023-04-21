@@ -58,29 +58,3 @@ resource "aws_dynamodb_table" "dynamodb_table" {
     }
   }
 }
-
-# ===== IAM POLICY =====
-
-data "aws_iam_policy_document" "lambda_iam_policy_document_dynamodb" {
-  statement {
-    actions = [
-      "dynamodb:Query",
-      "dynamodb:Scan",
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:UpdateItem",
-      "dynamodb:DeleteItem"
-    ]
-    resources = [
-      aws_dynamodb_table.dynamodb_table.arn,
-      "${aws_dynamodb_table.dynamodb_table.arn}/*"
-    ]
-    effect = "Allow"
-  }
-}
-
-resource "aws_iam_policy" "lambda_iam_policy_dynamodb" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-dynamodb-${var.table_settings.name}"
-  description = "IAM policy for using a DynamoDB table from a lambda"
-  policy      = data.aws_iam_policy_document.lambda_iam_policy_document_dynamodb.json
-}

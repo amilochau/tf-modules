@@ -8,7 +8,7 @@ variable "conventions" {
 }
 
 variable "function_settings" {
-  description = "Settings of the previously deployed Lambda Function"
+  description = "Settings of the Lambda Function"
   type        = object({
     function_key = string
   })

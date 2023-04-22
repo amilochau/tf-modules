@@ -19,7 +19,7 @@ module "lambda_iam_role" {
     function_key = var.function_settings.function_key
   }
   accesses_settings = {
-    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_log_group_lambda.arn
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
   }
@@ -57,7 +57,7 @@ resource "aws_lambda_function" "lambda_function" {
 
 # ===== CLOUDWATCH LOG GROUP =====
 
-resource "aws_cloudwatch_log_group" "cloudwatch_log_group_lambda" {
+resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
   name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
   skip_destroy      = !var.conventions.temporary

@@ -16,7 +16,6 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_role" {
         "lambda.amazonaws.com"
       ]
     }
-    # Using 'AWS:SourceAccount' make deployment fail
     effect = "Allow"
   }
 }
@@ -45,13 +44,6 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
     resources = [
       "${var.accesses_settings.cloudwatch_log_group_arn}:*"
     ]
-    /*condition { # @todo to test
-      test     = "StringEquals"
-      variable = "AWS:SourceAccount"
-      values = [
-        data.aws_caller_identity.caller_identity.account_id
-      ]
-    }*/
     effect = "Allow"
   }
 
@@ -68,13 +60,6 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "dynamodb:DeleteItem"
       ]
       resources = local.dynamodb_statement_resources
-      /*condition {
-        test     = "StringEquals"
-        variable = "AWS:SourceAccount"
-        values = [
-          data.aws_caller_identity.caller_identity.account_id
-        ]
-      }*/
       effect = "Allow"
     }
   }
@@ -87,13 +72,6 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "ses:SendTemplatedEmail"
       ]
       resources = local.ses_domain_identity_statement_resources
-      /*condition {
-        test     = "StringEquals"
-        variable = "AWS:SourceAccount"
-        values = [
-          data.aws_caller_identity.caller_identity.account_id
-        ]
-      }*/
       effect = "Allow"
     }
   }

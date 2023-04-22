@@ -46,7 +46,6 @@ data "aws_iam_policy_document" "schedule_iam_policy_document_lambda" {
       var.function_settings.function_arn,
       "${var.function_settings.function_arn}:*"
     ]
-    # Condition on 'AWS:SourceAccount' don't work here
     effect = "Allow"
   }
 }

@@ -28,7 +28,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
   ]
 }
 
-resource "aws_cognito_user_pool_client" "cognito_userpool_client_permanent" {
+resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   for_each = var.conventions.temporary ? {} : var.clients_settings
   name     = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-${each.key}"
 

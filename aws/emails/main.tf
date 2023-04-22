@@ -96,7 +96,6 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceAccount"
-
       values = [
         data.aws_caller_identity.caller_identity.account_id
       ]
@@ -104,7 +103,6 @@ data "aws_iam_policy_document" "sns_topic_iam_policy_document" {
     condition {
       test     = "ForAnyValue:StringEquals"
       variable = "AWS:SourceArn"
-
       values = [
         aws_sesv2_configuration_set.configuration_set.arn
       ]

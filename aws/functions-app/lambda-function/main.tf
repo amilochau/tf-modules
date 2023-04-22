@@ -9,7 +9,7 @@ locals {
   source_code_hash = local.to_archive ? data.archive_file.package_files[0].output_base64sha256 : filebase64sha256(var.function_settings.deployment_file_path)
 }
 
-# ===== LAMBDA IAM ROLE =====
+# ===== LAMBDA EXECUTION ROLE =====
 
 module "lambda_iam_role" {
   source = "./iam-role"
@@ -17,6 +17,11 @@ module "lambda_iam_role" {
   conventions = var.conventions
   function_settings = {
     function_key = var.function_settings.function_key
+  }
+  accesses_settings = {
+    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_log_group_lambda.arn
+    dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
+    ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
   }
 }
 
@@ -69,24 +74,6 @@ module "ses_identity_policies" {
   function_arn = aws_lambda_function.lambda_function.arn
 }
 
-# ===== LAMBDA IAM POLICY =====
-
-module "lambda_iam_policy" {
-  source = "./iam-policy"
-
-  conventions = var.conventions
-  function_settings = {
-    function_key = var.function_settings.function_key
-    function_arn = aws_lambda_function.lambda_function.arn
-    role_name = module.lambda_iam_role.iam_role_name
-  }
-  accesses_settings = {
-    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_log_group_lambda.arn
-    dynamodb_table_arns = var.accesses_settings.dynamodb_table_arns
-    ses_domain_identity_arns = values(module.ses_identity_policies[*]).ses_identity_arn
-  }
-}
-
 # ===== API GATEWAY TRIGGER =====
 
 resource "aws_lambda_permission" "apigateway_permission" {
@@ -103,7 +90,7 @@ module "trigger_api_gateway_routes" {
   source   = "./trigger-api-gateway-route"
 
   function_settings = {
-    invoke_arn    = aws_lambda_function.lambda_function.invoke_arn
+    invoke_arn = aws_lambda_function.lambda_function.invoke_arn
   }
   api_gateway_settings = each.value
 }
@@ -124,18 +111,18 @@ module "trigger_sns_topics" {
 # ===== SCHEDULE TRIGGER =====
 
 module "trigger_schedule" {
-  count = length(var.triggers_settings.schedules) > 0 ? 1 : 0
-  source   = "./trigger-schedule"
+  count  = length(var.triggers_settings.schedules) > 0 ? 1 : 0
+  source = "./trigger-schedule"
 
-  conventions       = var.conventions
+  conventions = var.conventions
   function_settings = {
     function_key = var.function_settings.function_key
-    function_arn  = aws_lambda_function.lambda_function.arn
+    function_arn = aws_lambda_function.lambda_function.arn
   }
   schedule_settings = {
     schedule_group_name = var.accesses_settings.schedule_group_name
-    schedules = [ for v in var.triggers_settings.schedules : {
-      description = v.description
+    schedules = [for v in var.triggers_settings.schedules : {
+      description         = v.description
       schedule_expression = v.schedule_expression
     }]
   }

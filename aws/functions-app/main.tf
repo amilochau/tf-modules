@@ -11,7 +11,7 @@ terraform {
 
 locals {
   has_http_triggers = anytrue([for v in var.lambda_settings.functions : length(v.http_triggers) > 0])
-  has_schedules = anytrue([for v in var.lambda_settings.functions : length(v.scheduler_triggers) > 0])
+  has_schedules     = anytrue([for v in var.lambda_settings.functions : length(v.scheduler_triggers) > 0])
 }
 
 module "cognito_clients" {
@@ -73,7 +73,7 @@ module "lambda_functions" {
   }
   triggers_settings = {
     api_gateway_routes = [for v in each.value.http_triggers : {
-      description = v.description
+      description       = v.description
       api_id            = module.api_gateway_api[0].apigateway_api_id
       api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
       authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
@@ -84,15 +84,15 @@ module "lambda_functions" {
     }]
     sns_topics = [for v in each.value.sns_triggers : {
       description = v.description
-      topic_name = v.topic_name
+      topic_name  = v.topic_name
     }]
     schedules = [for v in each.value.scheduler_triggers : {
-      description = v.description
+      description         = v.description
       schedule_expression = v.schedule_expression
     }]
   }
   accesses_settings = {
-    ses_domains     = [for k, v in each.value.ses_accesses : v.domain]
+    ses_domains         = [for k, v in each.value.ses_accesses : v.domain]
     schedule_group_name = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
     dynamodb_table_arns = [for k, v in module.dynamodb_tables : v.table_arn]
   }

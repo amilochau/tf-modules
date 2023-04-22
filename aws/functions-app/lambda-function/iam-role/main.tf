@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
           data.aws_caller_identity.caller_identity.account_id
         ]
       }
-      effect    = "Allow"
+      effect = "Allow"
     }
   }
 
@@ -94,7 +94,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
           data.aws_caller_identity.caller_identity.account_id
         ]
       }
-      effect    = "Allow"
+      effect = "Allow"
     }
   }
 }

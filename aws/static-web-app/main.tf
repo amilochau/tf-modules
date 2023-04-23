@@ -14,6 +14,8 @@ module "conventions" {
   conventions = var.conventions
 }
 
+data "aws_caller_identity" "caller_identity" {}
+
 # ===== CLIENT S3 =====
 
 resource "aws_s3_bucket" "s3_bucket" {
@@ -69,6 +71,21 @@ data "aws_iam_policy_document" "cloudfront_s3_bucket_policy_document" {
       ]
     }
 
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.s3_bucket.arn}/*"
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceAccount"
+      values = [
+        data.aws_caller_identity.caller_identity.account_id
+      ]
+    }
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
@@ -77,13 +94,6 @@ data "aws_iam_policy_document" "cloudfront_s3_bucket_policy_document" {
         module.cloudfront_distribution.cloudfront_distribution_arn
       ]
     }
-    actions = [
-      "s3:GetObject"
-    ]
-
-    resources = [
-      "${aws_s3_bucket.s3_bucket.arn}/*"
-    ]
     effect = "Allow"
   }
 }

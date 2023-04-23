@@ -26,7 +26,7 @@ variable "triggers_settings" {
   description = "Settings for the triggers in front of the Function"
   type = object({
     api_gateway_routes = list(object({
-      description = string
+      description       = string
       api_id            = string
       api_execution_arn = string
       authorizer_id     = string
@@ -37,10 +37,10 @@ variable "triggers_settings" {
     }))
     sns_topics = list(object({
       description = string
-      topic_name = string
+      topic_name  = string
     }))
     schedules = list(object({
-      description = string
+      description         = string
       schedule_expression = string
     }))
   })
@@ -49,8 +49,8 @@ variable "triggers_settings" {
 variable "accesses_settings" {
   description = "Settings for the accesses to grant to the Function"
   type = object({
-    iam_policy_arns = list(string)
-    ses_domains     = list(string)
+    ses_domains         = list(string)
     schedule_group_name = string
+    dynamodb_table_arns = list(string)
   })
 }

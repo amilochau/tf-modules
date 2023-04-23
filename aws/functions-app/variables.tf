@@ -39,10 +39,10 @@ variable "lambda_settings" {
       })), [])
       sns_triggers = optional(list(object({
         description = optional(string, null)
-        topic_name = string
+        topic_name  = string
       })), [])
       scheduler_triggers = optional(list(object({
-        description = optional(string, null)
+        description         = optional(string, null)
         schedule_expression = string
       })), [])
       ses_accesses = optional(list(object({

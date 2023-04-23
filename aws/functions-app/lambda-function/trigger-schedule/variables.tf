@@ -20,7 +20,7 @@ variable "schedule_settings" {
   type = object({
     schedule_group_name = string
     schedules = list(object({
-      description = string
+      description         = string
       schedule_expression = string
     }))
   })

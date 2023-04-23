@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_integration" "apigateway_integration" {
   integration_uri        = var.function_settings.invoke_arn
   passthrough_behavior   = "WHEN_NO_MATCH"
   payload_format_version = "2.0"
-  description = var.api_gateway_settings.description
+  description            = var.api_gateway_settings.description
 }
 
 resource "aws_apigatewayv2_route" "apigateway_route_cors" {

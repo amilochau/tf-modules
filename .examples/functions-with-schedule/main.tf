@@ -38,7 +38,7 @@ module "functions_app" {
         handler              = "handler.get"
         scheduler_triggers = [{
           description = "Sample Scheduler for Lambda trigger"
-          schedule_expression = "cron(0 * * * ? *)"
+          schedule_expression = "cron(* * * * ? *)"
         }]
       }
     }

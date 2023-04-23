@@ -28,7 +28,7 @@ resource "aws_apigatewayv2_stage" "apigateway_stage" {
 
   default_route_settings {
     throttling_burst_limit = module.conventions.aws_format_conventions.apigateway_throttling_burst_limit
-    throttling_rate_limit = module.conventions.aws_format_conventions.apigateway_throttling_rate_limit
+    throttling_rate_limit  = module.conventions.aws_format_conventions.apigateway_throttling_rate_limit
   }
 
   access_log_settings {

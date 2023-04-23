@@ -48,6 +48,9 @@ variable "lambda_settings" {
       ses_accesses = optional(list(object({
         domain = string
       })), [])
+      lambda_accesses = optional(list(object({
+        arn = string
+      })), [])
     }))
   })
 

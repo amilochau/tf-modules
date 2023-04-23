@@ -21,8 +21,8 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_role" {
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
-  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-lambda-${var.function_settings.function_key}"
-  description        = "IAM role used by the lambda"
+  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-fn-${var.function_settings.function_key}"
+  description        = "IAM role used by the lambda function"
   assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document_role.json
 }
 
@@ -78,8 +78,8 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
 }
 
 resource "aws_iam_policy" "lambda_iam_policy" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-lambda-${var.function_settings.function_key}"
-  description = "IAM policy for a lambda"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-fn-${var.function_settings.function_key}"
+  description = "IAM policy for a lambda function"
   policy      = data.aws_iam_policy_document.lambda_iam_policy_document_policy.json
 }
 

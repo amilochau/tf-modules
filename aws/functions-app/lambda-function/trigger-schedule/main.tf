@@ -51,8 +51,8 @@ data "aws_iam_policy_document" "schedule_iam_policy_document_lambda" {
 }
 
 resource "aws_iam_policy" "schedule_iam_policy_lambda" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-schedule-lambda-${var.function_settings.function_key}"
-  description = "IAM policy for invoking a lambda from a Schedule"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-schedule-fn-${var.function_settings.function_key}"
+  description = "IAM policy for invoking a lambda function from a Schedule"
   policy      = data.aws_iam_policy_document.schedule_iam_policy_document_lambda.json
 }
 

@@ -24,7 +24,7 @@ variable "lambda_settings" {
     architecture = string
 
     functions = map(object({
-      memory_size_mb              = optional(number, 128)
+      memory_size_mb              = optional(number, 512)
       timeout_s                   = optional(number, 10)
       deployment_source_file_path = optional(string, "")
       deployment_file_path        = string

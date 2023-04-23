@@ -31,6 +31,7 @@ resource "aws_iam_role" "lambda_iam_role" {
 locals {
   dynamodb_statement_resources            = flatten([for k, v in var.accesses_settings.dynamodb_table_arns : [v, "${v}/*"]])
   ses_domain_identity_statement_resources = length(var.accesses_settings.ses_domain_identity_arns) > 0 ? ["*"] : [] # Allow to send emails to any email address
+  lambda_statement_resources              = var.accesses_settings.lambda_arns
 }
 
 data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
@@ -60,7 +61,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "dynamodb:DeleteItem"
       ]
       resources = local.dynamodb_statement_resources
-      effect = "Allow"
+      effect    = "Allow"
     }
   }
 
@@ -72,7 +73,19 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "ses:SendTemplatedEmail"
       ]
       resources = local.ses_domain_identity_statement_resources
-      effect = "Allow"
+      effect    = "Allow"
+    }
+  }
+
+  // Lambda functions
+  dynamic "statement" {
+    for_each = length(local.lambda_statement_resources) > 0 ? [1] : []
+    content {
+      actions = [
+        "lambda:InvokeFunction"
+      ]
+      resources = local.lambda_statement_resources
+      effect    = "Allow"
     }
   }
 }

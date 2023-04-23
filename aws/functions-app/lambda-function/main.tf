@@ -22,6 +22,7 @@ module "lambda_iam_role" {
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
+    lambda_arns              = var.accesses_settings.lambda_arns
   }
 }
 

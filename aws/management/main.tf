@@ -19,11 +19,6 @@ module "conventions" {
   conventions = var.conventions
 }
 
-resource "aws_resourceexplorer2_index" "resourceexplorer_index_local" {
-  type = "LOCAL"
-}
-
-resource "aws_resourceexplorer2_index" "resourceexplorer_index_aggregator" {
-  count = var.region_type == "Primary" ? 1 : 0
-  type  = "AGGREGATOR"
+resource "aws_resourceexplorer2_index" "resourceexplorer_index" {
+  type = var.region_type == "Primary" ? "AGGREGATOR" : "LOCAL"
 }

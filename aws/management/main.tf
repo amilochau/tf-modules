@@ -23,7 +23,7 @@ resource "aws_resourceexplorer2_index" "resourceexplorer_index_local" {
   type = "LOCAL"
 }
 
-resource "aws_resourceexplorer2_index" "resourceexplorer_index_aggregate" {
+resource "aws_resourceexplorer2_index" "resourceexplorer_index_aggregator" {
   count = var.region_type == "Primary" ? 1 : 0
-  type  = "AGGREGATE"
+  type  = "AGGREGATOR"
 }

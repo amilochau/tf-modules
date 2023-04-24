@@ -25,5 +25,5 @@ resource "aws_resourceexplorer2_index" "resourceexplorer_index_local" {
 
 resource "aws_resourceexplorer2_index" "resourceexplorer_index_aggregate" {
   count = var.region_type == "Primary" ? 1 : 0
-  type = var.region_type == "AGGREGATE"
+  type  = var.region_type == "AGGREGATE"
 }

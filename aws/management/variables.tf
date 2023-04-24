@@ -19,10 +19,10 @@ variable "conventions" {
 
 variable "region_type" {
   description = "Type of AWS region"
-  type = string
+  type        = string
 
   validation {
-    condition = var.region_type == "Primary" || var.region_type == "Secondary"
+    condition     = var.region_type == "Primary" || var.region_type == "Secondary"
     error_message = "Type must be 'Primary' or 'Secondary'"
   }
 }

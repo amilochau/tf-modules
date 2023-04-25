@@ -16,3 +16,14 @@ variable "conventions" {
     error_message = "Host name must use between 2 and 8 characters, only lowercase letters and numbers"
   }
 }
+
+variable "s3_bucket_name_suffix" {
+  description = "Suffix used for the S3 bucket name - as the name is global"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.s3_bucket_name_suffix == "" || length(var.s3_bucket_name_suffix) <= 8 && can(regex("^[a-z0-9]+$", var.s3_bucket_name_suffix))
+    error_message = "S3 bucket name suffix must use less than 8 characters, only lowercase letters and numbers"
+  }
+}

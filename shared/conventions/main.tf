@@ -18,7 +18,7 @@ locals {
     iam_role_name_prefix                = "${local.aws_default_base.prefix}-role"              # aws_iam_role
     ses_identity_policy_name_prefix     = "${local.aws_default_base.prefix}-ses-policy"        # aws_ses_identity_policy
     lambda_function_name_prefix         = "${local.aws_default_base.prefix}-fn"                # aws_lambda_function
-    s3_bucket_name                      = "${local.aws_default_base.prefix}-bucket"            # aws_s3_bucket
+    s3_bucket_name_prefix               = "${local.aws_default_base.prefix}-bucket"            # aws_s3_bucket
     ses_template_name_prefix            = "${local.aws_default_base.prefix}-template"          # aws_ses_template
     ses_configuration_set_name          = "${local.aws_default_base.prefix}-configuration-set" # aws_sesv2_configuration_set
     sns_topic_name_prefix               = "${local.aws_default_base.prefix}-topic"             # aws_sns_topic

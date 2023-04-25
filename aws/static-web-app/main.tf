@@ -16,10 +16,14 @@ module "conventions" {
 
 data "aws_caller_identity" "caller_identity" {}
 
+locals {
+  s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.client_settings.s3_bucket_name_suffix == "" ? "" : "-"}${var.client_settings.s3_bucket_name_suffix}"
+}
+
 # ===== CLIENT S3 =====
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket        = module.conventions.aws_naming_conventions.s3_bucket_name
+  bucket        = local.s3_bucket_name
   force_destroy = true # only for client files, no persistent data to keep here
 }
 

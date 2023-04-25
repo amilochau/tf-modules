@@ -30,5 +30,6 @@ module "client_app" {
 
   client_settings = {
     package_source_file = "./dist"
+    s3_bucket_name_suffix = "1"
   }
 }

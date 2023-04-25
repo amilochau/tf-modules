@@ -19,10 +19,14 @@ module "conventions" {
   conventions = var.conventions
 }
 
+locals {
+  s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.s3_bucket_name_suffix == "" ? "" : "-"}${var.s3_bucket_name_suffix}"
+}
+
 # ===== S3 BUCKET =====
 
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket        = module.conventions.aws_naming_conventions.s3_bucket_name
+  bucket        = local.s3_bucket_name
   force_destroy = var.conventions.temporary
 }
 

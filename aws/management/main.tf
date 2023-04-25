@@ -22,3 +22,8 @@ module "conventions" {
 resource "aws_resourceexplorer2_index" "resourceexplorer_index" {
   type = var.region_type == "Primary" ? "AGGREGATOR" : "LOCAL"
 }
+
+resource "aws_resourceexplorer2_view" "default_view" {
+  name         = "Default"
+  default_view = true
+}

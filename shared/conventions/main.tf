@@ -48,6 +48,10 @@ locals {
 locals {
   aws_format = {
     cloudwatch_log_group_retention_days      = 30
+    cognito_auth_session_validity_minutes    = 5
+    cognito_access_token_validity_minutes    = 60
+    cognito_id_token_validity_minutes        = 60
+    cognito_refresh_token_validity_days      = 365
     mime_types                               = jsondecode(file("${path.module}/data/mime.json"))
     eventbridge_schedule_flexible_window_min = 10
     eventbridge_schedule_retries             = 2

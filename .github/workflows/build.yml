@@ -10,7 +10,7 @@ on:
     - main
 
 env:
-  IAC_PATH: '.example'
+  IAC_PATH: '.examples'
   IAC_DEPTH: 2
 
 jobs:

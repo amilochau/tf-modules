@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
     }
   }
 
@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.aws_provider_settings.region
+  region = var.aws_provider_settings.region
 
   default_tags {
     tags = {
@@ -35,8 +35,8 @@ module "functions_app" {
     functions = {
       "get" = {
         deployment_source_file_path = "data/get.js"
-        deployment_file_path = "data/app.zip"
-        handler              = "handler.get"
+        deployment_file_path        = "data/app.zip"
+        handler                     = "handler.get"
         http_triggers = [{
           method = "GET"
           route  = "/{proxy+}"

@@ -22,13 +22,13 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
   enable_token_revocation       = true
   prevent_user_existence_errors = "ENABLED"
 
-  access_token_validity = module.conventions.aws_format_conventions.cognito_access_token_validity_minutes
-  id_token_validity = module.conventions.aws_format_conventions.cognito_id_token_validity_minutes
+  access_token_validity  = module.conventions.aws_format_conventions.cognito_access_token_validity_minutes
+  id_token_validity      = module.conventions.aws_format_conventions.cognito_id_token_validity_minutes
   refresh_token_validity = module.conventions.aws_format_conventions.cognito_refresh_token_validity_days
-  
+
   token_validity_units {
-    access_token = "minutes"
-    id_token = "minutes"
+    access_token  = "minutes"
+    id_token      = "minutes"
     refresh_token = "days"
   }
 

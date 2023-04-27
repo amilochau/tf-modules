@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
     }
   }
 
@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.aws_provider_settings.region
+  region = var.aws_provider_settings.region
 
   default_tags {
     tags = {
@@ -25,11 +25,11 @@ module "checks" {
 }
 
 module "client_app" {
-  source = "../../aws/static-web-app"
+  source      = "../../aws/static-web-app"
   conventions = var.conventions
 
   client_settings = {
-    package_source_file = "./dist"
+    package_source_file   = "./dist"
     s3_bucket_name_suffix = "1"
   }
 }

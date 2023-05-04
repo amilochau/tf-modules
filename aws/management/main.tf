@@ -27,3 +27,10 @@ resource "aws_resourceexplorer2_view" "default_view" {
   name         = "Default"
   default_view = true
 }
+
+module "domains" {
+  for_each = var.domains
+  source = "./domain"
+  
+  domain_settings = each.value
+}

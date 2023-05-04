@@ -26,3 +26,12 @@ variable "region_type" {
     error_message = "Type must be 'Primary' or 'Secondary'"
   }
 }
+
+variable "domains" {
+  description = "Domains to manage"
+  type = map(object({
+    domain_name = string
+    domain_description = optional(string, null)
+  }))
+  default = {}
+}

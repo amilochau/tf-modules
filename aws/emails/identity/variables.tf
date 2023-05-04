@@ -3,6 +3,11 @@ variable "domain" {
   type        = string
 }
 
+variable "zone_name" {
+  description = "Name of the Route 53 zone"
+  type        = string
+}
+
 variable "configuration_set_name" {
   description = "Name of the default configuration set to use"
   type        = string

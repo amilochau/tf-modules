@@ -30,6 +30,7 @@ module "emails" {
 
   domains = {
     "example.com" = {
+      zone_name           = "test.com"
       mail_from_subdomain = "mail"
     }
   }

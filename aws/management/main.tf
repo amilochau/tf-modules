@@ -30,7 +30,12 @@ resource "aws_resourceexplorer2_view" "default_view" {
 
 module "domains" {
   for_each = var.domains
-  source = "./domain"
-  
-  domain_settings = each.value
+  source   = "./domain"
+
+  conventions = var.conventions
+  domain_settings = {
+    domain_name        = each.key
+    domain_description = each.value.domain_description
+    records            = each.value.records
+  }
 }

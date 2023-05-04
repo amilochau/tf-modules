@@ -30,8 +30,12 @@ variable "region_type" {
 variable "domains" {
   description = "Domains to manage"
   type = map(object({
-    domain_name = string
     domain_description = optional(string, null)
+    records = map(object({
+      type        = string
+      ttl_seconds = number
+      records     = list(string)
+    }))
   }))
   default = {}
 }

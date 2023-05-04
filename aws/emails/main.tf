@@ -69,6 +69,7 @@ module "identities" {
   source   = "./identity"
 
   domain                 = each.key
+  zone_name              = each.value.zone_name
   configuration_set_name = aws_sesv2_configuration_set.configuration_set.configuration_set_name
   mail_from_subdomain    = each.value.mail_from_subdomain
 }

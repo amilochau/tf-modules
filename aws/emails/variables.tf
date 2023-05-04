@@ -20,6 +20,7 @@ variable "conventions" {
 variable "domains" {
   description = "Domains to use as emails identity"
   type = map(object({
+    zone_name           = string
     mail_from_subdomain = string
   }))
 }

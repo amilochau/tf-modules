@@ -3,6 +3,9 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 4.62, < 5.0.0"
+      configuration_aliases = [
+        aws.us-east-1
+      ]
     }
   }
 
@@ -45,7 +48,20 @@ resource "aws_s3_object" "s3_object_client_files" {
   content_type = lookup(module.conventions.aws_format_conventions.mime_types, regex("\\.[^.]+$", each.value), null)
 }
 
-# ===== CLOUDFRONT =====
+# ===== CLOUDFRONT CERTIFICATE =====
+
+module "cloudfront_certificate" {
+  count = var.client_settings.domains != null ? 1 : 0
+  source = "./cloudfront-certificate"
+
+  certificate_settings = var.client_settings.domains
+
+  providers = {
+    aws = aws.us-east-1
+  }
+}
+
+# ===== CLOUDFRONT DISTRIBUTION =====
 
 module "cloudfront_distribution" {
   source = "./cloudfront-distribution"
@@ -61,6 +77,10 @@ module "cloudfront_distribution" {
     origin_client = {
       domain_name = aws_s3_bucket.s3_bucket.bucket_regional_domain_name
     }
+    domains = var.client_settings.domains != null ? {
+      alternate_domain_names = flatten([[var.client_settings.domains.domain_name], var.client_settings.domains.subject_alternative_names])
+      certificate_arn = module.cloudfront_certificate[0].certificate_arn
+    } : null
   }
 }
 

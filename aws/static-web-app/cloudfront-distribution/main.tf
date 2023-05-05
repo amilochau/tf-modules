@@ -81,6 +81,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   price_class         = "PriceClass_100"
   wait_for_deployment = false
   default_root_object = var.distribution_settings.default_root_object
+  aliases = var.distribution_settings.domains != null ? var.distribution_settings.domains.alternate_domain_names : []
 
   dynamic "origin" {
     for_each = var.distribution_settings.origin_api != null ? [0] : []
@@ -142,10 +143,6 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     }
   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
   custom_error_response {
     error_code            = 403
     response_code         = 200
@@ -158,5 +155,22 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     response_code         = 200
     response_page_path    = "/${var.distribution_settings.default_root_object}"
     error_caching_min_ttl = 0
+  }
+
+  dynamic "viewer_certificate" {
+    for_each = var.distribution_settings.domains != null ? [] : [0]
+
+    content {
+      cloudfront_default_certificate = true
+    }
+  }
+
+  dynamic "viewer_certificate" {
+    for_each = var.distribution_settings.domains != null ? [0] : []
+
+    content {
+      acm_certificate_arn = var.distribution_settings.domains.certificate_arn
+      ssl_support_method = "sni-only"
+    }
   }
 }

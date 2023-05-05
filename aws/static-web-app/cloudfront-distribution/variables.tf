@@ -21,7 +21,7 @@ variable "distribution_settings" {
     })
     domains = object({
       alternate_domain_names = list(string)
-      certificate_arn = string
+      certificate_arn        = string
     })
   })
 }

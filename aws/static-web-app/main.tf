@@ -51,7 +51,7 @@ resource "aws_s3_object" "s3_object_client_files" {
 # ===== CLOUDFRONT CERTIFICATE =====
 
 module "cloudfront_certificate" {
-  count = var.client_settings.domains != null ? 1 : 0
+  count  = var.client_settings.domains != null ? 1 : 0
   source = "./cloudfront-certificate"
 
   certificate_settings = var.client_settings.domains
@@ -79,7 +79,7 @@ module "cloudfront_distribution" {
     }
     domains = var.client_settings.domains != null ? {
       alternate_domain_names = flatten([[var.client_settings.domains.domain_name], var.client_settings.domains.subject_alternative_names])
-      certificate_arn = module.cloudfront_certificate[0].certificate_arn
+      certificate_arn        = module.cloudfront_certificate[0].certificate_arn
     } : null
   }
 }

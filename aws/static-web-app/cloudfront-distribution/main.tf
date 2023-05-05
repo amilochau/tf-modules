@@ -81,7 +81,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   price_class         = "PriceClass_100"
   wait_for_deployment = false
   default_root_object = var.distribution_settings.default_root_object
-  aliases = var.distribution_settings.domains != null ? var.distribution_settings.domains.alternate_domain_names : []
+  aliases             = var.distribution_settings.domains != null ? var.distribution_settings.domains.alternate_domain_names : []
 
   dynamic "origin" {
     for_each = var.distribution_settings.origin_api != null ? [0] : []
@@ -170,7 +170,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
 
     content {
       acm_certificate_arn = var.distribution_settings.domains.certificate_arn
-      ssl_support_method = "sni-only"
+      ssl_support_method  = "sni-only"
     }
   }
 }

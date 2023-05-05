@@ -24,8 +24,8 @@ variable "client_settings" {
     default_root_object   = optional(string, "index.html")
     s3_bucket_name_suffix = optional(string, "")
     domains = optional(object({
-      zone_name = string
-      domain_name = string
+      zone_name                 = string
+      domain_name               = string
       subject_alternative_names = optional(list(string), [])
     }), null)
   })

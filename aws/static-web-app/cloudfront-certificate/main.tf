@@ -14,19 +14,19 @@ data "aws_route53_zone" "route53_zone" {
 }
 
 resource "aws_acm_certificate" "acm_certificate" {
-  domain_name = var.certificate_settings.domain_name
+  domain_name               = var.certificate_settings.domain_name
   subject_alternative_names = var.certificate_settings.subject_alternative_names
-  validation_method = "DNS"
+  validation_method         = "DNS"
 }
 
 resource "aws_route53_record" "route53_record" {
   for_each = { for v in aws_acm_certificate.acm_certificate.domain_validation_options : v.domain_name => v }
 
-  zone_id         = data.aws_route53_zone.route53_zone.zone_id
-  name            = each.value.resource_record_name
-  type            = each.value.resource_record_type
-  ttl             = 60
-  records         = [each.value.resource_record_value]
+  zone_id = data.aws_route53_zone.route53_zone.zone_id
+  name    = each.value.resource_record_name
+  type    = each.value.resource_record_type
+  ttl     = 60
+  records = [each.value.resource_record_value]
 }
 
 resource "aws_acm_certificate_validation" "acm_certificate_validation" {

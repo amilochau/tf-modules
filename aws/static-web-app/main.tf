@@ -78,6 +78,7 @@ module "cloudfront_distribution" {
       domain_name = aws_s3_bucket.s3_bucket.bucket_regional_domain_name
     }
     domains = var.client_settings.domains != null ? {
+      zone_name              = var.client_settings.domains.zone_name
       alternate_domain_names = flatten([[var.client_settings.domains.domain_name], var.client_settings.domains.subject_alternative_names])
       certificate_arn        = module.cloudfront_certificate[0].certificate_arn
     } : null

@@ -19,6 +19,18 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias  = "us-east-1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = {
+      application = var.conventions.application_name
+      host        = var.conventions.host_name
+    }
+  }
+}
+
 module "checks" {
   source      = "../../shared/checks"
   conventions = var.conventions
@@ -31,5 +43,9 @@ module "client_app" {
   client_settings = {
     package_source_file   = "./dist"
     s3_bucket_name_suffix = "1"
+  }
+
+  providers = {
+    aws.us-east-1 = aws.us-east-1
   }
 }

@@ -174,3 +174,35 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     }
   }
 }
+
+data "aws_route53_zone" "route53_zone" {
+  count = var.distribution_settings.domains != null ? 1 : 0
+  name  = var.distribution_settings.domains.zone_name
+}
+
+resource "aws_route53_record" "route53_record_ipv4" {
+  for_each = { for v in var.distribution_settings.domains != null ? lookup(var.distribution_settings.domains, "alternate_domain_names", []) : [] : v => v }
+
+  zone_id = data.aws_route53_zone.route53_zone[0].zone_id
+  name    = each.value
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cloudfront_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.cloudfront_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+resource "aws_route53_record" "route53_record_ipv6" {
+  for_each = { for v in var.distribution_settings.domains != null ? lookup(var.distribution_settings.domains, "alternate_domain_names", []) : [] : v => v }
+
+  zone_id = data.aws_route53_zone.route53_zone[0].zone_id
+  name    = each.value
+  type    = "AAAA"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cloudfront_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.cloudfront_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}

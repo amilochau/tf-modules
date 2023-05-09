@@ -20,6 +20,7 @@ variable "distribution_settings" {
       domain_name = string
     })
     domains = object({
+      zone_name              = string
       alternate_domain_names = list(string)
       certificate_arn        = string
     })

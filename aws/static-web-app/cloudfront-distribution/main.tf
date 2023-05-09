@@ -127,7 +127,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     }
   }
   ordered_cache_behavior {
-    path_pattern           = "/css/*"
+    path_pattern           = "/assets/*"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     target_origin_id       = "client"

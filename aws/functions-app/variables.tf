@@ -96,7 +96,7 @@ variable "lambda_settings" {
     condition = alltrue([
       for v in var.lambda_settings.functions : v.timeout_s >= 1 && v.timeout_s <= 900
     ])
-    error_message = "Memory size must be between 1 second and 900 seconds"
+    error_message = "Timeout must be between 1 second and 900 seconds"
   }
 }
 

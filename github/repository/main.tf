@@ -115,8 +115,6 @@ resource "github_repository_environment" "repository_environment" {
 }
 
 resource "github_branch_protection" "repository_branch_protection" {
-  count = local.advanced_features ? 1 : 0
-
   repository_id                   = github_repository.repository.name
   pattern                         = "main"
   enforce_admins                  = false

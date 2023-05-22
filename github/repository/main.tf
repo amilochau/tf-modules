@@ -114,8 +114,23 @@ resource "github_repository_environment" "repository_environment" {
   }
 }
 
-resource "github_branch_protection" "repository_branch_protection" {
-  repository_id                   = github_repository.repository.name
+resource "github_branch_protection_v3" "repository_branch_protection" {
+  repository                      = github_repository.repository.name
+  branch                          = "main"
+  enforce_admins                  = false
+  require_conversation_resolution = true
+
+  required_status_checks {
+    strict = true
+  }
+
+  required_pull_request_reviews {
+    dismiss_stale_reviews           = true
+    require_code_owner_reviews      = true # To force review by code owners
+    required_approving_review_count = 0    # To enable admin to complete its own PR
+  }
+
+  /*repository_id                   = github_repository.repository.name
   pattern                         = "main"
   enforce_admins                  = false
   require_conversation_resolution = true
@@ -131,7 +146,7 @@ resource "github_branch_protection" "repository_branch_protection" {
     require_code_owner_reviews      = true # To force review by code owners
     require_last_push_approval      = false
     required_approving_review_count = 0 # To enable admin to complete its own PR
-  }
+  }*/
 }
 
 resource "github_repository_file" "file_readme" {

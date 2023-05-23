@@ -20,6 +20,11 @@ provider "aws" {
 }
 
 provider "aws" {
+  alias  = "no-tags"
+  region = var.aws_provider_settings.region
+}
+
+provider "aws" {
   alias  = "us-east-1"
   region = "us-east-1"
 
@@ -47,5 +52,6 @@ module "client_app" {
 
   providers = {
     aws.us-east-1 = aws.us-east-1
+    aws.no-tags   = aws.no-tags
   }
 }

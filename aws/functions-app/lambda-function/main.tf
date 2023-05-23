@@ -125,6 +125,7 @@ module "trigger_schedule" {
     schedules = [for v in var.triggers_settings.schedules : {
       description         = v.description
       schedule_expression = v.schedule_expression
+      enabled             = v.enabled
     }]
   }
 }

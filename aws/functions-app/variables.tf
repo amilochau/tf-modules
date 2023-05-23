@@ -44,6 +44,7 @@ variable "lambda_settings" {
       scheduler_triggers = optional(list(object({
         description         = optional(string, null)
         schedule_expression = string
+        enabled             = optional(bool, true)
       })), [])
       ses_accesses = optional(list(object({
         domain = string

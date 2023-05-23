@@ -39,6 +39,7 @@ module "functions_app" {
         scheduler_triggers = [{
           description         = "Sample Scheduler for Lambda trigger"
           schedule_expression = "cron(* * * * ? *)"
+          enabled             = false
         }]
       }
     }

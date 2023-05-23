@@ -89,6 +89,7 @@ module "lambda_functions" {
     schedules = [for v in each.value.scheduler_triggers : {
       description         = v.description
       schedule_expression = v.schedule_expression
+      enabled             = v.enabled
     }]
   }
   accesses_settings = {

@@ -71,6 +71,7 @@ resource "aws_scheduler_schedule" "schedule" {
 
   description         = each.value.description
   schedule_expression = each.value.schedule_expression
+  state               = each.value.enabled ? "ENABLED" : "DISABLED"
 
   flexible_time_window {
     mode                      = "FLEXIBLE"

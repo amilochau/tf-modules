@@ -8,7 +8,7 @@ variable "conventions" {
 }
 
 variable "function_settings" {
-  description = "Settings to configuren the Lambda"
+  description = "Settings to configure the Lambda"
   type = object({
     runtime                     = string
     architecture                = string
@@ -42,6 +42,7 @@ variable "triggers_settings" {
     schedules = list(object({
       description         = string
       schedule_expression = string
+      enabled             = bool
     }))
   })
 }

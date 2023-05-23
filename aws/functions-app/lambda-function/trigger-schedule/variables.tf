@@ -22,6 +22,7 @@ variable "schedule_settings" {
     schedules = list(object({
       description         = string
       schedule_expression = string
+      enabled             = bool
     }))
   })
 }

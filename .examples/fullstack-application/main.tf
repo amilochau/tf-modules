@@ -81,7 +81,7 @@ module "client_app" {
   }
 
   providers = {
-    aws.us-east-1 = aws.us-east-1
     aws.no-tags   = aws.no-tags
+    aws.us-east-1 = aws.us-east-1
   }
 }

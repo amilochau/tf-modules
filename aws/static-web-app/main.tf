@@ -4,7 +4,8 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.62, < 5.0.0"
       configuration_aliases = [
-        aws.us-east-1
+        aws.us-east-1,
+        aws.no-tags
       ]
     }
   }
@@ -46,6 +47,8 @@ resource "aws_s3_object" "s3_object_client_files" {
   source       = "${var.client_settings.package_source_file}/${each.value}"
   etag         = filemd5("${var.client_settings.package_source_file}/${each.value}")
   content_type = lookup(module.conventions.aws_format_conventions.mime_types, regex("\\.[^.]+$", each.value), null)
+
+  provider = aws.no-tags
 }
 
 # ===== CLOUDFRONT CERTIFICATE =====

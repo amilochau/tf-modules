@@ -14,13 +14,19 @@ module "conventions" {
   conventions = var.conventions
 }
 
+# IAM OIDC between AWS and GitHub
+
+data "tls_certificate" "github" {
+  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
+}
+
 resource "aws_iam_openid_connect_provider" "github_identity_provider" {
   url = "https://token.actions.githubusercontent.com"
   client_id_list = [
     "sts.amazonaws.com"
   ]
   thumbprint_list = [
-    "6938fd4d98bab03faadb97b34396831e3780aea1" // Thumbprint for GitHub Actions
+    data.tls_certificate.github.certificates[0].sha1_fingerprint // Thumbprint for GitHub Actions
   ]
 }
 

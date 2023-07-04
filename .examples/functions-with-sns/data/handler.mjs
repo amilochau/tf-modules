@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-exports.handler = async (event) => {
+export const get = async (event, context) => {
+    console.log(`EVENT: \n ${JSON.stringify(event, null, 2)}`)
     return {
         statusCode: 200,
         headers: {

@@ -47,6 +47,18 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
     ]
     effect = "Allow"
   }
+  
+  // X-Ray Daemon
+  statement {
+    actions = [
+      "xray:PutTraceSegments",
+      "xray:PutTelemetryRecords"
+    ]
+    resources = [
+      "*"
+    ]
+    effect = "Allow"
+  }
 
   // DynamoDB tables
   dynamic "statement" {

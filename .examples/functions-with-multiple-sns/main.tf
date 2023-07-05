@@ -26,12 +26,14 @@ module "checks" {
 
 resource "aws_sns_topic" "sns_topic" {
   # SNS topic, to be created by the process that publishes the event
-  name = "sns-topic-sample"
+  name           = "sns-topic-sample"
+  tracing_config = "Active"
 }
 
 resource "aws_sns_topic" "sns_topic2" {
   # SNS topic, to be created by the process that publishes the event
-  name = "sns-topic-sample2"
+  name           = "sns-topic-sample2"
+  tracing_config = "Active"
 }
 
 module "functions_app" {

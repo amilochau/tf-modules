@@ -54,6 +54,10 @@ resource "aws_lambda_function" "lambda_function" {
       "CONVENTION__HOST"        = var.conventions.host_name
     })
   }
+
+  tracing_config {
+    mode = "Active"
+  }
 }
 
 # ===== CLOUDWATCH LOG GROUP =====

@@ -27,6 +27,7 @@ module "checks" {
 resource "aws_sns_topic" "sns_topic" {
   # SNS topic, to be created by the process that publishes the event
   name = "sns-topic-sample"
+  tracing_config = "Active"
 }
 
 module "functions_app" {

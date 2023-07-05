@@ -22,7 +22,7 @@ module "conventions" {
 # ===== SNS topic =====
 
 resource "aws_sns_topic" "notifications_topic" {
-  name = "${module.conventions.aws_naming_conventions.sns_topic_name_prefix}-notifications"
+  name           = "${module.conventions.aws_naming_conventions.sns_topic_name_prefix}-notifications"
   tracing_config = "Active"
 }
 

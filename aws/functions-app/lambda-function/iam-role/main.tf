@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
     ]
     effect = "Allow"
   }
-  
+
   // X-Ray Daemon
   statement {
     actions = [

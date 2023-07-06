@@ -19,6 +19,21 @@ module "conventions" {
   conventions = var.conventions
 }
 
+resource "aws_account_primary_contact" "account_primary_contact" {
+  count = var.account_primary_contact == null ? 0 : 1
+
+  address_line_1     = var.account_primary_contact.address_line_1
+  city               = var.account_primary_contact.city
+  company_name       = var.account_primary_contact.company_name
+  country_code       = var.account_primary_contact.country_code
+  district_or_county = var.account_primary_contact.district_or_county
+  full_name          = var.account_primary_contact.full_name
+  phone_number       = var.account_primary_contact.phone_number
+  postal_code        = var.account_primary_contact.postal_code
+  state_or_region    = var.account_primary_contact.state_or_region
+  website_url        = var.account_primary_contact.website_url
+}
+
 resource "aws_resourceexplorer2_index" "resourceexplorer_index" {
   type = var.region_type == "Primary" ? "AGGREGATOR" : "LOCAL"
 }

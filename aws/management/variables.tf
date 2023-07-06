@@ -27,6 +27,23 @@ variable "region_type" {
   }
 }
 
+variable "account_primary_contact" {
+  description = "Account primary contact"
+  type = object({
+    address_line_1     = string
+    city               = string
+    company_name       = optional(string, null)
+    country_code       = string
+    district_or_county = optional(string, null)
+    full_name          = string
+    phone_number       = string
+    postal_code        = string
+    state_or_region    = optional(string, null)
+    website_url        = optional(string, null)
+  })
+  default = null
+}
+
 variable "domains" {
   description = "Domains to manage"
   type = map(object({

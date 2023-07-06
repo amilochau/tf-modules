@@ -50,4 +50,5 @@ variable "budgets" {
       email_addresses    = list(string)
     }))
   }))
+  default = {}
 }

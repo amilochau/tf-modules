@@ -42,8 +42,12 @@ module "domains" {
 
 module "budgets" {
   for_each = var.budgets
+  source   = "./budget"
 
-  name             = each.key
-  limit_amount_usd = each.value.limit_amount_usd
-  notifications    = each.value.notifications
+  conventions = var.conventions
+  budget_settings = {
+    name             = each.key
+    limit_amount_usd = each.value.limit_amount_usd
+    notifications    = each.value.notifications
+  }
 }

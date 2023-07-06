@@ -10,10 +10,10 @@ resource "aws_budgets_budget" "budget" {
 
     content {
       comparison_operator        = "GREATER_THAN"
-      threshold                  = v.threshould_percent
+      threshold                  = notification.value.threshold_percent
       threshold_type             = "PERCENTAGE"
-      notification_type          = v.forecast ? "FORECASTED" : "ACTUAL"
-      subscriber_email_addresses = v.email_addresses
+      notification_type          = notification.value.forecast ? "FORECASTED" : "ACTUAL"
+      subscriber_email_addresses = notification.value.email_addresses
     }
   }
 }

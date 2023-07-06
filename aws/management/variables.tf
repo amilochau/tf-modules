@@ -45,8 +45,8 @@ variable "budgets" {
   type = map(object({
     limit_amount_usd = string
     notifications = list(object({
-      threshould_percent = number
-      forecast           = bool
+      threshold_percent = number
+      forecast           = optional(bool, false)
       email_addresses    = list(string)
     }))
   }))

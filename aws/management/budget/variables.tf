@@ -14,8 +14,8 @@ variable "budget_settings" {
     limit_amount_usd = string
     notifications = list(object({
       threshold_percent = number
-      forecast           = bool
-      email_addresses    = list(string)
+      forecast          = bool
+      email_addresses   = list(string)
     }))
   })
 }

@@ -39,3 +39,15 @@ variable "domains" {
   }))
   default = {}
 }
+
+variable "budgets" {
+  description = "Budgets"
+  type = map(object({
+    limit_amount_usd = string
+    notifications = list(object({
+      threshould_percent = number
+      forecast           = bool
+      email_addresses    = list(string)
+    }))
+  }))
+}

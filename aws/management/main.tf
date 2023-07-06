@@ -39,3 +39,11 @@ module "domains" {
     records            = each.value.records
   }
 }
+
+module "budgets" {
+  for_each = var.budgets
+
+  name             = each.key
+  limit_amount_usd = each.value.limit_amount_usd
+  notifications    = each.value.notifications
+}

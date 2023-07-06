@@ -30,15 +30,15 @@ variable "region_type" {
 variable "account_primary_contact" {
   description = "Account primary contact"
   type = object({
-    address_line_1     = string
-    city               = string
-    company_name       = optional(string, null)
-    country_code       = string
-    district_or_county = optional(string, null)
     full_name          = string
-    phone_number       = string
+    company_name       = optional(string, null)
+    address_line_1     = string
     postal_code        = string
+    city               = string
     state_or_region    = optional(string, null)
+    district_or_county = optional(string, null)
+    country_code       = string
+    phone_number       = string
     website_url        = optional(string, null)
   })
   default = null

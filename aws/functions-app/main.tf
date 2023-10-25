@@ -33,6 +33,7 @@ module "dynamodb_tables" {
     attributes               = each.value.attributes
     ttl                      = each.value.ttl
     global_secondary_indexes = each.value.global_secondary_indexes
+    enable_stream            = each.value.enable_stream
   }
 }
 
@@ -90,6 +91,11 @@ module "lambda_functions" {
       description         = v.description
       schedule_expression = v.schedule_expression
       enabled             = v.enabled
+    }]
+    dynamodb_streams = [for v in each.value.dynamodb_stream_triggers : {
+      description              = v.description
+      stream_arn               = module.dynamodb_tables[v.table_name].stream_arn
+      filter_criteria_patterns = v.filter_criteria_patterns
     }]
   }
   accesses_settings = {

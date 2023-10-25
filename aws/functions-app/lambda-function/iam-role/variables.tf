@@ -19,6 +19,7 @@ variable "accesses_settings" {
   type = object({
     cloudwatch_log_group_arn = string
     dynamodb_table_arns      = list(string)
+    dynamodb_stream_arns     = list(string)
     ses_domain_identity_arns = list(string)
     lambda_arns              = list(string)
   })

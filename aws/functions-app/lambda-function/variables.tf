@@ -44,6 +44,11 @@ variable "triggers_settings" {
       schedule_expression = string
       enabled             = bool
     }))
+    dynamodb_streams = list(object({
+      description              = string
+      stream_arn               = string
+      filter_criteria_patterns = list(string)
+    }))
   })
 }
 

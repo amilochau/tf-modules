@@ -21,6 +21,7 @@ module "lambda_iam_role" {
   accesses_settings = {
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
+    dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
     lambda_arns              = var.accesses_settings.lambda_arns
   }
@@ -132,4 +133,17 @@ module "trigger_schedule" {
       enabled             = v.enabled
     }]
   }
+}
+
+# ===== DYNAMODB STREAM TRIGGER =====
+
+module "dynamodb_stream_trigger" {
+  for_each = { for k, v in var.triggers_settings.dynamodb_streams : k => v }
+  source   = "./trigger-dynamodb-stream"
+
+  function_settings = {
+    function_name = aws_lambda_function.lambda_function.function_name
+  }
+
+  dynamodb_stream_settings = each.value
 }

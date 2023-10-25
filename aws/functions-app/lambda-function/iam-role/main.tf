@@ -29,7 +29,8 @@ resource "aws_iam_role" "lambda_iam_role" {
 # ===== POLICY =====
 
 locals {
-  dynamodb_statement_resources            = flatten([for k, v in var.accesses_settings.dynamodb_table_arns : [v, "${v}/*"]])
+  dynamodb_tables_statement_resources     = flatten([for k, v in var.accesses_settings.dynamodb_table_arns : [v, "${v}/*"]])
+  dynamodb_streams_statement_resources    = var.accesses_settings.dynamodb_stream_arns
   ses_domain_identity_statement_resources = length(var.accesses_settings.ses_domain_identity_arns) > 0 ? ["*"] : [] # Allow to send emails to any email address
   lambda_statement_resources              = var.accesses_settings.lambda_arns
 }
@@ -62,7 +63,7 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
 
   // DynamoDB tables
   dynamic "statement" {
-    for_each = length(local.dynamodb_statement_resources) > 0 ? [1] : []
+    for_each = length(local.dynamodb_tables_statement_resources) > 0 ? [1] : []
     content {
       actions = [
         "dynamodb:Query",
@@ -72,7 +73,22 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "dynamodb:UpdateItem",
         "dynamodb:DeleteItem"
       ]
-      resources = local.dynamodb_statement_resources
+      resources = local.dynamodb_tables_statement_resources
+      effect    = "Allow"
+    }
+  }
+
+  // DynamoDB streams
+  dynamic "statement" {
+    for_each = length(local.dynamodb_streams_statement_resources) > 0 ? [1] : []
+    content {
+      actions = [
+        "dynamodb:DescribeStream",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:ListStreams"
+      ]
+      resources = local.dynamodb_streams_statement_resources
       effect    = "Allow"
     }
   }

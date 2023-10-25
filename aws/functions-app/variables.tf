@@ -46,6 +46,11 @@ variable "lambda_settings" {
         schedule_expression = string
         enabled             = optional(bool, true)
       })), [])
+      dynamodb_stream_triggers = optional(list(object({
+        description              = optional(string, null)
+        table_name               = string
+        filter_criteria_patterns = optional(list(string), [])
+      })), [])
       ses_accesses = optional(list(object({
         domain = string
       })), [])
@@ -99,6 +104,15 @@ variable "lambda_settings" {
     ])
     error_message = "Timeout must be between 1 second and 900 seconds"
   }
+
+  validation {
+    condition = alltrue([
+      for v in var.lambda_settings.functions : alltrue([
+        for v2 in v.dynamodb_stream_triggers : length(v2.filter_criteria_patterns) <= 5
+      ]) if length(v.dynamodb_stream_triggers) > 0
+    ])
+    error_message = "DynamoDB stream trigger can only include up to 5 filter criteria patterns"
+  }
 }
 
 variable "cognito_clients_settings" {
@@ -128,6 +142,7 @@ variable "dynamodb_tables_settings" {
       sort_key           = string
       non_key_attributes = list(string)
     })), {})
+    enable_stream = optional(bool, false)
   }))
   default = {}
 

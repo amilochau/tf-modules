@@ -25,5 +25,6 @@ variable "table_settings" {
       sort_key           = string
       non_key_attributes = list(string)
     }))
+    enable_stream = bool
   })
 }

@@ -6,6 +6,9 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   bisect_batch_on_function_error     = true
   maximum_batching_window_in_seconds = 10
   maximum_retry_attempts             = 10
+  function_response_types = [
+    "ReportBatchItemFailures"
+  ]
 
   dynamic "filter_criteria" {
     for_each = length(var.dynamodb_stream_settings.filter_criteria_patterns) > 0 ? [1] : []

@@ -2,10 +2,10 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   function_name                      = var.function_settings.function_name
   event_source_arn                   = var.dynamodb_stream_settings.stream_arn
   starting_position                  = "LATEST"
-  batch_size                         = 10
+  batch_size                         = var.dynamodb_stream_settings.batch_size
   bisect_batch_on_function_error     = true
-  maximum_batching_window_in_seconds = 10
-  maximum_retry_attempts             = 10
+  maximum_batching_window_in_seconds = var.dynamodb_stream_settings.maximum_batching_window_in_seconds
+  maximum_retry_attempts             = var.dynamodb_stream_settings.maximum_retry_attempts
   function_response_types = [
     "ReportBatchItemFailures"
   ]

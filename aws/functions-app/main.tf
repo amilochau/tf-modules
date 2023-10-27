@@ -93,9 +93,12 @@ module "lambda_functions" {
       enabled             = v.enabled
     }]
     dynamodb_streams = [for v in each.value.dynamodb_stream_triggers : {
-      description              = v.description
-      stream_arn               = module.dynamodb_tables[v.table_name].stream_arn
-      filter_criteria_patterns = v.filter_criteria_patterns
+      description                        = v.description
+      stream_arn                         = module.dynamodb_tables[v.table_name].stream_arn
+      filter_criteria_patterns           = v.filter_criteria_patterns
+      batch_size                         = v.batch_size
+      maximum_batching_window_in_seconds = v.maximum_batching_window_in_seconds
+      maximum_retry_attempts             = v.maximum_retry_attempts
     }]
   }
   accesses_settings = {

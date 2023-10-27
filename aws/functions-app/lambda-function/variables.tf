@@ -45,9 +45,12 @@ variable "triggers_settings" {
       enabled             = bool
     }))
     dynamodb_streams = list(object({
-      description              = string
-      stream_arn               = string
-      filter_criteria_patterns = list(string)
+      description                        = string
+      stream_arn                         = string
+      filter_criteria_patterns           = list(string)
+      batch_size                         = number
+      maximum_batching_window_in_seconds = number
+      maximum_retry_attempts             = number
     }))
   })
 }

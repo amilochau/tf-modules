@@ -47,9 +47,12 @@ variable "lambda_settings" {
         enabled             = optional(bool, true)
       })), [])
       dynamodb_stream_triggers = optional(list(object({
-        description              = optional(string, null)
-        table_name               = string
-        filter_criteria_patterns = optional(list(string), [])
+        description                        = optional(string, null)
+        table_name                         = string
+        filter_criteria_patterns           = optional(list(string), [])
+        batch_size                         = optional(number, 10)
+        maximum_batching_window_in_seconds = optional(number, 10)
+        maximum_retry_attempts             = optional(number, 10)
       })), [])
       ses_accesses = optional(list(object({
         domain = string

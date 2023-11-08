@@ -18,9 +18,9 @@ jobs:
     name: Build (IaC)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build and test projects
-        uses: amilochau/github-actions/build/terraform@v3
+        uses: amilochau/github-actions/build/terraform@v4
         with:
           modulesPath: ${{ env.IAC_PATH }}
           modulesPathDepth: ${{ env.IAC_DEPTH }}

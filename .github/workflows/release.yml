@@ -25,14 +25,16 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     environment: RELEASE
+    env:
+      GH_TOKEN: ${{ github.token }}
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up a GitHub Release
-        uses: amilochau/github-actions/release/basic@v3
+        uses: amilochau/github-actions/release/basic@v4
         with:
           versionMajor: ${{ github.event.inputs.versionMajor }}
           versionMinor: ${{ github.event.inputs.versionMinor }}
           versionPatch: ${{ github.event.inputs.versionPatch }}
           versionUnstableSuffix: ${{ github.event.inputs.versionUnstableSuffix }}
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          avoidGitHubPrerelease: true

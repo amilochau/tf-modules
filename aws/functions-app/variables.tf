@@ -64,8 +64,8 @@ variable "lambda_settings" {
   })
 
   validation {
-    condition     = contains(["provided.al2", "nodejs18.x"], var.lambda_settings.runtime)
-    error_message = "Runtime must be 'provided.al2' or 'nodejs18.x'"
+    condition     = contains(["provided.al2", "provided.al2023", "nodejs18.x"], var.lambda_settings.runtime)
+    error_message = "Runtime must be 'provided.al2', 'provided.al2023' or 'nodejs18.x'"
   }
 
   validation {

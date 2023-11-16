@@ -2,11 +2,11 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = ">= 5.18.0, < 6.0.0"
+      version = ">= 5.42.0, < 6.0.0"
     }
   }
 
-  required_version = ">= 1.3.0"
+  required_version = ">= 1.6.3, < 2.0.0"
 }
 
 locals {

@@ -96,8 +96,8 @@ resource "github_issue_labels" "repository_issue_labels" {
     for_each = local.labels
     content {
       name        = label.key
-      color       = label.color
-      description = label.description
+      color       = label.value.color
+      description = label.value.description
     }
   }
 }

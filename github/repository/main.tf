@@ -2,7 +2,7 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = ">= 5.42.0, < 6.0.0"
+      version = ">= 5.43.0, < 6.0.0"
     }
   }
 
@@ -89,13 +89,17 @@ resource "github_actions_repository_permissions" "repository_actions_permissions
   }
 }
 
-resource "github_issue_label" "repository_issue_label" {
-  for_each = local.labels
+resource "github_issue_labels" "repository_issue_labels" {
+  repository = github_repository.repository.name
 
-  repository  = github_repository.repository.name
-  name        = each.key
-  description = each.value.description
-  color       = each.value.color
+  dynamic "label" {
+    for_each = local.labels
+    content {
+      name        = label.key
+      color       = label.color
+      description = label.description
+    }
+  }
 }
 
 resource "github_repository_environment" "repository_environment" {

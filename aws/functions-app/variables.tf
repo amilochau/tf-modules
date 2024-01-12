@@ -124,6 +124,12 @@ variable "lambda_settings" {
   }
 }
 
+variable "cognito_user_pool_name" {
+  description = "Name of the Cognito user pool"
+  type        = string
+  default     = null
+}
+
 variable "cognito_clients_settings" {
   description = "Settings to configure identity clients for the API"
   type = map(object({

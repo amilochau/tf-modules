@@ -4,7 +4,7 @@ module "conventions" {
 }
 
 data "aws_cognito_user_pools" "cognito_userpool" {
-  name = module.conventions.aws_existing_conventions.cognito_userpool_name
+  name = var.cognito_user_pool_name
 }
 
 locals {

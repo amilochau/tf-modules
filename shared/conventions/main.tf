@@ -40,7 +40,6 @@ locals {
   }
 
   aws_existing = {
-    cognito_userpool_name                = "${local.aws_environment_base.organization}-identity-${local.aws_environment_base.host}-userpool"
     cloudfront_cache_policy_disabled_id  = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
     cloudfront_cache_policy_optimized_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
   }

@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "landing_zones" {
-  source      = "../../aws/landing-zones"
+  source = "../../aws/landing-zones"
 
   account_settings = {
     email = "test@example.fr"

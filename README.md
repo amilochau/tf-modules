@@ -23,6 +23,7 @@ The following modules are proposed for Infrastructure as Code, and can be freely
 | [aws/auth](./aws/auth) | Deploys AWS Cognito resources for identity management |
 | [aws/emails](./aws/emails) | Deploys AWS SES resources for emails management, including domain validation |
 | [aws/functions-app](./aws/functions-app) | Deploys AWS Lambda functions resources, including multi-triggers management and data storage |
+| [aws/landing-zones](./aws/landing-zones) | Deploys AWS landing zones, to architect AWS organizations and accounts |
 | [aws/management](./aws/management) | Deploys AWS global management resources, to help manage an AWS account |
 | [aws/static-web-app](./aws/static-web-app) | Deploys AWS CloudFront to expose a Static Web App, with routing policies for APIs |
 | [aws/tf-backend](./aws/tf-backend) | Deploys AWS resources to manage a Terraform backend |

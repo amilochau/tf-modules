@@ -8,6 +8,13 @@ variable "organization_name" {
   type        = string
 }
 
+variable "deployments_settings" {
+  description = "Deployments settings"
+  type = object({
+    account_email_prod_shared = string
+  })
+}
+
 variable "infrastructure_settings" {
   description = "Infrastructure settings"
   type = object({

@@ -8,6 +8,11 @@ variable "conventions" {
   })
 }
 
+variable "cognito_user_pool_name" {
+  description = "Name of the Cognito user pool"
+  type        = string
+}
+
 variable "clients_settings" {
   description = "Settings to configure identity clients for the API"
   type = map(object({

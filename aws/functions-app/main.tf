@@ -17,8 +17,9 @@ locals {
 module "cognito_clients" {
   source = "./cognito-clients"
 
-  conventions      = var.conventions
-  clients_settings = var.cognito_clients_settings
+  conventions            = var.conventions
+  cognito_user_pool_name = var.cognito_user_pool_name
+  clients_settings       = var.cognito_clients_settings
 }
 
 module "dynamodb_tables" {

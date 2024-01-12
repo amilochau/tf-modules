@@ -15,6 +15,9 @@ variable "sandbox_settings" {
 variable "organizations_settings" {
   description = "Organizations settings"
   type = map(object({
+    deployments = object({
+      account_email_prod_shared = string
+    })
     infrastructure = object({
       account_email_prod_shared = string
     })

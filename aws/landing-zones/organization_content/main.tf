@@ -16,99 +16,38 @@ resource "aws_organizations_organizational_unit" "ou_organization" {
 
 # Deployments
 
-resource "aws_organizations_organizational_unit" "ou_deployments" {
-  name      = "${var.organization_name}-deployments"
-  parent_id = aws_organizations_organizational_unit.ou_organization.id
+module "deployments" {
+  source = "./deployments"
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  ou_organization_id = aws_organizations_organizational_unit.ou_organization.id
+  organization_name = var.organization_name
+  deployments_settings = var.deployments_settings
 }
 
-resource "aws_organizations_organizational_unit" "ou_deployments_prod" {
-  name      = "${var.organization_name}-deployments-prod"
-  parent_id = aws_organizations_organizational_unit.ou_deployments.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
+/*
+moved {
+  from = 
 }
-
-resource "aws_organizations_account" "account_deployments_prod_shared" {
-  name      = "${var.organization_name}-deployments-prod-shared"
-  email     = var.deployments_settings.account_email_prod_shared
-  parent_id = aws_organizations_organizational_unit.ou_deployments_prod.id
-}
+*/
 
 # Infrastructure
 
-resource "aws_organizations_organizational_unit" "ou_infrastructure" {
-  name      = "${var.organization_name}-infrastructure"
-  parent_id = aws_organizations_organizational_unit.ou_organization.id
+module "infrastructure" {
+  source = "./infrastructure"
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_organizations_organizational_unit" "ou_infrastructure_prod" {
-  name      = "${var.organization_name}-infrastructure-prod"
-  parent_id = aws_organizations_organizational_unit.ou_infrastructure.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_organizations_account" "account_infrastructure_prod_shared" {
-  name      = "${var.organization_name}-infrastructure-prod-shared"
-  email     = var.infrastructure_settings.account_email_prod_shared
-  parent_id = aws_organizations_organizational_unit.ou_infrastructure_prod.id
+  ou_organization_id = aws_organizations_organizational_unit.ou_organization.id
+  organization_name = var.organization_name
+  infrastructure_settings = var.infrastructure_settings
 }
 
 # Workloads
 
-resource "aws_organizations_organizational_unit" "ou_workloads" {
-  name      = "${var.organization_name}-workloads"
-  parent_id = aws_organizations_organizational_unit.ou_organization.id
+module "workloads" {
+  source = "./workloads"
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_organizations_organizational_unit" "ou_workloads_prod" {
-  name      = "${var.organization_name}-workloads-prod"
-  parent_id = aws_organizations_organizational_unit.ou_workloads.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_organizations_organizational_unit" "ou_workloads_test" {
-  name      = "${var.organization_name}-workloads-test"
-  parent_id = aws_organizations_organizational_unit.ou_workloads.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_organizations_account" "account_workloads_prod" {
-  for_each = var.workloads_settings
-
-  name      = "${var.organization_name}-workloads-prod-${each.key}"
-  email     = each.value.account_email_prod
-  parent_id = aws_organizations_organizational_unit.ou_workloads_prod.id
-}
-
-resource "aws_organizations_account" "account_workloads_test" {
-  for_each = var.workloads_settings
-
-  name      = "${var.organization_name}-workloads-test-${each.key}"
-  email     = each.value.account_email_test
-  parent_id = aws_organizations_organizational_unit.ou_workloads_test.id
+  ou_organization_id = aws_organizations_organizational_unit.ou_organization.id
+  organization_name = var.organization_name
+  workloads_settings = var.workloads_settings
 }
 
 # Additional - not enabled yet

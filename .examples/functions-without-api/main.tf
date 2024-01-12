@@ -13,8 +13,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      application = var.conventions.application_name
-      host        = var.conventions.host_name
+      organization = var.conventions.organization_name
+      application  = var.conventions.application_name
+      host         = var.conventions.host_name
     }
   }
 }

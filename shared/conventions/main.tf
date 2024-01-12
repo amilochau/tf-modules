@@ -34,11 +34,6 @@ locals {
 }
 
 locals {
-  aws_environment_base = { # @todo To be removed
-    organization = var.conventions.organization_name
-    host         = module.environment.is_production ? "prd" : "dev"
-  }
-
   aws_existing = {
     cloudfront_cache_policy_disabled_id  = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
     cloudfront_cache_policy_optimized_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled

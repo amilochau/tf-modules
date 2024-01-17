@@ -40,7 +40,7 @@ module "organization_content" {
   source   = "./organization_content"
 
   root_id                 = aws_organizations_organization.organization.roots[0].id
-  organization_name       = each.key
+  organization_full_name  = each.key
   deployments_settings    = each.value.deployments
   infrastructure_settings = each.value.infrastructure
   workloads_settings      = each.value.workloads

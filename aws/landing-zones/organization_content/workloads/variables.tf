@@ -1,11 +1,11 @@
-variable "organization_name" {
-  description = "Organization name"
+variable "organization_full_name" {
+  description = "Organization long name"
   type        = string
 }
 
 variable "ou_organization_id" {
   description = "OU organization ID"
-  type = string
+  type        = string
 }
 
 variable "workloads_settings" {

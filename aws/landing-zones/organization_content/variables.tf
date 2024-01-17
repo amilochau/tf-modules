@@ -3,8 +3,8 @@ variable "root_id" {
   type        = string
 }
 
-variable "organization_name" {
-  description = "Organization name"
+variable "organization_full_name" {
+  description = "Organization long name"
   type        = string
 }
 

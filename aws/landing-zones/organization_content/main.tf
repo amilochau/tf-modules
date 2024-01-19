@@ -17,21 +17,23 @@ resource "aws_organizations_organizational_unit" "ou_organization" {
 # Deployments
 
 module "deployments" {
-  source = "./deployments"
+  source = "../account"
 
-  ou_organization_id     = aws_organizations_organizational_unit.ou_organization.id
-  organization_full_name = var.organization_full_name
-  deployments_settings   = var.deployments_settings
+  account_name = "${var.organization_full_name}-deployments"
+  account_email = var.deployments_settings.account_email
+  account_parent_id = aws_organizations_organizational_unit.ou_organization.id
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
 # Infrastructure
 
 module "infrastructure" {
-  source = "./infrastructure"
+  source = "../account"
 
-  ou_organization_id      = aws_organizations_organizational_unit.ou_organization.id
-  organization_full_name  = var.organization_full_name
-  infrastructure_settings = var.infrastructure_settings
+  account_name = "${var.organization_full_name}-infrastructure"
+  account_email = var.infrastructure_settings.account_email
+  account_parent_id = aws_organizations_organizational_unit.ou_organization.id
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
 # Workloads
@@ -42,6 +44,7 @@ module "workloads" {
   ou_organization_id     = aws_organizations_organizational_unit.ou_organization.id
   organization_full_name = var.organization_full_name
   workloads_settings     = var.workloads_settings
+  default_account_iam_assignments = var.default_account_iam_assignments
 }
 
 # Additional - not enabled yet

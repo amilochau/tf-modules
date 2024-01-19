@@ -25,18 +25,22 @@ resource "aws_organizations_organizational_unit" "ou_workloads_test" {
   }
 }
 
-resource "aws_organizations_account" "account_workloads_prod" {
+module "account_workloads_prod" {
   for_each = var.workloads_settings
+  source = "../../account"
 
-  name      = "${var.organization_full_name}-workloads-prod-${each.key}"
-  email     = each.value.account_email_prod
-  parent_id = aws_organizations_organizational_unit.ou_workloads_prod.id
+  account_name = "${var.organization_full_name}-workloads-prod-${each.key}"
+  account_email = each.value.account_email_prod
+  account_parent_id = aws_organizations_organizational_unit.ou_workloads_prod.id
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
-resource "aws_organizations_account" "account_workloads_test" {
+module "account_workloads_test" {
   for_each = var.workloads_settings
+  source = "../../account"
 
-  name      = "${var.organization_full_name}-workloads-test-${each.key}"
-  email     = each.value.account_email_test
-  parent_id = aws_organizations_organizational_unit.ou_workloads_test.id
+  account_name      = "${var.organization_full_name}-workloads-test-${each.key}"
+  account_email     = each.value.account_email_test
+  account_parent_id = aws_organizations_organizational_unit.ou_workloads_test.id
+  account_iam_assignments = var.default_account_iam_assignments
 }

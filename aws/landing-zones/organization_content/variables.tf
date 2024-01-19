@@ -11,14 +11,14 @@ variable "organization_full_name" {
 variable "deployments_settings" {
   description = "Deployments settings"
   type = object({
-    account_email_prod_shared = string
+    account_email = string
   })
 }
 
 variable "infrastructure_settings" {
   description = "Infrastructure settings"
   type = object({
-    account_email_prod_shared = string
+    account_email = string
   })
 }
 
@@ -28,4 +28,14 @@ variable "workloads_settings" {
     account_email_prod = string
     account_email_test = string
   }))
+}
+
+variable "default_account_iam_assignments" {
+  description = "Default account IAM assignments"
+  type = map(object({
+    permission_set_arn = string
+    principal_id = string
+    principal_type = optional(string, "GROUP")
+  }))
+  default = {}
 }

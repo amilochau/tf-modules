@@ -12,20 +12,27 @@ terraform {
 resource "aws_organizations_organization" "organization" {
   aws_service_access_principals = [
     "account.amazonaws.com",
-    "sso.amazonaws.com"
+    "resource-explorer-2.amazonaws.com",
+    "sso.amazonaws.com",
   ]
 }
 
 # Management & Sandbox
 
-resource "aws_organizations_account" "account_management" {
-  name  = "management"
-  email = var.management_settings.account_email
+module "account_management" {
+  source = "./account"
+  
+  account_name = "management"
+  account_email = var.management_settings.account_email
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
-resource "aws_organizations_account" "account_sandbox" {
-  name  = "sandbox"
-  email = var.sandbox_settings.account_email
+module "account_sandbox" {
+  source = "./account"
+  
+  account_name = "sandbox"
+  account_email = var.sandbox_settings.account_email
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
 resource "aws_organizations_organizational_unit" "ou_suspended" {
@@ -44,4 +51,5 @@ module "organization_content" {
   deployments_settings    = each.value.deployments
   infrastructure_settings = each.value.infrastructure
   workloads_settings      = each.value.workloads
+  default_account_iam_assignments = var.default_account_iam_assignments
 }

@@ -1,3 +1,14 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 resource "aws_route53_zone" "route53_zone" {
   name          = var.domain_settings.domain_name
   comment       = var.domain_settings.domain_description

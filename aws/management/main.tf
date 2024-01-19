@@ -52,18 +52,6 @@ resource "aws_resourceexplorer2_view" "default_view" {
   default_view = true
 }
 
-module "domains" {
-  for_each = var.domains
-  source   = "./domain"
-
-  conventions = var.conventions
-  domain_settings = {
-    domain_name        = each.key
-    domain_description = each.value.domain_description
-    records            = each.value.records
-  }
-}
-
 module "budgets" {
   for_each = var.budgets
   source   = "./budget"

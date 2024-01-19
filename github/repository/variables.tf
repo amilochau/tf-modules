@@ -37,6 +37,11 @@ variable "repository_basics" {
     is_template      = optional(bool, false)
     license_template = optional(string, "mit")
     topics           = set(string)
+
+    template = optional(object({
+      owner = string
+      repository = string
+    }), null)
   })
 }
 
@@ -46,15 +51,6 @@ variable "repository_environments" {
     protected_branches_only = optional(bool, true)
     reviewers_ids           = optional(set(number), [])
   }))
-  default = {}
-}
-
-variable "workflows" {
-  description = "Workflows to add"
-  type = object({
-    enable_dependency_review = optional(bool, false)
-    enable_clean             = optional(bool, true)
-  })
   default = {}
 }
 

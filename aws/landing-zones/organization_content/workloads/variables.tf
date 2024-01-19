@@ -1,25 +1,11 @@
-variable "root_id" {
-  description = "Root id"
-  type        = string
-}
-
 variable "organization_full_name" {
   description = "Organization long name"
   type        = string
 }
 
-variable "deployments_settings" {
-  description = "Deployments settings"
-  type = object({
-    account_email = string
-  })
-}
-
-variable "infrastructure_settings" {
-  description = "Infrastructure settings"
-  type = object({
-    account_email = string
-  })
+variable "ou_organization_id" {
+  description = "OU organization ID"
+  type        = string
 }
 
 variable "workloads_settings" {

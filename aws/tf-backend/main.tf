@@ -20,7 +20,8 @@ module "conventions" {
 }
 
 locals {
-  s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.s3_bucket_name_suffix == "" ? "" : "-"}${var.s3_bucket_name_suffix}"
+  s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.resources_name_suffix == "" ? "" : "-"}${var.resources_name_suffix}"
+  dynamodb_table_name = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}${var.resources_name_suffix == "" ? "" : "-"}${var.resources_name_suffix}-locks"
 }
 
 # ===== S3 BUCKET =====
@@ -67,7 +68,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_bucket_lifecycle" {
 # ===== DYNAMODB TABLE =====
 
 resource "aws_dynamodb_table" "dynamodb_table" {
-  name                        = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}-locks"
+  name                        = local.dynamodb_table_name
   hash_key                    = "LockID"
   billing_mode                = "PAY_PER_REQUEST"
   deletion_protection_enabled = !var.conventions.temporary && module.environment.is_production

@@ -23,42 +23,15 @@ variable "conventions" {
   }
 }
 
-variable "region_type" {
-  description = "Type of AWS region"
-  type        = string
-
-  validation {
-    condition     = var.region_type == "Primary" || var.region_type == "Secondary"
-    error_message = "Type must be 'Primary' or 'Secondary'"
-  }
-}
-
-variable "account_primary_contact" {
-  description = "Account primary contact"
+variable "domain_settings" {
+  description = "Settings of the domain to deploy"
   type = object({
-    full_name          = string
-    company_name       = optional(string, null)
-    address_line_1     = string
-    postal_code        = string
-    city               = string
-    state_or_region    = optional(string, null)
-    district_or_county = optional(string, null)
-    country_code       = string
-    phone_number       = string
-    website_url        = optional(string, null)
-  })
-  default = null
-}
-
-variable "budgets" {
-  description = "Budgets"
-  type = map(object({
-    limit_amount_usd = string
-    notifications = list(object({
-      threshold_percent = number
-      forecast          = optional(bool, false)
-      email_addresses   = list(string)
+    domain_name        = string
+    domain_description = optional(string, null)
+    records = map(object({
+      type        = string
+      ttl_seconds = number
+      records     = list(string)
     }))
-  }))
-  default = {}
+  })
 }

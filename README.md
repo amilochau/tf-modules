@@ -29,6 +29,7 @@ The following modules are proposed for Infrastructure as Code, and can be freely
 | [aws/static-web-app](./aws/static-web-app) | Deploys AWS CloudFront to expose a Static Web App, with routing policies for APIs |
 | [aws/tf-backend](./aws/tf-backend) | Deploys AWS resources to manage a Terraform backend |
 | [github/identity-provider](./github/identity-provider) | Registers GitHub in AWS with OIDC |
+| [github/organization](./github/organization) | Deploys GitHub organization resources |
 | [github/repository](./github/repository) | Deploys a GitHub repository |
 
 ## Usage

@@ -64,6 +64,15 @@ resource "github_repository" "repository" {
   vulnerability_alerts   = true
   archive_on_destroy     = true
 
+  dynamic "template" {
+    for_each = var.repository_basics.template != null ? [1] : []
+    content {
+      owner = var.repository_basics.template.owner
+      repository = var.repository_basics.template.repository
+      include_all_branches = false
+    }
+  }
+
   /*security_and_analysis {
     advanced_security {
       status = "enabled"

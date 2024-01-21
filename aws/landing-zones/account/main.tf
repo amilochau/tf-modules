@@ -1,15 +1,15 @@
 data "aws_ssoadmin_instances" "iam_identity_center" {}
 
 resource "aws_organizations_account" "account" {
-  name  = var.account_name
-  email = var.account_email
+  name      = var.account_name
+  email     = var.account_email
   parent_id = var.account_parent_id
   role_name = "administrator-access"
 
   lifecycle {
-    ignore_changes = [ 
+    ignore_changes = [
       role_name
-     ]
+    ]
   }
 }
 

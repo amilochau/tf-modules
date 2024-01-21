@@ -67,8 +67,8 @@ resource "github_repository" "repository" {
   dynamic "template" {
     for_each = var.repository_basics.template != null ? [1] : []
     content {
-      owner = var.repository_basics.template.owner
-      repository = var.repository_basics.template.repository
+      owner                = var.repository_basics.template.owner
+      repository           = var.repository_basics.template.repository
       include_all_branches = false
     }
   }

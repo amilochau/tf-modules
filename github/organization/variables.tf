@@ -26,9 +26,9 @@ variable "conventions" {
 variable "github_organization_settings" {
   description = "GitHub organization settings"
   type = object({
-    name = string
+    name          = string
     billing_email = string
-    blog = string
-    location = string
+    blog          = string
+    location      = string
   })
 }

@@ -39,7 +39,7 @@ variable "repository_basics" {
     topics           = set(string)
 
     template = optional(object({
-      owner = string
+      owner      = string
       repository = string
     }), null)
   })

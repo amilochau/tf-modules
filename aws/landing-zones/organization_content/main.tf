@@ -19,9 +19,9 @@ resource "aws_organizations_organizational_unit" "ou_organization" {
 module "deployments" {
   source = "../account"
 
-  account_name = "${var.organization_full_name}-deployments"
-  account_email = var.deployments_settings.account_email
-  account_parent_id = aws_organizations_organizational_unit.ou_organization.id
+  account_name            = "${var.organization_full_name}-deployments"
+  account_email           = var.deployments_settings.account_email
+  account_parent_id       = aws_organizations_organizational_unit.ou_organization.id
   account_iam_assignments = var.default_account_iam_assignments
 }
 
@@ -30,9 +30,9 @@ module "deployments" {
 module "infrastructure" {
   source = "../account"
 
-  account_name = "${var.organization_full_name}-infrastructure"
-  account_email = var.infrastructure_settings.account_email
-  account_parent_id = aws_organizations_organizational_unit.ou_organization.id
+  account_name            = "${var.organization_full_name}-infrastructure"
+  account_email           = var.infrastructure_settings.account_email
+  account_parent_id       = aws_organizations_organizational_unit.ou_organization.id
   account_iam_assignments = var.default_account_iam_assignments
 }
 
@@ -41,9 +41,9 @@ module "infrastructure" {
 module "workloads" {
   source = "./workloads"
 
-  ou_organization_id     = aws_organizations_organizational_unit.ou_organization.id
-  organization_full_name = var.organization_full_name
-  workloads_settings     = var.workloads_settings
+  ou_organization_id              = aws_organizations_organizational_unit.ou_organization.id
+  organization_full_name          = var.organization_full_name
+  workloads_settings              = var.workloads_settings
   default_account_iam_assignments = var.default_account_iam_assignments
 }
 

@@ -32,8 +32,8 @@ variable "default_account_iam_assignments" {
   description = "Default account IAM assignments"
   type = map(object({
     permission_set_arn = string
-    principal_id = string
-    principal_type = optional(string, "GROUP")
+    principal_id       = string
+    principal_type     = optional(string, "GROUP")
   }))
   default = {}
 }

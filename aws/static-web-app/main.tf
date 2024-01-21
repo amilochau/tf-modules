@@ -32,7 +32,7 @@ locals {
 resource "aws_s3_bucket" "s3_bucket" {
   bucket        = local.s3_bucket_name
   force_destroy = true # only for client files, no persistent data to keep here
-  
+
   provider = aws.workloads
 }
 
@@ -42,7 +42,7 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
-  
+
   provider = aws.workloads
 }
 
@@ -73,7 +73,7 @@ module "cloudfront_certificate" {
   certificate_settings = var.client_settings.domains
 
   providers = {
-    aws.infrastructure = aws.infrastructure
+    aws.infrastructure    = aws.infrastructure
     aws.workloads-us-east = aws.workloads-us-east
   }
 }
@@ -100,10 +100,10 @@ module "cloudfront_distribution" {
       certificate_arn        = module.cloudfront_certificate[0].certificate_arn
     } : null
   }
-  
+
   providers = {
     aws.infrastructure = aws.infrastructure
-    aws.workloads = aws.workloads
+    aws.workloads      = aws.workloads
   }
 }
 

@@ -20,7 +20,7 @@ module "conventions" {
 }
 
 locals {
-  s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.resources_name_suffix == "" ? "" : "-"}${var.resources_name_suffix}"
+  s3_bucket_name      = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.resources_name_suffix == "" ? "" : "-"}${var.resources_name_suffix}"
   dynamodb_table_name = "${module.conventions.aws_naming_conventions.dynamodb_table_name_prefix}${var.resources_name_suffix == "" ? "" : "-"}${var.resources_name_suffix}-locks"
 }
 

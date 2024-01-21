@@ -1,3 +1,18 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.infrastructure,
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../shared/conventions"
   conventions = var.conventions
@@ -12,6 +27,8 @@ resource "aws_cloudfront_origin_access_control" "cloudfront_s3_access_control" {
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
+
+  provider = aws.workloads
 }
 
 resource "aws_cloudfront_cache_policy" "cloudfront_cache_api" {
@@ -35,6 +52,8 @@ resource "aws_cloudfront_cache_policy" "cloudfront_cache_api" {
       query_string_behavior = "none"
     }
   }
+
+  provider = aws.workloads
 }
 
 resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_api" {
@@ -50,6 +69,8 @@ resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_api" 
   query_strings_config {
     query_string_behavior = "all"
   }
+
+  provider = aws.workloads
 }
 
 resource "aws_cloudfront_response_headers_policy" "cloudfront_response_header_api" {
@@ -71,6 +92,8 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_header_ap
       items = var.distribution_settings.origin_api.allowed_origins
     }
   }
+
+  provider = aws.workloads
 }
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
@@ -173,11 +196,15 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       ssl_support_method  = "sni-only"
     }
   }
+
+  provider = aws.workloads
 }
 
 data "aws_route53_zone" "route53_zone" {
   count = var.distribution_settings.domains != null ? 1 : 0
   name  = var.distribution_settings.domains.zone_name
+
+  provider = aws.infrastructure
 }
 
 resource "aws_route53_record" "route53_record_ipv4" {
@@ -192,7 +219,10 @@ resource "aws_route53_record" "route53_record_ipv4" {
     zone_id                = aws_cloudfront_distribution.cloudfront_distribution.hosted_zone_id
     evaluate_target_health = false
   }
+
+  provider = aws.infrastructure
 }
+
 resource "aws_route53_record" "route53_record_ipv6" {
   for_each = { for v in var.distribution_settings.domains != null ? lookup(var.distribution_settings.domains, "alternate_domain_names", []) : [] : v => v }
 
@@ -205,4 +235,6 @@ resource "aws_route53_record" "route53_record_ipv6" {
     zone_id                = aws_cloudfront_distribution.cloudfront_distribution.hosted_zone_id
     evaluate_target_health = false
   }
+
+  provider = aws.infrastructure
 }

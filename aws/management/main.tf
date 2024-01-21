@@ -34,7 +34,8 @@ resource "aws_account_primary_contact" "account_primary_contact" {
   website_url        = var.account_primary_contact.website_url
 }
 
-resource "aws_s3_account_public_access_block" "example" {
+/* @todo how to enforce that for multi-account?
+resource "aws_s3_account_public_access_block" "s3_account_public_access_block" {
   count = var.region_type == "Primary" ? 1 : 0
 
   block_public_acls       = true
@@ -42,6 +43,7 @@ resource "aws_s3_account_public_access_block" "example" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+*/
 
 resource "aws_resourceexplorer2_index" "resourceexplorer_index" {
   type = var.region_type == "Primary" ? "AGGREGATOR" : "LOCAL"

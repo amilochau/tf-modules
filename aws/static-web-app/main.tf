@@ -4,8 +4,9 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 5.26, < 6.0.0"
       configuration_aliases = [
-        aws.us-east-1,
-        aws.no-tags
+        aws.infrastructure,
+        aws.workloads,
+        aws.workloads-us-east
       ]
     }
   }
@@ -18,7 +19,9 @@ module "conventions" {
   conventions = var.conventions
 }
 
-data "aws_caller_identity" "caller_identity" {}
+data "aws_caller_identity" "caller_identity" {
+  provider = aws.workloads
+}
 
 locals {
   s3_bucket_name = "${module.conventions.aws_naming_conventions.s3_bucket_name_prefix}${var.client_settings.s3_bucket_name_suffix == "" ? "" : "-"}${var.client_settings.s3_bucket_name_suffix}"
@@ -29,6 +32,8 @@ locals {
 resource "aws_s3_bucket" "s3_bucket" {
   bucket        = local.s3_bucket_name
   force_destroy = true # only for client files, no persistent data to keep here
+  
+  provider = aws.workloads
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
@@ -37,6 +42,8 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+  
+  provider = aws.workloads
 }
 
 resource "aws_s3_object" "s3_object_client_files" {
@@ -48,7 +55,13 @@ resource "aws_s3_object" "s3_object_client_files" {
   etag         = filemd5("${var.client_settings.package_source_file}/${each.value}")
   content_type = lookup(module.conventions.aws_format_conventions.mime_types, regex("\\.[^.]+$", each.value), null)
 
-  provider = aws.no-tags
+  override_provider {
+    default_tags {
+      tags = {}
+    }
+  }
+
+  provider = aws.workloads
 }
 
 # ===== CLOUDFRONT CERTIFICATE =====
@@ -60,7 +73,8 @@ module "cloudfront_certificate" {
   certificate_settings = var.client_settings.domains
 
   providers = {
-    aws = aws.us-east-1
+    aws.infrastructure = aws.infrastructure
+    aws.workloads-us-east = aws.workloads-us-east
   }
 }
 
@@ -85,6 +99,11 @@ module "cloudfront_distribution" {
       alternate_domain_names = flatten([[var.client_settings.domains.domain_name], var.client_settings.domains.subject_alternative_names])
       certificate_arn        = module.cloudfront_certificate[0].certificate_arn
     } : null
+  }
+  
+  providers = {
+    aws.infrastructure = aws.infrastructure
+    aws.workloads = aws.workloads
   }
 }
 
@@ -129,4 +148,6 @@ data "aws_iam_policy_document" "cloudfront_s3_bucket_policy_document" {
 resource "aws_s3_bucket_policy" "cloudfront_s3_bucket_policy" {
   bucket = aws_s3_bucket.s3_bucket.id
   policy = data.aws_iam_policy_document.cloudfront_s3_bucket_policy_document.json
+
+  provider = aws.workloads
 }

@@ -3,6 +3,10 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.infrastructure,
+        aws.workloads-us-east
+      ]
     }
   }
 
@@ -11,12 +15,16 @@ terraform {
 
 data "aws_route53_zone" "route53_zone" {
   name = var.certificate_settings.zone_name
+
+  provider = aws.infrastructure
 }
 
 resource "aws_acm_certificate" "acm_certificate" {
   domain_name               = var.certificate_settings.domain_name
   subject_alternative_names = var.certificate_settings.subject_alternative_names
   validation_method         = "DNS"
+
+  provider = aws.workloads-us-east
 }
 
 resource "aws_route53_record" "route53_record" {
@@ -27,9 +35,13 @@ resource "aws_route53_record" "route53_record" {
   type    = each.value.resource_record_type
   ttl     = 60
   records = [each.value.resource_record_value]
+
+  provider = aws.infrastructure
 }
 
 resource "aws_acm_certificate_validation" "acm_certificate_validation" {
   certificate_arn         = aws_acm_certificate.acm_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.route53_record : record.fqdn]
+
+  provider = aws.workloads-us-east
 }

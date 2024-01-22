@@ -40,6 +40,6 @@ resource "github_organization_settings" "organization_settings" {
 }
 
 resource "github_actions_organization_permissions" "github_actions_organization_permissions" {
-  allowed_actions = "all" # Note: we can't select specific allowed actions with a Free plan
+  allowed_actions      = "all" # Note: we can't select specific allowed actions with a Free plan
   enabled_repositories = "all"
 }

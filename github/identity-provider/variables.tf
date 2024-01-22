@@ -25,7 +25,7 @@ variable "conventions" {
 
 variable "github_identity_provider_arn" {
   description = "ARN of the GitHub Identity provider"
-  type = string
+  type        = string
 }
 
 variable "organization_name" {
@@ -35,6 +35,6 @@ variable "organization_name" {
 
 variable "aws_accounts" {
   description = "AWS accounts to which allow access"
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }

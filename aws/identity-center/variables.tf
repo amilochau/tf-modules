@@ -26,8 +26,8 @@ variable "conventions" {
 variable "permission_sets" {
   description = "Permission sets settings"
   type = map(object({
-    description = string
-    session_duration = string
+    description         = string
+    session_duration    = string
     managed_policy_arns = optional(list(string), [])
   }))
 }
@@ -36,6 +36,6 @@ variable "groups" {
   description = "Groups settings"
   type = map(object({
     display_name = string
-    description = string
+    description  = string
   }))
 }

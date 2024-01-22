@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
       content {
         test     = "StringEquals"
         variable = "aws:ResourceAccount"
-        values = var.aws_accounts
+        values   = var.aws_accounts
       }
     }
     # @todo add condition here - see https://dev.to/mmiranda/github-actions-authenticating-on-aws-using-oidc-3d2n

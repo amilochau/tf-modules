@@ -24,6 +24,7 @@ The following modules are proposed for Infrastructure as Code, and can be freely
 | [aws/domain](./aws/domain) | Deploys AWS domain resources |
 | [aws/emails](./aws/emails) | Deploys AWS SES resources for emails management, including domain validation |
 | [aws/functions-app](./aws/functions-app) | Deploys AWS Lambda functions resources, including multi-triggers management and data storage |
+| [aws/identity-center](./aws/identity-center) | Deploys AWS IAM Identity Center, to manage cross-accounts permissions via SSO |
 | [aws/landing-zones](./aws/landing-zones) | Deploys AWS landing zones, to architect AWS organizations and accounts |
 | [aws/management](./aws/management) | Deploys AWS global management resources, to help manage an AWS organization with a management account |
 | [aws/static-web-app](./aws/static-web-app) | Deploys AWS CloudFront to expose a Static Web App, with routing policies for APIs |

@@ -23,7 +23,18 @@ variable "conventions" {
   }
 }
 
-variable "account_name" {
-  description = "The name of the GitHub account"
+variable "github_identity_provider_arn" {
+  description = "ARN of the GitHub Identity provider"
+  type = string
+}
+
+variable "organization_name" {
+  description = "The name of the GitHub organization"
   type        = string
+}
+
+variable "aws_accounts" {
+  description = "AWS accounts to which allow access"
+  type = list(string)
+  default = []
 }

@@ -90,11 +90,15 @@ resource "github_actions_repository_permissions" "repository_actions_permissions
   repository = github_repository.repository.name
 
   enabled         = true
-  allowed_actions = "selected"
-  allowed_actions_config {
-    github_owned_allowed = true
-    verified_allowed     = true
-    patterns_allowed     = []
+  allowed_actions = var.repository_basics.visibility == "public" ? "selected" : "all"
+
+  dynamic "allowed_actions_config" {
+    for_each = var.repository_basics.visibility == "public" ? [1] : []
+    content {
+      github_owned_allowed = true
+      verified_allowed     = true
+      patterns_allowed     = ["amilochau/github-actions/*"]
+    }
   }
 }
 

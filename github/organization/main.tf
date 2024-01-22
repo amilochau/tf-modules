@@ -38,3 +38,8 @@ resource "github_organization_settings" "organization_settings" {
   #secret_scanning_enabled_for_new_repositories = false
   #secret_scanning_push_protection_enabled_for_new_repositories = false
 }
+
+resource "github_actions_organization_permissions" "github_actions_organization_permissions" {
+  allowed_actions = "all" # Note: we can't select specific allowed actions with a Free plan
+  enabled_repositories = "all"
+}

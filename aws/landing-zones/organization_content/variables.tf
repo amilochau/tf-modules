@@ -24,10 +24,10 @@ variable "infrastructure_settings" {
 
 variable "workloads_settings" {
   description = "Workloads settings"
-  type = map(object({
+  type = object({
     account_email_prod = string
     account_email_test = string
-  }))
+  })
 }
 
 variable "default_account_iam_assignments" {

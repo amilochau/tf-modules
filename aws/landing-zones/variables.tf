@@ -21,10 +21,10 @@ variable "organizations_settings" {
     infrastructure = object({
       account_email = string
     })
-    workloads = map(object({
+    workloads = object({
       account_email_prod = string
       account_email_test = string
-    }))
+    })
   }))
 }
 

@@ -14,24 +14,6 @@ module "conventions" {
   conventions = var.conventions
 }
 
-# IAM OIDC between AWS and GitHub
-
-data "tls_certificate" "github" {
-  url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
-}
-
-resource "aws_iam_openid_connect_provider" "github_identity_provider" {
-  url = "https://token.actions.githubusercontent.com"
-  client_id_list = [
-    "sts.amazonaws.com"
-  ]
-  thumbprint_list = [
-    data.tls_certificate.github.certificates[0].sha1_fingerprint // Thumbprint for GitHub Actions
-  ]
-}
-
-// IAM Policy & role to allow GitHub connecting with AWS
-
 data "aws_iam_policy_document" "iam_policy_document_github_assume" {
   statement {
     actions = [
@@ -39,7 +21,7 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
     ]
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.github_identity_provider.arn]
+      identifiers = [var.github_identity_provider_arn]
     }
     condition {
       test     = "StringEquals"
@@ -52,7 +34,7 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
-        "repo:${var.account_name}/*:*"
+        "repo:${var.organization_name}/*:*"
       ]
     }
     effect = "Allow"
@@ -60,7 +42,7 @@ data "aws_iam_policy_document" "iam_policy_document_github_assume" {
 }
 
 resource "aws_iam_role" "iam_role" {
-  name               = module.conventions.aws_naming_conventions.iam_role_name_prefix
+  name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-github-${var.organization_name}"
   description        = "IAM role used by GitHub Actions to execute"
   assume_role_policy = data.aws_iam_policy_document.iam_policy_document_github_assume.json
 }
@@ -75,6 +57,14 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
     resources = [
       "*"
     ]
+    dynamic "condition" {
+      for_each = length(var.aws_accounts) > 0 ? [1] : []
+      content {
+        test     = "StringEquals"
+        variable = "aws:ResourceAccount"
+        values = var.aws_accounts
+      }
+    }
     # @todo add condition here - see https://dev.to/mmiranda/github-actions-authenticating-on-aws-using-oidc-3d2n
     # See also https://docs.aws.amazon.com/IAM/latest/UserGuide/access_iam-tags.html#access_iam-tags
     effect = "Allow"
@@ -82,7 +72,7 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
 }
 
 resource "aws_iam_policy" "iam_policy" {
-  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-actions"
+  name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-github-${var.organization_name}"
   description = "IAM policy used by GitHub Actions to deploy AWS resources"
   policy      = data.aws_iam_policy_document.iam_policy_document_github.json
 }

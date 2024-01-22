@@ -38,13 +38,21 @@ module "infrastructure" {
 
 # Workloads
 
-module "workloads" {
-  source = "./workloads"
+module "workloads_prod" {
+  source = "../account"
 
-  ou_organization_id              = aws_organizations_organizational_unit.ou_organization.id
-  organization_full_name          = var.organization_full_name
-  workloads_settings              = var.workloads_settings
-  default_account_iam_assignments = var.default_account_iam_assignments
+  account_name            = "${var.organization_full_name}-workloads-prod"
+  account_email           = var.workloads_settings.account_email_prod
+  account_parent_id       = aws_organizations_organizational_unit.ou_organization.id
+  account_iam_assignments = var.default_account_iam_assignments
+}
+module "workloads_test" {
+  source = "../account"
+
+  account_name            = "${var.organization_full_name}-workloads-test"
+  account_email           = var.workloads_settings.account_email_test
+  account_parent_id       = aws_organizations_organizational_unit.ou_organization.id
+  account_iam_assignments = var.default_account_iam_assignments
 }
 
 # Additional - not enabled yet

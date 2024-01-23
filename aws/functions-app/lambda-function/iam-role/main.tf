@@ -1,9 +1,25 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../../shared/conventions"
   conventions = var.conventions
 }
 
-data "aws_caller_identity" "caller_identity" {}
+data "aws_caller_identity" "caller_identity" {
+  provider = aws.workloads
+}
 
 data "aws_iam_policy_document" "lambda_iam_policy_document_role" {
   statement {
@@ -24,6 +40,8 @@ resource "aws_iam_role" "lambda_iam_role" {
   name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-fn-${var.function_settings.function_key}"
   description        = "IAM role used by the lambda function"
   assume_role_policy = data.aws_iam_policy_document.lambda_iam_policy_document_role.json
+
+  provider = aws.workloads
 }
 
 # ===== POLICY =====
@@ -122,9 +140,13 @@ resource "aws_iam_policy" "lambda_iam_policy" {
   name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-fn-${var.function_settings.function_key}"
   description = "IAM policy for a lambda function"
   policy      = data.aws_iam_policy_document.lambda_iam_policy_document_policy.json
+
+  provider = aws.workloads
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_iam_role_policy_attachment" {
   role       = aws_iam_role.lambda_iam_role.name
   policy_arn = aws_iam_policy.lambda_iam_policy.arn
+
+  provider = aws.workloads
 }

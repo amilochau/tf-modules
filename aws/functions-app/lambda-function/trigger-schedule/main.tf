@@ -1,9 +1,25 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../../shared/conventions"
   conventions = var.conventions
 }
 
-data "aws_caller_identity" "caller_identity" {}
+data "aws_caller_identity" "caller_identity" {
+  provider = aws.workloads
+}
 
 # ===== ROLE ASSUMED BY SCHEDULER =====
 
@@ -33,6 +49,8 @@ resource "aws_iam_role" "schedule_iam_role" {
   name               = "${module.conventions.aws_naming_conventions.iam_role_name_prefix}-schedule-${var.function_settings.function_key}"
   description        = "IAM role used by schedule"
   assume_role_policy = data.aws_iam_policy_document.schedule_iam_policy_document.json
+
+  provider = aws.workloads
 }
 
 # ===== POLICY GIVEN TO SCHEDULER ROLE TO INVOKE FUNCTION =====
@@ -54,11 +72,15 @@ resource "aws_iam_policy" "schedule_iam_policy_lambda" {
   name        = "${module.conventions.aws_naming_conventions.iam_policy_name_prefix}-schedule-fn-${var.function_settings.function_key}"
   description = "IAM policy for invoking a lambda function from a Schedule"
   policy      = data.aws_iam_policy_document.schedule_iam_policy_document_lambda.json
+
+  provider = aws.workloads
 }
 
 resource "aws_iam_role_policy_attachment" "schedule_iam_role_policy_attachment" {
   role       = aws_iam_role.schedule_iam_role.name
   policy_arn = aws_iam_policy.schedule_iam_policy_lambda.arn
+
+  provider = aws.workloads
 }
 
 # ===== SCHEDULE =====
@@ -87,4 +109,6 @@ resource "aws_scheduler_schedule" "schedule" {
       maximum_event_age_in_seconds = module.conventions.aws_format_conventions.eventbridge_schedule_event_age_sec
     }
   }
+
+  provider = aws.workloads
 }

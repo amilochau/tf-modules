@@ -3,6 +3,9 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
     }
   }
 
@@ -20,6 +23,10 @@ module "cognito_clients" {
   conventions            = var.conventions
   cognito_user_pool_name = var.cognito_user_pool_name
   clients_settings       = var.cognito_clients_settings
+  
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 module "dynamodb_tables" {
@@ -36,6 +43,10 @@ module "dynamodb_tables" {
     global_secondary_indexes = each.value.global_secondary_indexes
     enable_stream            = each.value.enable_stream
   }
+  
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 module "api_gateway_api" {
@@ -48,6 +59,10 @@ module "api_gateway_api" {
     user_pool_id = module.cognito_clients.cognito_user_pool_id
     client_ids   = module.cognito_clients.cognito_client_ids
   }
+  
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 module "schedule_group" {
@@ -55,6 +70,10 @@ module "schedule_group" {
   source = "./schedule-group"
 
   conventions = var.conventions
+  
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 module "lambda_functions" {
@@ -107,5 +126,9 @@ module "lambda_functions" {
     lambda_arns         = [for k, v in each.value.lambda_accesses : v.arn]
     schedule_group_name = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
     dynamodb_table_arns = [for k, v in module.dynamodb_tables : v.table_arn]
+  }
+  
+  providers = {
+    aws.workloads = aws.workloads
   }
 }

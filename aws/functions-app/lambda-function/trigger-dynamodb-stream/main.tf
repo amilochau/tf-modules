@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   function_name                      = var.function_settings.function_name
   event_source_arn                   = var.dynamodb_stream_settings.stream_arn
@@ -21,4 +35,6 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
       }
     }
   }
+
+  provider = aws.workloads
 }

@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../shared/conventions"
   conventions = var.conventions
@@ -5,6 +19,8 @@ module "conventions" {
 
 data "aws_cognito_user_pools" "cognito_userpool" {
   name = var.cognito_user_pool_name
+  
+  provider = aws.workloads
 }
 
 locals {
@@ -36,6 +52,8 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH"
   ]
+  
+  provider = aws.workloads
 }
 
 resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
@@ -65,4 +83,6 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   lifecycle {
     prevent_destroy = true # As we can't use var.conventions.temporary in lifecycle, we have to duplicate this block...
   }
+  
+  provider = aws.workloads
 }

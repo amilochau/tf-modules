@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../shared/conventions"
   conventions = var.conventions
@@ -24,6 +38,10 @@ module "lambda_iam_role" {
     dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
     lambda_arns              = var.accesses_settings.lambda_arns
+  }
+
+  providers = {
+    aws.workloads = aws.workloads
   }
 }
 
@@ -60,6 +78,8 @@ resource "aws_lambda_function" "lambda_function" {
   tracing_config {
     mode = "Active"
   }
+
+  provider = aws.workloads
 }
 
 # ===== CLOUDWATCH LOG GROUP =====
@@ -68,6 +88,8 @@ resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
   name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
   skip_destroy      = !var.conventions.temporary
+
+  provider = aws.workloads
 }
 
 # ===== LAMBDA SES DOMAIN IDENTITY POLICIES
@@ -79,6 +101,10 @@ module "ses_identity_policies" {
   conventions  = var.conventions
   ses_domain   = each.value
   function_arn = aws_lambda_function.lambda_function.arn
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 # ===== API GATEWAY TRIGGER =====
@@ -90,6 +116,8 @@ resource "aws_lambda_permission" "apigateway_permission" {
   function_name = aws_lambda_function.lambda_function.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${var.triggers_settings.api_gateway_routes[0].api_execution_arn}/*/*" # Allow invocation from any stage, any method, any resource path @todo restrict that?
+
+  provider = aws.workloads
 }
 
 module "trigger_api_gateway_routes" {
@@ -100,6 +128,10 @@ module "trigger_api_gateway_routes" {
     invoke_arn = aws_lambda_function.lambda_function.invoke_arn
   }
   api_gateway_settings = each.value
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 # ===== SNS TRIGGER =====
@@ -113,6 +145,10 @@ module "trigger_sns_topics" {
     function_arn  = aws_lambda_function.lambda_function.arn
   }
   sns_settings = each.value
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 # ===== SCHEDULE TRIGGER =====
@@ -134,6 +170,10 @@ module "trigger_schedule" {
       enabled             = v.enabled
     }]
   }
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }
 
 # ===== DYNAMODB STREAM TRIGGER =====
@@ -147,4 +187,8 @@ module "dynamodb_stream_trigger" {
   }
 
   dynamodb_stream_settings = each.value
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
 }

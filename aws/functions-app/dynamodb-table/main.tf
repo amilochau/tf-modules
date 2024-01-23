@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "environment" {
   source      = "../../../shared/environment"
   conventions = var.conventions
@@ -59,4 +73,6 @@ resource "aws_dynamodb_table" "dynamodb_table" {
       non_key_attributes = global_secondary_index.value.non_key_attributes
     }
   }
+  
+  provider = aws.workloads
 }

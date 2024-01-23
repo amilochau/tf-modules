@@ -1,9 +1,25 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
+    }
+  }
+
+  required_version = ">= 1.6.3, < 2.0.0"
+}
+
 module "conventions" {
   source      = "../../../shared/conventions"
   conventions = var.conventions
 }
 
-data "aws_region" "current" {}
+data "aws_region" "current" {
+  provider = aws.workloads
+}
 
 locals {
   apigateway_authorizer_audience = var.cognito_settings.client_ids
@@ -13,12 +29,16 @@ locals {
 resource "aws_apigatewayv2_api" "apigateway_api" {
   name          = module.conventions.aws_naming_conventions.apigateway_api_name
   protocol_type = "HTTP"
+  
+  provider = aws.workloads
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_apigateway" {
   name              = "/aws/api-gateway/${aws_apigatewayv2_api.apigateway_api.name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
   skip_destroy      = !var.conventions.temporary
+  
+  provider = aws.workloads
 }
 
 resource "aws_apigatewayv2_stage" "apigateway_stage" {
@@ -35,6 +55,8 @@ resource "aws_apigatewayv2_stage" "apigateway_stage" {
     destination_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_apigateway.arn
     format          = module.conventions.aws_format_conventions.apigateway_accesslog_format
   }
+  
+  provider = aws.workloads
 }
 
 resource "aws_apigatewayv2_authorizer" "apigateway_authorizer" {
@@ -48,4 +70,6 @@ resource "aws_apigatewayv2_authorizer" "apigateway_authorizer" {
     audience = local.apigateway_authorizer_audience
     issuer   = local.apigateway_authorizer_issuer
   }
+  
+  provider = aws.workloads
 }

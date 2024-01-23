@@ -85,7 +85,6 @@ resource "aws_route53_record" "route53_record_txt_dmarc_verification" {
   provider = aws.infrastructure
 }
 
-/*
 # This resource should be excluded from the first deployment
 resource "aws_route53_record" "route53_record_cname_dkim_tokens" {
   for_each = { for k, v in flatten([for v in aws_sesv2_email_identity.identity.dkim_signing_attributes : v.tokens]) : k => v }
@@ -100,4 +99,3 @@ resource "aws_route53_record" "route53_record_cname_dkim_tokens" {
 
   provider = aws.infrastructure
 }
-*/

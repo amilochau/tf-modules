@@ -3,6 +3,9 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 5.26, < 6.0.0"
+      configuration_aliases = [
+        aws.workloads
+      ]
     }
   }
 
@@ -107,4 +110,6 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
     #email_subject = "Confirm your account!"
     #email_message = "Hi {username}, here is your code: {####}."
   }
+  
+  provider = aws.workloads
 }

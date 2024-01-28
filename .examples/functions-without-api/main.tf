@@ -44,4 +44,8 @@ module "functions_app" {
       }
     }
   }
+
+  providers = {
+    aws.workloads = aws
+  }
 }

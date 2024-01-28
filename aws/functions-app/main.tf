@@ -18,12 +18,13 @@ locals {
 }
 
 module "cognito_clients" {
+  count  = local.has_http_triggers ? 1 : 0
   source = "./cognito-clients"
 
   conventions            = var.conventions
   cognito_user_pool_name = var.cognito_user_pool_name
   clients_settings       = var.cognito_clients_settings
-  
+
   providers = {
     aws.workloads = aws.workloads
   }
@@ -43,7 +44,7 @@ module "dynamodb_tables" {
     global_secondary_indexes = each.value.global_secondary_indexes
     enable_stream            = each.value.enable_stream
   }
-  
+
   providers = {
     aws.workloads = aws.workloads
   }
@@ -56,10 +57,10 @@ module "api_gateway_api" {
   conventions       = var.conventions
   enable_authorizer = anytrue([for v in var.lambda_settings.functions : anytrue([for v2 in v.http_triggers : !v2.anonymous]) if length(v.http_triggers) > 0])
   cognito_settings = {
-    user_pool_id = module.cognito_clients.cognito_user_pool_id
-    client_ids   = module.cognito_clients.cognito_client_ids
+    user_pool_id = module.cognito_clients[0].cognito_user_pool_id
+    client_ids   = module.cognito_clients[0].cognito_client_ids
   }
-  
+
   providers = {
     aws.workloads = aws.workloads
   }
@@ -70,7 +71,7 @@ module "schedule_group" {
   source = "./schedule-group"
 
   conventions = var.conventions
-  
+
   providers = {
     aws.workloads = aws.workloads
   }
@@ -127,7 +128,7 @@ module "lambda_functions" {
     schedule_group_name = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
     dynamodb_table_arns = [for k, v in module.dynamodb_tables : v.table_arn]
   }
-  
+
   providers = {
     aws.workloads = aws.workloads
   }

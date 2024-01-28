@@ -28,7 +28,7 @@ module "conventions" {
 resource "aws_sns_topic" "notifications_topic" {
   name           = "${module.conventions.aws_naming_conventions.sns_topic_name_prefix}-notifications"
   tracing_config = "Active"
-  
+
   provider = aws.workloads
 }
 
@@ -41,7 +41,7 @@ resource "aws_ses_template" "templates" {
   subject = each.value.subject
   html    = each.value.html
   text    = each.value.text
-  
+
   provider = aws.workloads
 }
 
@@ -54,7 +54,7 @@ resource "aws_sesv2_configuration_set" "configuration_set" {
   reputation_options {
     reputation_metrics_enabled = true
   }
-  
+
   provider = aws.workloads
 }
 
@@ -73,7 +73,7 @@ resource "aws_sesv2_configuration_set_event_destination" "configuration_set_even
     enabled              = true
     matching_event_types = ["BOUNCE", "COMPLAINT", "DELIVERY_DELAY", "REJECT", "RENDERING_FAILURE", "SUBSCRIPTION"]
   }
-  
+
   provider = aws.workloads
 }
 
@@ -85,10 +85,10 @@ module "identities" {
   zone_name              = each.value.zone_name
   configuration_set_name = aws_sesv2_configuration_set.configuration_set.configuration_set_name
   mail_from_subdomain    = each.value.mail_from_subdomain
-  
+
   providers = {
     aws.infrastructure = aws.infrastructure
-    aws.workloads = aws.workloads
+    aws.workloads      = aws.workloads
   }
 }
 

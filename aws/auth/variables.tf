@@ -22,3 +22,15 @@ variable "conventions" {
     error_message = "Host name must use between 2 and 8 characters, only lowercase letters and numbers"
   }
 }
+
+variable "user_migration_lambda_arn" {
+  description = "Lambda ARN for function managing user migration"
+  type        = string
+  default     = null
+}
+
+variable "post_confirmation_lambda_arn" {
+  description = "Lambda ARN for function managing post confirmation"
+  type        = string
+  default     = null
+}

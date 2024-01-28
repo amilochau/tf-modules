@@ -90,6 +90,18 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
     }
   }
 
+  schema {
+    name                     = "user_id"
+    attribute_data_type      = "String"
+    mutable                  = false
+    required                 = true
+    developer_only_attribute = false
+    string_attribute_constraints {
+      min_length = 0
+      max_length = 2048
+    }
+  }
+
   software_token_mfa_configuration {
     enabled = true
   }
@@ -109,6 +121,11 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   verification_message_template {
     #email_subject = "Confirm your account!"
     #email_message = "Hi {username}, here is your code: {####}."
+  }
+
+  lambda_config {
+    user_migration    = var.user_migration_lambda_arn
+    post_confirmation = var.post_confirmation_lambda_arn
   }
 
   provider = aws.workloads

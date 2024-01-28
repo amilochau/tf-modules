@@ -12,3 +12,8 @@ output "apigateway_invoke_origin_path" {
   description = "Invoke URL of the default API Gateway stage"
   value       = local.has_http_triggers ? (module.api_gateway_api[0].apigateway_stage_name != "$default" ? "/${module.api_gateway_api[0].apigateway_stage_name}" : "") : ""
 }
+
+output "lambda_functions" {
+  description = "Lambda function outputs"
+  value       = module.lambda_functions
+}

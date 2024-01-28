@@ -19,7 +19,7 @@ module "conventions" {
 
 data "aws_cognito_user_pools" "cognito_userpool" {
   name = var.cognito_user_pool_name
-  
+
   provider = aws.workloads
 }
 
@@ -52,7 +52,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH"
   ]
-  
+
   provider = aws.workloads
 }
 
@@ -83,6 +83,6 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   lifecycle {
     prevent_destroy = true # As we can't use var.conventions.temporary in lifecycle, we have to duplicate this block...
   }
-  
+
   provider = aws.workloads
 }

@@ -78,7 +78,7 @@ variable "lambda_settings" {
     condition     = contains(["x86_64", "arm64"], var.lambda_settings.architecture)
     error_message = "Architecture must be 'x86_64' or 'arm64'"
   }
-  
+
   validation {
     condition = alltrue([
       for k, v in var.lambda_settings.functions : can(regex("^[a-z0-9-]+$", k))

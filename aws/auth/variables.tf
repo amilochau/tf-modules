@@ -25,18 +25,18 @@ variable "conventions" {
 
 variable "migrate_users_lambda" {
   description = "Lambda settings for function managing user migration"
-  type        = object({
-    function_arn = string
-    function_name = string 
+  type = object({
+    function_arn  = string
+    function_name = string
   })
-  default     = null
+  default = null
 }
 
 variable "post_confirmation_lambda" {
   description = "Lambda settings for function managing post confirmation"
-  type        = object({
-    function_arn = string
-    function_name = string 
+  type = object({
+    function_arn  = string
+    function_name = string
   })
-  default     = null
+  default = null
 }

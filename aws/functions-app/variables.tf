@@ -66,6 +66,7 @@ variable "lambda_settings" {
       lambda_accesses = optional(list(object({
         arn = string
       })), [])
+      cognito_userpools_access = optional(bool, false)
     }))
   })
 

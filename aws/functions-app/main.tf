@@ -123,10 +123,11 @@ module "lambda_functions" {
     }]
   }
   accesses_settings = {
-    ses_domains         = [for k, v in each.value.ses_accesses : v.domain]
-    lambda_arns         = [for k, v in each.value.lambda_accesses : v.arn]
-    schedule_group_name = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
-    dynamodb_table_arns = [for k, v in module.dynamodb_tables : v.table_arn]
+    ses_domains              = [for k, v in each.value.ses_accesses : v.domain]
+    lambda_arns              = [for k, v in each.value.lambda_accesses : v.arn]
+    schedule_group_name      = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
+    dynamodb_table_arns      = [for k, v in module.dynamodb_tables : v.table_arn]
+    cognito_userpools_access = each.value.cognito_userpools_access
   }
 
   providers = {

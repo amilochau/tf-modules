@@ -59,9 +59,10 @@ variable "triggers_settings" {
 variable "accesses_settings" {
   description = "Settings for the accesses to grant to the Function"
   type = object({
-    ses_domains         = list(string)
-    lambda_arns         = list(string)
-    schedule_group_name = string
-    dynamodb_table_arns = list(string)
+    ses_domains              = list(string)
+    lambda_arns              = list(string)
+    schedule_group_name      = string
+    dynamodb_table_arns      = list(string)
+    cognito_userpools_access = bool
   })
 }

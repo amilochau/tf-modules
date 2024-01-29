@@ -134,6 +134,20 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
       effect    = "Allow"
     }
   }
+
+  // Cognito user pools
+  dynamic "statement" {
+    for_each = var.accesses_settings.cognito_userpools_access ? [1] : []
+    content {
+      actions = [
+        "cognito-idp:AdminUpdateUserAttributes"
+      ]
+      resources = [
+        "*"
+      ]
+      effect = "Allow"
+    }
+  }
 }
 
 resource "aws_iam_policy" "lambda_iam_policy" {

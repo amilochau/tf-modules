@@ -23,5 +23,6 @@ variable "accesses_settings" {
     dynamodb_stream_arns     = list(string)
     ses_domain_identity_arns = list(string)
     lambda_arns              = list(string)
+    cognito_userpools_access = bool
   })
 }

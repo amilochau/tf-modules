@@ -19,6 +19,7 @@ variable "assume_roles" {
   type = object({
     sandbox = optional(string, "arn:aws:iam::381492034295:role/administrator-access")
   })
+  default = {}
 }
 
 variable "aws_provider_settings" {

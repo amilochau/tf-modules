@@ -16,7 +16,7 @@ variable "cognito_user_pool_name" {
 variable "clients_settings" {
   description = "Settings to configure identity clients for the API"
   type = map(object({
-    purpose = string
+    purpose                 = string
     disable_users_migration = bool
   }))
 }

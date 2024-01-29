@@ -51,7 +51,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
   explicit_auth_flows = each.value.disable_users_migration ? [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
-  ] : [
+    ] : [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",
@@ -82,7 +82,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   explicit_auth_flows = each.value.disable_users_migration ? [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
-  ] : [
+    ] : [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_PASSWORD_AUTH",

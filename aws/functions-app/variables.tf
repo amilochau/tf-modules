@@ -130,6 +130,7 @@ variable "cognito_clients_settings" {
   description = "Settings to configure identity clients for the API"
   type = map(object({
     purpose = string
+    disable_users_migration = optional(bool, false)
   }))
   default = {}
 }

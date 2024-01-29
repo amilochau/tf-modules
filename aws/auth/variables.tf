@@ -23,7 +23,7 @@ variable "conventions" {
   }
 }
 
-variable "user_migration_lambda" {
+variable "migrate_users_lambda" {
   description = "Lambda settings for function managing user migration"
   type        = object({
     function_arn = string

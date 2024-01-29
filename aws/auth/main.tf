@@ -124,9 +124,9 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   }
 
   dynamic "lambda_config" {
-    for_each = var.user_migration_lambda != null && var.post_confirmation_lambda != null ? [1] : []
+    for_each = var.migrate_users_lambda != null && var.post_confirmation_lambda != null ? [1] : []
     content {
-      user_migration    = var.user_migration_lambda.arn
+      user_migration    = var.migrate_users_lambda.arn
       post_confirmation = var.post_confirmation_lambda.arn
     }
   }
@@ -135,10 +135,10 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
 }
 
 resource "aws_lambda_permission" "cognito_user_pool_permission_user_migration" {
-  count = var.user_migration_lambda != null ? 1 : 0
+  count = var.migrate_users_lambda != null ? 1 : 0
   statement_id  = "AllowExecutionFromCognitoUserPool-UserMigration-${resource.aws_cognito_user_pool.cognito_user_pool.name}"
   action        = "lambda:InvokeFunction"
-  function_name = var.user_migration_lambda.function_name
+  function_name = var.migrate_users_lambda.function_name
   principal     = "cognito-idp.amazonaws.com"
   source_arn    = resource.aws_cognito_user_pool.cognito_user_pool.arn
 

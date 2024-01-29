@@ -126,8 +126,8 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
   dynamic "lambda_config" {
     for_each = var.migrate_users_lambda != null && var.post_confirmation_lambda != null ? [1] : []
     content {
-      user_migration    = var.migrate_users_lambda.arn
-      post_confirmation = var.post_confirmation_lambda.arn
+      user_migration    = var.migrate_users_lambda.function_arn
+      post_confirmation = var.post_confirmation_lambda.function_arn
     }
   }
 

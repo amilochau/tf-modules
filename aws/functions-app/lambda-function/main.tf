@@ -38,6 +38,7 @@ module "lambda_iam_role" {
     dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
     lambda_arns              = var.accesses_settings.lambda_arns
+    cognito_userpools_access = var.accesses_settings.cognito_userpools_access
   }
 
   providers = {

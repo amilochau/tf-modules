@@ -135,7 +135,7 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
 }
 
 resource "aws_lambda_permission" "cognito_user_pool_permission_user_migration" {
-  count = var.migrate_users_lambda != null ? 1 : 0
+  count         = var.migrate_users_lambda != null ? 1 : 0
   statement_id  = "AllowExecutionFromCognitoUserPool-UserMigration-${resource.aws_cognito_user_pool.cognito_user_pool.name}"
   action        = "lambda:InvokeFunction"
   function_name = var.migrate_users_lambda.function_name
@@ -146,7 +146,7 @@ resource "aws_lambda_permission" "cognito_user_pool_permission_user_migration" {
 }
 
 resource "aws_lambda_permission" "cognito_user_pool_permission_post_confirmation" {
-  count = var.post_confirmation_lambda != null ? 1 : 0
+  count         = var.post_confirmation_lambda != null ? 1 : 0
   statement_id  = "AllowExecutionFromCognitoUserPool-PostConfirmation-${resource.aws_cognito_user_pool.cognito_user_pool.name}"
   action        = "lambda:InvokeFunction"
   function_name = var.post_confirmation_lambda.function_name

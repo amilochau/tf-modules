@@ -54,7 +54,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
   ] : [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
-    "USER_PASSWORD_AUTH",
+    "ALLOW_USER_PASSWORD_AUTH",
   ]
 
   provider = aws.workloads
@@ -85,7 +85,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   ] : [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
-    "USER_PASSWORD_AUTH",
+    "ALLOW_USER_PASSWORD_AUTH",
   ]
 
   lifecycle {

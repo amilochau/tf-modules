@@ -9,7 +9,12 @@ terraform {
 }
 
 provider "aws" {
+  alias  = "workloads"
   region = var.aws_provider_settings.region
+
+  assume_role {
+    role_arn = var.assume_roles.sandbox
+  }
 
   default_tags {
     tags = {
@@ -29,12 +34,16 @@ resource "aws_sns_topic" "sns_topic" {
   # SNS topic, to be created by the process that publishes the event
   name           = "sns-topic-sample"
   tracing_config = "Active"
+
+  provider = aws.workloads
 }
 
 resource "aws_sns_topic" "sns_topic2" {
   # SNS topic, to be created by the process that publishes the event
   name           = "sns-topic-sample2"
   tracing_config = "Active"
+
+  provider = aws.workloads
 }
 
 module "functions_app" {
@@ -59,5 +68,9 @@ module "functions_app" {
         }]
       }
     }
+  }
+
+  providers = {
+    aws.workloads = aws.workloads
   }
 }

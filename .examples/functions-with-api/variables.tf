@@ -14,6 +14,13 @@ variable "conventions" {
   }
 }
 
+variable "assume_roles" {
+  description = "Roles to be assumed"
+  type = object({
+    sandbox = optional(string, "arn:aws:iam::381492034295:role/administrator-access")
+  })
+}
+
 variable "aws_provider_settings" {
   description = "Settings to configure the AWS provider"
   type = object({

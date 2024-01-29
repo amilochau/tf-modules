@@ -9,7 +9,12 @@ terraform {
 }
 
 provider "aws" {
+  alias  = "workloads"
   region = var.aws_provider_settings.region
+
+  assume_role {
+    role_arn = var.assume_roles.sandbox
+  }
 
   default_tags {
     tags = {
@@ -46,6 +51,6 @@ module "functions_app" {
   }
 
   providers = {
-    aws.workloads = aws
+    aws.workloads = aws.workloads
   }
 }

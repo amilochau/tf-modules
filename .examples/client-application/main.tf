@@ -9,7 +9,12 @@ terraform {
 }
 
 provider "aws" {
+  alias  = "workloads"
   region = var.aws_provider_settings.region
+
+  assume_role {
+    role_arn = var.assume_roles.sandbox
+  }
 
   default_tags {
     tags = {
@@ -21,13 +26,29 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias  = "no-tags"
-  region = var.aws_provider_settings.region
+  alias  = "workloads-us-east-1"
+  region = "us-east-1"
+
+  assume_role {
+    role_arn = var.assume_roles.sandbox
+  }
+
+  default_tags {
+    tags = {
+      organization = var.conventions.organization_name
+      application  = var.conventions.application_name
+      host         = var.conventions.host_name
+    }
+  }
 }
 
 provider "aws" {
-  alias  = "us-east-1"
+  alias  = "infrastructure"
   region = "us-east-1"
+
+  assume_role {
+    role_arn = var.assume_roles.sandbox
+  }
 
   default_tags {
     tags = {
@@ -53,7 +74,8 @@ module "client_app" {
   }
 
   providers = {
-    aws.no-tags   = aws.no-tags
-    aws.us-east-1 = aws.us-east-1
+    aws.infrastructure    = aws.infrastructure
+    aws.workloads         = aws.workloads
+    aws.workloads-us-east = aws.workloads-us-east-1
   }
 }

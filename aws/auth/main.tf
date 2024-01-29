@@ -123,10 +123,35 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
     #email_message = "Hi {username}, here is your code: {####}."
   }
 
-  lambda_config {
-    user_migration    = var.user_migration_lambda_arn
-    post_confirmation = var.post_confirmation_lambda_arn
+  dynamic "lambda_config" {
+    for_each = var.user_migration_lambda != null && var.post_confirmation_lambda != null ? [1] : []
+    content {
+      user_migration    = var.user_migration_lambda.arn
+      post_confirmation = var.post_confirmation_lambda.arn
+    }
   }
+
+  provider = aws.workloads
+}
+
+resource "aws_lambda_permission" "cognito_user_pool_permission_user_migration" {
+  count = var.user_migration_lambda != null ? 1 : 0
+  statement_id  = "AllowExecutionFromCognitoUserPool-UserMigration-${resource.aws_cognito_user_pool.cognito_user_pool.name}"
+  action        = "lambda:InvokeFunction"
+  function_name = var.user_migration_lambda.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = resource.aws_cognito_user_pool.cognito_user_pool.arn
+
+  provider = aws.workloads
+}
+
+resource "aws_lambda_permission" "cognito_user_pool_permission_post_confirmation" {
+  count = var.post_confirmation_lambda != null ? 1 : 0
+  statement_id  = "AllowExecutionFromCognitoUserPool-PostConfirmation-${resource.aws_cognito_user_pool.cognito_user_pool.name}"
+  action        = "lambda:InvokeFunction"
+  function_name = var.post_confirmation_lambda.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = resource.aws_cognito_user_pool.cognito_user_pool.arn
 
   provider = aws.workloads
 }

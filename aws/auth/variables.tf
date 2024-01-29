@@ -23,14 +23,20 @@ variable "conventions" {
   }
 }
 
-variable "user_migration_lambda_arn" {
-  description = "Lambda ARN for function managing user migration"
-  type        = string
+variable "user_migration_lambda" {
+  description = "Lambda settings for function managing user migration"
+  type        = object({
+    function_arn = string
+    function_name = string 
+  })
   default     = null
 }
 
-variable "post_confirmation_lambda_arn" {
-  description = "Lambda ARN for function managing post confirmation"
-  type        = string
+variable "post_confirmation_lambda" {
+  description = "Lambda settings for function managing post confirmation"
+  type        = object({
+    function_arn = string
+    function_name = string 
+  })
   default     = null
 }

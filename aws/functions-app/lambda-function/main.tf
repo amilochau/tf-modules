@@ -88,7 +88,6 @@ resource "aws_lambda_function" "lambda_function" {
 resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
   name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
   retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
-  skip_destroy      = !var.conventions.temporary
 
   provider = aws.workloads
 }

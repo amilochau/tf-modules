@@ -14,7 +14,7 @@ module "environment" {
   context = var.context
 }
 
-module "context" {
+module "conventions" {
   source  = "../../shared/conventions"
   context = var.context
 }

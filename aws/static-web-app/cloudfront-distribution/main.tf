@@ -13,7 +13,7 @@ terraform {
   required_version = ">= 1.6.3, < 2.0.0"
 }
 
-module "context" {
+module "conventions" {
   source  = "../../../shared/conventions"
   context = var.context
 }

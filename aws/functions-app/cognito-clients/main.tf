@@ -100,6 +100,18 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
     "ALLOW_USER_PASSWORD_AUTH",
   ]
 
+  read_attributes = [
+    "custom:user_id",
+    "email",
+    "email_verified",
+    "name",
+  ]
+
+  write_attributes = [
+    "email",
+    "name",
+  ]
+
   lifecycle {
     prevent_destroy = true # As we can't use var.context.temporary in lifecycle, we have to duplicate this block...
   }

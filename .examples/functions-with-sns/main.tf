@@ -26,7 +26,7 @@ provider "aws" {
 }
 
 module "checks" {
-  source      = "../../shared/checks"
+  source  = "../../shared/checks"
   context = var.context
 }
 
@@ -39,7 +39,7 @@ resource "aws_sns_topic" "sns_topic" {
 }
 
 module "functions_app" {
-  source      = "../../aws/functions-app"
+  source  = "../../aws/functions-app"
   context = var.context
   depends_on = [
     aws_sns_topic.sns_topic

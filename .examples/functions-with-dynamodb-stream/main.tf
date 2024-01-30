@@ -26,12 +26,12 @@ provider "aws" {
 }
 
 module "checks" {
-  source      = "../../shared/checks"
+  source  = "../../shared/checks"
   context = var.context
 }
 
 module "functions_app" {
-  source      = "../../aws/functions-app"
+  source  = "../../aws/functions-app"
   context = var.context
 
   dynamodb_tables_settings = {

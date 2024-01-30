@@ -13,7 +13,7 @@ terraform {
 }
 
 module "context" {
-  source      = "../../../shared/conventions"
+  source  = "../../../shared/conventions"
   context = var.context
 }
 
@@ -98,7 +98,7 @@ module "ses_identity_policies" {
   for_each = { for k, v in var.accesses_settings.ses_domains : k => v }
   source   = "./ses-identity-policy"
 
-  context  = var.context
+  context      = var.context
   ses_domain   = each.value
   function_arn = aws_lambda_function.lambda_function.arn
 

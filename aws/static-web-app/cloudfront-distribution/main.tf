@@ -14,7 +14,7 @@ terraform {
 }
 
 module "context" {
-  source      = "../../../shared/conventions"
+  source  = "../../../shared/conventions"
   context = var.context
 }
 

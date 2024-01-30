@@ -13,12 +13,12 @@ terraform {
 }
 
 module "environment" {
-  source      = "../../../shared/environment"
+  source  = "../../../shared/environment"
   context = var.context
 }
 
 module "context" {
-  source      = "../../../shared/conventions"
+  source  = "../../../shared/conventions"
   context = var.context
 }
 

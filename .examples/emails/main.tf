@@ -26,12 +26,12 @@ provider "aws" {
 }
 
 module "checks" {
-  source      = "../../shared/checks"
+  source  = "../../shared/checks"
   context = var.context
 }
 
 module "emails" {
-  source      = "../../aws/emails"
+  source  = "../../aws/emails"
   context = var.context
 
   domains = {

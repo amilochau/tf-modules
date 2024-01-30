@@ -60,12 +60,12 @@ provider "aws" {
 }
 
 module "checks" {
-  source      = "../../shared/checks"
+  source  = "../../shared/checks"
   context = var.context
 }
 
 module "functions_app" {
-  source      = "../../aws/functions-app"
+  source  = "../../aws/functions-app"
   context = var.context
 
   cognito_clients_settings = {
@@ -96,7 +96,7 @@ module "functions_app" {
 }
 
 module "client_app" {
-  source      = "../../aws/static-web-app"
+  source  = "../../aws/static-web-app"
   context = var.context
 
   api_settings = {

@@ -21,7 +21,7 @@ module "cognito_clients" {
   count  = local.has_http_triggers ? 1 : 0
   source = "./cognito-clients"
 
-  context            = var.context
+  context                = var.context
   cognito_user_pool_name = var.cognito_user_pool_name
   clients_settings       = var.cognito_clients_settings
 
@@ -54,7 +54,7 @@ module "api_gateway_api" {
   count  = local.has_http_triggers ? 1 : 0
   source = "./api-gateway-api"
 
-  context       = var.context
+  context           = var.context
   enable_authorizer = anytrue([for v in var.lambda_settings.functions : anytrue([for v2 in v.http_triggers : !v2.anonymous]) if length(v.http_triggers) > 0])
   cognito_settings = {
     user_pool_id = module.cognito_clients[0].cognito_user_pool_id

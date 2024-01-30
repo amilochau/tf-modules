@@ -60,12 +60,12 @@ provider "aws" {
 }
 
 module "checks" {
-  source      = "../../shared/checks"
+  source  = "../../shared/checks"
   context = var.context
 }
 
 module "client_app" {
-  source      = "../../aws/static-web-app"
+  source  = "../../aws/static-web-app"
   context = var.context
 
   client_settings = {

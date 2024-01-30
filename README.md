@@ -39,7 +39,7 @@ The following modules are proposed for Infrastructure as Code, and can be freely
 
 ```hcl
 module "functions_app" {
-  source      = "git::https://github.com/amilochau/tf-modules.git//aws/functions-app?ref=v1"
+  source      = "git::https://github.com/amilochau/tf-modules.git//aws/functions-app?ref=v2"
 
   # Settings - omitted here
 }

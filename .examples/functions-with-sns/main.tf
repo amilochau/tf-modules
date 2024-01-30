@@ -18,16 +18,16 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
 
 module "checks" {
   source      = "../../shared/checks"
-  conventions = var.conventions
+  context = var.context
 }
 
 resource "aws_sns_topic" "sns_topic" {
@@ -40,7 +40,7 @@ resource "aws_sns_topic" "sns_topic" {
 
 module "functions_app" {
   source      = "../../aws/functions-app"
-  conventions = var.conventions
+  context = var.context
   depends_on = [
     aws_sns_topic.sns_topic
   ]

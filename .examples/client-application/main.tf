@@ -18,9 +18,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
@@ -35,9 +35,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
@@ -52,21 +52,21 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
 
 module "checks" {
   source      = "../../shared/checks"
-  conventions = var.conventions
+  context = var.context
 }
 
 module "client_app" {
   source      = "../../aws/static-web-app"
-  conventions = var.conventions
+  context = var.context
 
   client_settings = {
     package_source_file   = "./dist"

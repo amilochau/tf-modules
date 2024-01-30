@@ -11,12 +11,12 @@ terraform {
 
 module "environment" {
   source      = "../../shared/environment"
-  conventions = var.conventions
+  context = var.context
 }
 
-module "conventions" {
+module "context" {
   source      = "../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 resource "aws_account_primary_contact" "account_primary_contact" {
@@ -58,7 +58,7 @@ module "budgets" {
   for_each = var.budgets
   source   = "./budget"
 
-  conventions = var.conventions
+  context = var.context
   budget_settings = {
     name             = each.key
     limit_amount_usd = each.value.limit_amount_usd

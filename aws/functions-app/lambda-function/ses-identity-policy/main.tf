@@ -12,9 +12,9 @@ terraform {
   required_version = ">= 1.6.3, < 2.0.0"
 }
 
-module "conventions" {
+module "context" {
   source      = "../../../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 data "aws_caller_identity" "caller_identity" {

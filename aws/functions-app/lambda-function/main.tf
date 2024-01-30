@@ -12,9 +12,9 @@ terraform {
   required_version = ">= 1.6.3, < 2.0.0"
 }
 
-module "conventions" {
+module "context" {
   source      = "../../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 locals {
@@ -28,7 +28,7 @@ locals {
 module "lambda_iam_role" {
   source = "./iam-role"
 
-  conventions = var.conventions
+  context = var.context
   function_settings = {
     function_key = var.function_settings.function_key
   }
@@ -69,10 +69,10 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = merge(var.function_settings.environment_variables, {
-      "CONVENTION__PREFIX"       = "${var.conventions.organization_name}-${var.conventions.application_name}-${var.conventions.host_name}"
-      "CONVENTION__ORGANIZATION" = var.conventions.organization_name
-      "CONVENTION__APPLICATION"  = var.conventions.application_name
-      "CONVENTION__HOST"         = var.conventions.host_name
+      "CONVENTION__PREFIX"       = "${var.context.organization_name}-${var.context.application_name}-${var.context.host_name}"
+      "CONVENTION__ORGANIZATION" = var.context.organization_name
+      "CONVENTION__APPLICATION"  = var.context.application_name
+      "CONVENTION__HOST"         = var.context.host_name
     })
   }
 
@@ -98,7 +98,7 @@ module "ses_identity_policies" {
   for_each = { for k, v in var.accesses_settings.ses_domains : k => v }
   source   = "./ses-identity-policy"
 
-  conventions  = var.conventions
+  context  = var.context
   ses_domain   = each.value
   function_arn = aws_lambda_function.lambda_function.arn
 
@@ -157,7 +157,7 @@ module "trigger_schedule" {
   count  = length(var.triggers_settings.schedules) > 0 ? 1 : 0
   source = "./trigger-schedule"
 
-  conventions = var.conventions
+  context = var.context
   function_settings = {
     function_key = var.function_settings.function_key
     function_arn = aws_lambda_function.lambda_function.arn

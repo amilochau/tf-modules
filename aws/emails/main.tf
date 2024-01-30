@@ -15,12 +15,12 @@ terraform {
 
 module "environment" {
   source      = "../../shared/environment"
-  conventions = var.conventions
+  context = var.context
 }
 
-module "conventions" {
+module "context" {
   source      = "../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 # ===== SNS topic =====

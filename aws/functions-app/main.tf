@@ -21,7 +21,7 @@ module "cognito_clients" {
   count  = local.has_http_triggers ? 1 : 0
   source = "./cognito-clients"
 
-  conventions            = var.conventions
+  context            = var.context
   cognito_user_pool_name = var.cognito_user_pool_name
   clients_settings       = var.cognito_clients_settings
 
@@ -34,7 +34,7 @@ module "dynamodb_tables" {
   for_each = var.dynamodb_tables_settings
   source   = "./dynamodb-table"
 
-  conventions = var.conventions
+  context = var.context
   table_settings = {
     name                     = each.key
     partition_key            = each.value.partition_key
@@ -54,7 +54,7 @@ module "api_gateway_api" {
   count  = local.has_http_triggers ? 1 : 0
   source = "./api-gateway-api"
 
-  conventions       = var.conventions
+  context       = var.context
   enable_authorizer = anytrue([for v in var.lambda_settings.functions : anytrue([for v2 in v.http_triggers : !v2.anonymous]) if length(v.http_triggers) > 0])
   cognito_settings = {
     user_pool_id = module.cognito_clients[0].cognito_user_pool_id
@@ -70,7 +70,7 @@ module "schedule_group" {
   count  = local.has_schedules ? 1 : 0
   source = "./schedule-group"
 
-  conventions = var.conventions
+  context = var.context
 
   providers = {
     aws.workloads = aws.workloads
@@ -81,7 +81,7 @@ module "lambda_functions" {
   for_each = var.lambda_settings.functions
   source   = "./lambda-function"
 
-  conventions = var.conventions
+  context = var.context
   function_settings = {
     runtime                     = var.lambda_settings.runtime
     architecture                = var.lambda_settings.architecture

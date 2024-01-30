@@ -9,9 +9,9 @@ terraform {
   required_version = ">= 1.6.3, < 2.0.0"
 }
 
-module "conventions" {
+module "context" {
   source      = "../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 data "aws_iam_policy_document" "iam_policy_document_github_assume" {

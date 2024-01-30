@@ -12,9 +12,9 @@ terraform {
   required_version = ">= 1.6.3, < 2.0.0"
 }
 
-module "conventions" {
+module "context" {
   source      = "../../../shared/conventions"
-  conventions = var.conventions
+  context = var.context
 }
 
 data "aws_cognito_user_pools" "cognito_userpool" {
@@ -30,7 +30,7 @@ locals {
 # ===== COGNITO CLIENTS =====
 
 resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
-  for_each = var.conventions.temporary ? var.clients_settings : {}
+  for_each = var.context.temporary ? var.clients_settings : {}
   name     = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-${each.key}"
 
   user_pool_id                  = local.cognito_user_pool_id
@@ -61,7 +61,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
 }
 
 resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
-  for_each = var.conventions.temporary ? {} : var.clients_settings
+  for_each = var.context.temporary ? {} : var.clients_settings
   name     = "${module.conventions.aws_naming_conventions.cognito_userpool_client_name_prefix}-${each.key}"
 
   user_pool_id                  = local.cognito_user_pool_id
@@ -89,7 +89,7 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client" {
   ]
 
   lifecycle {
-    prevent_destroy = true # As we can't use var.conventions.temporary in lifecycle, we have to duplicate this block...
+    prevent_destroy = true # As we can't use var.context.temporary in lifecycle, we have to duplicate this block...
   }
 
   provider = aws.workloads

@@ -57,6 +57,18 @@ resource "aws_cognito_user_pool_client" "cognito_userpool_client_temporary" {
     "ALLOW_USER_PASSWORD_AUTH",
   ]
 
+  read_attributes = [
+    "custom:user_id",
+    "email",
+    "email_verified",
+    "name",
+  ]
+
+  write_attributes = [
+    "email",
+    "name",
+  ]
+
   provider = aws.workloads
 }
 

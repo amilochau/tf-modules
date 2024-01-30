@@ -1,11 +1,11 @@
 module "environment" {
-  source      = "../../shared/environment"
-  conventions = var.conventions
+  source  = "../../shared/environment"
+  context = var.context
 }
 
 locals {
   aws_default_base = {
-    prefix = "${var.conventions.organization_name}-${var.conventions.application_name}-${var.conventions.host_name}"
+    prefix = "${var.context.organization_name}-${var.context.application_name}-${var.context.host_name}"
   }
 
   aws_naming = {

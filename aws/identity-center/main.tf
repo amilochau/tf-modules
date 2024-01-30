@@ -10,13 +10,13 @@ terraform {
 }
 
 module "environment" {
-  source      = "../../shared/environment"
-  conventions = var.conventions
+  source  = "../../shared/environment"
+  context = var.context
 }
 
 module "conventions" {
-  source      = "../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../shared/conventions"
+  context = var.context
 }
 
 data "aws_ssoadmin_instances" "identity_center_instances" {}

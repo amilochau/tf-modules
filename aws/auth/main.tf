@@ -13,19 +13,19 @@ terraform {
 }
 
 module "environment" {
-  source      = "../../shared/environment"
-  conventions = var.conventions
+  source  = "../../shared/environment"
+  context = var.context
 }
 
 module "conventions" {
-  source      = "../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../shared/conventions"
+  context = var.context
 }
 
 resource "aws_cognito_user_pool" "cognito_user_pool" {
   name                     = module.conventions.aws_naming_conventions.cognito_userpool_name
   auto_verified_attributes = ["email"]
-  deletion_protection      = !var.conventions.temporary && module.environment.is_production ? "ACTIVE" : "INACTIVE"
+  deletion_protection      = !var.context.temporary && module.environment.is_production ? "ACTIVE" : "INACTIVE"
   mfa_configuration        = "OPTIONAL"
   username_attributes      = ["email"]
 

@@ -18,21 +18,21 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
 
 module "checks" {
-  source      = "../../shared/checks"
-  conventions = var.conventions
+  source  = "../../shared/checks"
+  context = var.context
 }
 
 module "emails" {
-  source      = "../../aws/emails"
-  conventions = var.conventions
+  source  = "../../aws/emails"
+  context = var.context
 
   domains = {
     "example.com" = {

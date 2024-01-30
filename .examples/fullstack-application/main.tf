@@ -18,9 +18,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
@@ -35,9 +35,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
@@ -52,21 +52,21 @@ provider "aws" {
 
   default_tags {
     tags = {
-      organization = var.conventions.organization_name
-      application  = var.conventions.application_name
-      host         = var.conventions.host_name
+      organization = var.context.organization_name
+      application  = var.context.application_name
+      host         = var.context.host_name
     }
   }
 }
 
 module "checks" {
-  source      = "../../shared/checks"
-  conventions = var.conventions
+  source  = "../../shared/checks"
+  context = var.context
 }
 
 module "functions_app" {
-  source      = "../../aws/functions-app"
-  conventions = var.conventions
+  source  = "../../aws/functions-app"
+  context = var.context
 
   cognito_clients_settings = {
     "client" = {
@@ -96,8 +96,8 @@ module "functions_app" {
 }
 
 module "client_app" {
-  source      = "../../aws/static-web-app"
-  conventions = var.conventions
+  source  = "../../aws/static-web-app"
+  context = var.context
 
   api_settings = {
     domain_name = module.functions_app.apigateway_invoke_domain

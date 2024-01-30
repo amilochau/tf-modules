@@ -10,13 +10,13 @@ terraform {
 }
 
 module "environment" {
-  source      = "../../shared/environment"
-  conventions = var.conventions
+  source  = "../../shared/environment"
+  context = var.context
 }
 
 module "conventions" {
-  source      = "../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../shared/conventions"
+  context = var.context
 }
 
 locals {
@@ -28,7 +28,7 @@ locals {
 
 resource "aws_s3_bucket" "s3_bucket" {
   bucket        = local.s3_bucket_name
-  force_destroy = var.conventions.temporary
+  force_destroy = var.context.temporary
 }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_public_access_block" {
@@ -71,7 +71,7 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   name                        = local.dynamodb_table_name
   hash_key                    = "LockID"
   billing_mode                = "PAY_PER_REQUEST"
-  deletion_protection_enabled = !var.conventions.temporary && module.environment.is_production
+  deletion_protection_enabled = !var.context.temporary && module.environment.is_production
 
   attribute {
     name = "LockID"

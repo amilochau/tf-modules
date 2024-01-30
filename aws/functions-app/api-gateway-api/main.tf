@@ -13,8 +13,8 @@ terraform {
 }
 
 module "conventions" {
-  source      = "../../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../../shared/conventions"
+  context = var.context
 }
 
 data "aws_region" "current" {

@@ -13,13 +13,13 @@ terraform {
 }
 
 module "environment" {
-  source      = "../../../shared/environment"
-  conventions = var.conventions
+  source  = "../../../shared/environment"
+  context = var.context
 }
 
 module "conventions" {
-  source      = "../../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../../shared/conventions"
+  context = var.context
 }
 
 locals {
@@ -39,7 +39,7 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   hash_key                    = var.table_settings.partition_key
   range_key                   = var.table_settings.sort_key
   billing_mode                = "PAY_PER_REQUEST"
-  deletion_protection_enabled = !var.conventions.temporary && module.environment.is_production
+  deletion_protection_enabled = !var.context.temporary && module.environment.is_production
   stream_enabled              = var.table_settings.enable_stream
   stream_view_type            = "NEW_AND_OLD_IMAGES"
 

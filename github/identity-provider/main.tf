@@ -10,8 +10,8 @@ terraform {
 }
 
 module "conventions" {
-  source      = "../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../shared/conventions"
+  context = var.context
 }
 
 data "aws_iam_policy_document" "iam_policy_document_github_assume" {

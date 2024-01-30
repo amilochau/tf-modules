@@ -15,8 +15,8 @@ terraform {
 }
 
 module "conventions" {
-  source      = "../../shared/conventions"
-  conventions = var.conventions
+  source  = "../../shared/conventions"
+  context = var.context
 }
 
 data "aws_caller_identity" "caller_identity" {
@@ -83,7 +83,7 @@ module "cloudfront_certificate" {
 module "cloudfront_distribution" {
   source = "./cloudfront-distribution"
 
-  conventions = var.conventions
+  context = var.context
   distribution_settings = {
     default_root_object = var.client_settings.default_root_object
     origin_api = var.api_settings != null ? {

@@ -120,8 +120,8 @@ variable "lambda_settings" {
   }
 }
 
-variable "cognito_user_pool_name" {
-  description = "Name of the Cognito user pool"
+variable "cognito_user_pool_id" {
+  description = "Id of the Cognito user pool"
   type        = string
   default     = null
 }

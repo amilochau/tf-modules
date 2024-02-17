@@ -46,7 +46,7 @@ resource "aws_cognito_user_pool" "cognito_user_pool" {
 
   device_configuration {
     challenge_required_on_new_device      = true
-    device_only_remembered_on_user_prompt = false
+    device_only_remembered_on_user_prompt = true // false is not compatible with USER_PASSWORD_AUTH, when using Amplify auth library
   }
 
   email_configuration {

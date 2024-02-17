@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.26, < 6.0.0"
+      version = ">= 5.37, < 6.0.0"
       configuration_aliases = [
         aws.infrastructure,
         aws.workloads
@@ -10,7 +10,7 @@ terraform {
     }
   }
 
-  required_version = ">= 1.6.3, < 2.0.0"
+  required_version = ">= 1.7.3, < 2.0.0"
 }
 
 data "aws_region" "current" {

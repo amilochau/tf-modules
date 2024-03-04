@@ -56,6 +56,10 @@ data "archive_file" "package_files" {
   output_path = var.function_settings.deployment_file_path
 }
 
+data "aws_caller_identity" "workloads" {
+  provider = aws.workloads
+}
+
 resource "aws_lambda_function" "lambda_function" {
   function_name = "${module.conventions.aws_naming_conventions.lambda_function_name_prefix}-${var.function_settings.function_key}"
   role          = module.lambda_iam_role.iam_role_arn
@@ -74,6 +78,7 @@ resource "aws_lambda_function" "lambda_function" {
       "CONVENTION__ORGANIZATION" = var.context.organization_name
       "CONVENTION__APPLICATION"  = var.context.application_name
       "CONVENTION__HOST"         = var.context.host_name
+      "ACCOUNT_ID"               = data.aws_caller_identity.workloads.account_id
     })
   }
 

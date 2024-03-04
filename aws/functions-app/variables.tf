@@ -165,3 +165,17 @@ variable "dynamodb_tables_settings" {
     error_message = "Table key must use only lowercase letters, numbers and underscores ('_')"
   }
 }
+
+variable "sns_topics_settings" {
+  description = "Settings to configure SNS topics for the API"
+  type = map(object({
+  }))
+  default = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.sns_topics_settings : can(regex("^[a-z0-9_]+$", k))
+    ])
+    error_message = "SNS topic key must use only lowercase letters, numbers and underscores ('_')"
+  }
+}

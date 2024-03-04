@@ -63,6 +63,7 @@ variable "accesses_settings" {
     lambda_arns              = list(string)
     schedule_group_name      = string
     dynamodb_table_arns      = list(string)
+    sns_topics_arns          = list(string)
     cognito_userpools_access = bool
   })
 }

@@ -36,6 +36,7 @@ module "lambda_iam_role" {
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
     dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
+    sns_topics_arns          = var.accesses_settings.sns_topics_arns
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
     lambda_arns              = var.accesses_settings.lambda_arns
     cognito_userpools_access = var.accesses_settings.cognito_userpools_access

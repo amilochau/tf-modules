@@ -38,7 +38,7 @@ variable "triggers_settings" {
     }))
     sns_topics = list(object({
       description = string
-      topic_name  = string
+      topic_arn   = string
     }))
     schedules = list(object({
       description         = string

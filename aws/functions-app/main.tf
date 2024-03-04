@@ -120,7 +120,7 @@ module "lambda_functions" {
     }]
     sns_topics = [for v in each.value.sns_triggers : {
       description = v.description
-      topic_name  = v.topic_name
+      topic_arn   = v.topic_arn
     }]
     schedules = [for v in each.value.scheduler_triggers : {
       description         = v.description

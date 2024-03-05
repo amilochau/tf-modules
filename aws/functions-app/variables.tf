@@ -45,7 +45,7 @@ variable "lambda_settings" {
       })), [])
       sns_triggers = optional(list(object({
         description = optional(string, null)
-        topic_name  = string
+        topic_arn   = string
       })), [])
       scheduler_triggers = optional(list(object({
         description         = optional(string, null)
@@ -163,5 +163,19 @@ variable "dynamodb_tables_settings" {
       for k, v in var.dynamodb_tables_settings : can(regex("^[a-z0-9_]+$", k))
     ])
     error_message = "Table key must use only lowercase letters, numbers and underscores ('_')"
+  }
+}
+
+variable "sns_topics_settings" {
+  description = "Settings to configure SNS topics for the API"
+  type = map(object({
+  }))
+  default = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.sns_topics_settings : can(regex("^[a-z0-9_]+$", k))
+    ])
+    error_message = "SNS topic key must use only lowercase letters, numbers and underscores ('_')"
   }
 }

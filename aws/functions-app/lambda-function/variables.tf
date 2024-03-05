@@ -38,7 +38,7 @@ variable "triggers_settings" {
     }))
     sns_topics = list(object({
       description = string
-      topic_name  = string
+      topic_arn   = string
     }))
     schedules = list(object({
       description         = string
@@ -63,6 +63,7 @@ variable "accesses_settings" {
     lambda_arns              = list(string)
     schedule_group_name      = string
     dynamodb_table_arns      = list(string)
+    sns_topics_arns          = list(string)
     cognito_userpools_access = bool
   })
 }

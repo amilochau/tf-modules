@@ -36,6 +36,6 @@ module "auth" {
 
 
   providers = {
-    aws.workloads      = aws.workloads
+    aws.workloads = aws.workloads
   }
 }

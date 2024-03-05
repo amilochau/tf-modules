@@ -49,6 +49,7 @@ resource "aws_iam_role" "lambda_iam_role" {
 locals {
   dynamodb_tables_statement_resources     = flatten([for k, v in var.accesses_settings.dynamodb_table_arns : [v, "${v}/*"]])
   dynamodb_streams_statement_resources    = var.accesses_settings.dynamodb_stream_arns
+  sns_topics_statement_resources          = var.accesses_settings.sns_topics_arns
   ses_domain_identity_statement_resources = length(var.accesses_settings.ses_domain_identity_arns) > 0 ? ["*"] : [] # Allow to send emails to any email address
   lambda_statement_resources              = var.accesses_settings.lambda_arns
 }
@@ -107,6 +108,18 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "dynamodb:ListStreams"
       ]
       resources = local.dynamodb_streams_statement_resources
+      effect    = "Allow"
+    }
+  }
+
+  // SNS topics
+  dynamic "statement" {
+    for_each = length(local.sns_topics_statement_resources) > 0 ? [1] : []
+    content {
+      actions = [
+        "sns:Publish"
+      ]
+      resources = local.sns_topics_statement_resources
       effect    = "Allow"
     }
   }

@@ -36,6 +36,7 @@ module "lambda_iam_role" {
     cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
     dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
+    sns_topics_arns          = var.accesses_settings.sns_topics_arns
     ses_domain_identity_arns = values(module.ses_identity_policies)[*].ses_identity_arn
     lambda_arns              = var.accesses_settings.lambda_arns
     cognito_userpools_access = var.accesses_settings.cognito_userpools_access
@@ -53,6 +54,10 @@ data "archive_file" "package_files" {
   type        = "zip"
   source_file = var.function_settings.deployment_source_file_path
   output_path = var.function_settings.deployment_file_path
+}
+
+data "aws_caller_identity" "workloads" {
+  provider = aws.workloads
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -73,6 +78,7 @@ resource "aws_lambda_function" "lambda_function" {
       "CONVENTION__ORGANIZATION" = var.context.organization_name
       "CONVENTION__APPLICATION"  = var.context.application_name
       "CONVENTION__HOST"         = var.context.host_name
+      "ACCOUNT_ID"               = data.aws_caller_identity.workloads.account_id
     })
   }
 

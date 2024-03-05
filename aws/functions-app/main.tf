@@ -77,6 +77,20 @@ module "schedule_group" {
   }
 }
 
+module "sns_topics" {
+  for_each = var.sns_topics_settings
+  source   = "./sns-topic"
+
+  context = var.context
+  topic_settings = {
+    name = each.key
+  }
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
+}
+
 module "lambda_functions" {
   for_each = var.lambda_settings.functions
   source   = "./lambda-function"
@@ -106,7 +120,7 @@ module "lambda_functions" {
     }]
     sns_topics = [for v in each.value.sns_triggers : {
       description = v.description
-      topic_name  = v.topic_name
+      topic_arn   = v.topic_arn
     }]
     schedules = [for v in each.value.scheduler_triggers : {
       description         = v.description
@@ -127,6 +141,7 @@ module "lambda_functions" {
     lambda_arns              = [for k, v in each.value.lambda_accesses : v.arn]
     schedule_group_name      = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
     dynamodb_table_arns      = [for k, v in module.dynamodb_tables : v.table_arn]
+    sns_topics_arns          = [for k, v in module.sns_topics : v.topic_arn]
     cognito_userpools_access = each.value.cognito_userpools_access
   }
 

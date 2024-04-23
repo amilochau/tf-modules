@@ -2,11 +2,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.37, < 6.0.0"
+      version = ">= 5.46.0, < 6.0.0"
     }
   }
 
-  required_version = ">= 1.7.3, < 2.0.0"
+  required_version = ">= 1.8.0, < 2.0.0"
 }
 
 resource "aws_organizations_organizational_unit" "ou_organization" {

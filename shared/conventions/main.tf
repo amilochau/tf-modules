@@ -53,7 +53,7 @@ locals {
     eventbridge_schedule_event_age_sec       = 600 # 10 min
     apigateway_throttling_burst_limit        = 10
     apigateway_throttling_rate_limit         = 10
-    apigateway_accesslog_format              = jsonencode(file("${path.module}/data/apigateway_accesslog_format.json"))
+    apigateway_accesslog_format              = jsonencode(jsondecode(file("${path.module}/data/apigateway_accesslog_format.json")))
     urlparse_regex                           = "(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?" # https://github.com/hashicorp/terraform/issues/23893
   }
 }

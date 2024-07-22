@@ -122,9 +122,9 @@ variable "lambda_settings" {
 
   validation {
     condition = alltrue([
-      for v in var.lambda_settings.functions : contains(["INFO", "WARN"], v.minimum_log_level)
+      for v in var.lambda_settings.functions : contains(["DEBUG", "INFO", "WARN"], v.minimum_log_level)
     ])
-    error_message = "Minimum log level must be 'INFO' or 'WARN'"
+    error_message = "Minimum log level must be 'DEBUG', 'INFO' or 'WARN'"
   }
 }
 

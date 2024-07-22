@@ -33,13 +33,6 @@ resource "aws_apigatewayv2_api" "apigateway_api" {
   provider = aws.workloads
 }
 
-resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_apigateway" {
-  name              = "/aws/api-gateway/${aws_apigatewayv2_api.apigateway_api.name}"
-  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
-
-  provider = aws.workloads
-}
-
 resource "aws_apigatewayv2_stage" "apigateway_stage" {
   name        = "$default"
   api_id      = aws_apigatewayv2_api.apigateway_api.id
@@ -51,7 +44,7 @@ resource "aws_apigatewayv2_stage" "apigateway_stage" {
   }
 
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_apigateway.arn
+    destination_arn = var.cloudwatch_log_group_arn
     format          = module.conventions.aws_format_conventions.apigateway_accesslog_format
   }
 

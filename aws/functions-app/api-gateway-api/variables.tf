@@ -20,3 +20,8 @@ variable "cognito_settings" {
     client_ids   = list(string)
   })
 }
+
+variable "cloudwatch_log_group_arn" {
+  description = "Cloudwatch log group ARN"
+  type        = string
+}

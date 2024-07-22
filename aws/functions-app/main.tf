@@ -17,6 +17,16 @@ locals {
   has_schedules     = anytrue([for v in var.lambda_settings.functions : length(v.scheduler_triggers) > 0])
 }
 
+module "cloudwatch_log_group" {
+  source = "./cloudwatch-log-group"
+
+  context = var.context
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
+}
+
 module "cognito_clients" {
   count  = local.has_http_triggers ? 1 : 0
   source = "./cognito-clients"
@@ -60,6 +70,7 @@ module "api_gateway_api" {
     user_pool_id = var.cognito_user_pool_id
     client_ids   = module.cognito_clients[0].cognito_client_ids
   }
+  cloudwatch_log_group_arn = module.cloudwatch_log_group.cloudwatch_log_group_arn
 
   providers = {
     aws.workloads = aws.workloads
@@ -144,6 +155,10 @@ module "lambda_functions" {
     dynamodb_table_arns      = [for k, v in module.dynamodb_tables : v.table_arn]
     sns_topics_arns          = [for k, v in module.sns_topics : v.topic_arn]
     cognito_userpools_access = each.value.cognito_userpools_access
+  }
+  monitoring_settings = {
+    cloudwatch_log_group_arn  = module.cloudwatch_log_group.cloudwatch_log_group_arn
+    cloudwatch_log_group_name = module.cloudwatch_log_group.cloudwatch_log_group_name
   }
 
   providers = {

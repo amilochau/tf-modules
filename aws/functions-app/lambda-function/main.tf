@@ -33,7 +33,7 @@ module "lambda_iam_role" {
     function_key = var.function_settings.function_key
   }
   accesses_settings = {
-    cloudwatch_log_group_arn = aws_cloudwatch_log_group.cloudwatch_loggroup_lambda.arn
+    cloudwatch_log_group_arn = var.monitoring_settings.cloudwatch_log_group_arn
     dynamodb_table_arns      = var.accesses_settings.dynamodb_table_arns
     dynamodb_stream_arns     = var.triggers_settings.dynamodb_streams.*.stream_arn
     sns_topics_arns          = var.accesses_settings.sns_topics_arns
@@ -87,19 +87,11 @@ resource "aws_lambda_function" "lambda_function" {
   }
 
   logging_config {
-    log_format = "JSON"
-    system_log_level = var.function_settings.minimum_log_level
+    log_format            = "JSON"
+    system_log_level      = var.function_settings.minimum_log_level
     application_log_level = var.function_settings.minimum_log_level
+    log_group             = var.monitoring_settings.cloudwatch_log_group_name
   }
-
-  provider = aws.workloads
-}
-
-# ===== CLOUDWATCH LOG GROUP =====
-
-resource "aws_cloudwatch_log_group" "cloudwatch_loggroup_lambda" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
-  retention_in_days = module.conventions.aws_format_conventions.cloudwatch_log_group_retention_days
 
   provider = aws.workloads
 }

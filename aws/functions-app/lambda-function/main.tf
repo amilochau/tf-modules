@@ -86,6 +86,12 @@ resource "aws_lambda_function" "lambda_function" {
     mode = "Active"
   }
 
+  logging_config {
+    log_format = "JSON"
+    system_log_level = var.function_settings.minimum_log_level
+    application_log_level = var.function_settings.minimum_log_level
+  }
+
   provider = aws.workloads
 }
 

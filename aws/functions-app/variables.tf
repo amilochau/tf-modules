@@ -36,6 +36,7 @@ variable "lambda_settings" {
       deployment_file_path        = string
       handler                     = string
       environment_variables       = optional(map(string), {})
+      minimum_log_level           = optional(string, "WARN")
       http_triggers = optional(list(object({
         description = optional(string, null)
         method      = string
@@ -117,6 +118,13 @@ variable "lambda_settings" {
       ]) if length(v.dynamodb_stream_triggers) > 0
     ])
     error_message = "DynamoDB stream trigger can only include up to 5 filter criteria patterns"
+  }
+
+  validation {
+    condition = alltrue([
+      for v in var.lambda_settings.functions : contains(["INFO", "WARN"], v.minimum_log_level)
+    ])
+    error_message = "Minimum log level must be 'INFO' or 'WARN'"
   }
 }
 

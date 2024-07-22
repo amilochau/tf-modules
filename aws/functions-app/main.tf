@@ -106,6 +106,7 @@ module "lambda_functions" {
     deployment_file_path        = each.value.deployment_file_path
     handler                     = each.value.handler
     environment_variables       = each.value.environment_variables
+    minimum_log_level           = each.value.minimum_log_level
   }
   triggers_settings = {
     api_gateway_routes = [for v in each.value.http_triggers : {

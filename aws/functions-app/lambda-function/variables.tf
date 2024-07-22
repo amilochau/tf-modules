@@ -68,3 +68,11 @@ variable "accesses_settings" {
     cognito_userpools_access = bool
   })
 }
+
+variable "monitoring_settings" {
+  description = "Settings to configure monitoring"
+  type = object({
+    cloudwatch_log_group_name = string
+    cloudwatch_log_group_arn  = string
+  })
+}

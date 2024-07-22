@@ -24,6 +24,7 @@ locals {
     sns_topic_name_prefix               = "${local.aws_default_base.prefix}-topic"             # aws_sns_topic
     eventbridge_schedule_group_name     = "${local.aws_default_base.prefix}-schedule-group"    # aws_scheduler_schedule
     eventbridge_schedule_name_prefix    = "${local.aws_default_base.prefix}-schedule"          # aws_scheduler_schedule
+    cloudwatch_log_group_name           = "/aws/${local.aws_default_base.prefix}"
 
     cloudfront_distribution_comment        = "${local.aws_default_base.prefix}-cf"                 # aws_cloudfront_distribution
     cloudfront_origin_access_control_name  = "${local.aws_default_base.prefix}-cf-oac"             # aws_cloudfront_origin_access_control
@@ -53,7 +54,7 @@ locals {
     eventbridge_schedule_event_age_sec       = 600 # 10 min
     apigateway_throttling_burst_limit        = 10
     apigateway_throttling_rate_limit         = 10
-    apigateway_accesslog_format              = jsonencode(jsondecode(file("${path.module}/data/apigateway_accesslog_format.json")))
+    apigateway_accesslog_format              = jsonencode(jsondecode(file("${path.module}/data/apigateway_accesslog_format.json")))                                    # https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-logging-variables.html
     urlparse_regex                           = "(?:(?P<scheme>[^:/?#]+):)?(?://(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(?:\\?(?P<query>[^#]*))?(?:#(?P<fragment>.*))?" # https://github.com/hashicorp/terraform/issues/23893
   }
 }

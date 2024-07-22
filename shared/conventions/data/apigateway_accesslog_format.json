@@ -1,34 +1,20 @@
 {
-  "resourcePath": "$context.resourcePath",
-
-  "_accountId": "$context.accountId",
-  "_apiId": "$context.apiId",
-  "_username": "$context.authorizer.claims.username",
-  "_principalId": "$context.authorizer.principalId",
-  "_requestId": "$context.awsEndpointRequestId",
-  "_requestId2": "$context.awsEndpointRequestId2",
-  "_dataProcessed": "$context.dataProcessed",
-
+  "apiId": "$context.apiId",
+  "protocol": "$context.protocol",
   "httpMethod": "$context.httpMethod",
-
-  "_cognitoIdentityId": "$context.identity.cognitoIdentityId",
-
+  "path": "$context.path",
   "sourceIp": "$context.identity.sourceIp",
 
-  "_userAgent": "$context.identity.userAgent",
+  "cognitoSub": "$context.authorizer.claims.sub",
+  "cognitoUserId": "$context.authorizer.claims['custom:user_id']",
 
-  "_integrationLatency": "$context.integration.latency",
-  "_integrationStatus": "$context.integration.status",
-  "integrationErrorMessage": "$context.integrationErrorMessage",
+  "requestId": "$context.awsEndpointRequestId",
 
-  "_path": "$context.path",
-  "protocol": "$context.protocol",
-  "requestId": "$context.requestId",
-  "requestTime": "$context.requestTime",
-  "_requestTimeEpoch": "$context.requestTimeEpoch",
-  "_responseLatency": "$context.responseLatency",
-  "responseLength": "$context.responseLength",
+  "integrationLatency": "$context.integration.latency",
+  "integrationStatus": "$context.integration.status",
+  "integrationError": "$context.integration.error",
 
-  "routeKey": "$context.routeKey",
-  "status": "$context.status"
+  "responseLatency": "$context.responseLatency",
+  "responseStatus": "$context.status",
+  "responseLength": "$context.responseLength"
 }

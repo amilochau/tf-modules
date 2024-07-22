@@ -1,4 +1,6 @@
 {
+  "extendedRequestId ": "$context.extendedRequestId ",
+
   "apiId": "$context.apiId",
   "protocol": "$context.protocol",
   "httpMethod": "$context.httpMethod",

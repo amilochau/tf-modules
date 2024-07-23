@@ -170,7 +170,7 @@ module "existing_lambda_functions" {
   for_each = var.lambda_settings.existing_functions
   source   = "./existing-lambda-function"
 
-  context = var.context
+  context       = var.context
   function_name = each.value.function_name
   triggers_settings = {
     api_gateway_routes = [for v in each.value.http_triggers : {

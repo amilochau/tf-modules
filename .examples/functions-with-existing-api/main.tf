@@ -58,6 +58,8 @@ module "functions_app" {
     }
   }
 
+  cognito_user_pool_id = "eu-west-3_ru867ihBT"
+
   providers = {
     aws.workloads = aws.workloads
   }

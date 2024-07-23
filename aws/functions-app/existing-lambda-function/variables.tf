@@ -10,7 +10,7 @@ variable "context" {
 
 variable "function_name" {
   description = "Name of the already deployed Lambda function"
-  type = string
+  type        = string
 }
 
 variable "triggers_settings" {

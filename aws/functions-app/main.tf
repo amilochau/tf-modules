@@ -106,6 +106,10 @@ module "lambda_functions" {
   for_each = var.lambda_settings.functions
   source   = "./lambda-function"
 
+  depends_on = [
+    module.sns_topics
+  ]
+
   context = var.context
   function_settings = {
     runtime                     = var.lambda_settings.runtime

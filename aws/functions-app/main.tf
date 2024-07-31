@@ -156,8 +156,8 @@ module "lambda_functions" {
     ses_domains              = [for k, v in each.value.ses_accesses : v.domain]
     lambda_arns              = [for k, v in each.value.lambda_accesses : v.arn]
     schedule_group_name      = local.has_schedules ? module.schedule_group[0].schedule_group_name : null
-    dynamodb_table_arns      = [for k, v in module.dynamodb_tables : v.table_arn] + [for k, v in each.value.dynamodb_table_accesses : v.arn]
-    sns_topics_arns          = [for k, v in module.sns_topics : v.topic_arn] + [for k, v in each.value.sns_topic_accesses : v.arn]
+    dynamodb_table_arns      = setunion([for k, v in module.dynamodb_tables : v.table_arn], [for k, v in each.value.dynamodb_table_accesses : v.arn])
+    sns_topics_arns          = setunion([for k, v in module.sns_topics : v.topic_arn], [for k, v in each.value.sns_topic_accesses : v.arn])
     cognito_userpools_access = each.value.cognito_userpools_access
   }
   monitoring_settings = {

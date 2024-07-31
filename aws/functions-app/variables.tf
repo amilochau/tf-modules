@@ -69,6 +69,15 @@ variable "lambda_settings" {
       })), [])
       cognito_userpools_access = optional(bool, false)
     }))
+    existing_functions = optional(map(object({
+      http_triggers = optional(list(object({
+        description = optional(string, null)
+        method      = string
+        route       = string
+        anonymous   = optional(bool, false)
+        enable_cors = optional(bool, false)
+      })), [])
+    })), {})
   })
 
   validation {

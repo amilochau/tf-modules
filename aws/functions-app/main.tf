@@ -169,3 +169,27 @@ module "lambda_functions" {
     aws.workloads = aws.workloads
   }
 }
+
+module "existing_lambda_functions" {
+  for_each = var.lambda_settings.existing_functions
+  source   = "./existing-lambda-function"
+
+  context       = var.context
+  function_name = each.key
+  triggers_settings = {
+    api_gateway_routes = [for v in each.value.http_triggers : {
+      description       = v.description
+      api_id            = module.api_gateway_api[0].apigateway_api_id
+      api_execution_arn = module.api_gateway_api[0].apigateway_api_execution_arn
+      authorizer_id     = module.api_gateway_api[0].apigateway_authorizer_id
+      method            = v.method
+      route             = v.route
+      anonymous         = v.anonymous
+      enable_cors       = v.enable_cors
+    }]
+  }
+
+  providers = {
+    aws.workloads = aws.workloads
+  }
+}

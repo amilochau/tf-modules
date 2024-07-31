@@ -67,6 +67,12 @@ variable "lambda_settings" {
       lambda_accesses = optional(list(object({
         arn = string
       })), [])
+      dynamodb_table_accesses = optional(list(object({
+        arn = string
+      })), [])
+      sns_topic_accesses = optional(list(object({
+        arn = string
+      })), [])
       cognito_userpools_access = optional(bool, false)
     }))
     existing_functions = optional(map(object({

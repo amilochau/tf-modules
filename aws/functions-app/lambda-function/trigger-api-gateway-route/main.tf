@@ -22,6 +22,9 @@ resource "aws_apigatewayv2_integration" "apigateway_integration" {
   payload_format_version = "2.0"
   description            = var.api_gateway_settings.description
 
+  # Parameter mapping - see https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html
+  request_parameters = var.api_gateway_settings.request_parameters
+
   provider = aws.workloads
 }
 

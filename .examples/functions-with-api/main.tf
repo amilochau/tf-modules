@@ -35,6 +35,8 @@ module "functions_app" {
   source  = "../../aws/functions-app"
   context = var.context
 
+  cognito_user_pool_id = "eu-west-3_ru867ihBT"
+
   cognito_clients_settings = {
     "client" = {
       purpose = "Web UI"
@@ -53,6 +55,11 @@ module "functions_app" {
           description = "Sample HTTP API for Lambda trigger"
           method      = "GET"
           route       = "/{proxy+}"
+          anonymous = true
+          request_parameters = {
+            "overwrite:header.x-api-entitytype": "list"
+            "overwrite:querystring.entityType": "list"
+          }
         }]
       }
     }

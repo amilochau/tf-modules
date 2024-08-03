@@ -28,14 +28,15 @@ variable "triggers_settings" {
   description = "Settings for the triggers in front of the Function"
   type = object({
     api_gateway_routes = list(object({
-      description       = string
-      api_id            = string
-      api_execution_arn = string
-      authorizer_id     = string
-      method            = string
-      route             = string
-      anonymous         = bool
-      enable_cors       = bool
+      description        = string
+      api_id             = string
+      api_execution_arn  = string
+      authorizer_id      = string
+      method             = string
+      route              = string
+      request_parameters = map(string)
+      anonymous          = bool
+      enable_cors        = bool
     }))
     sns_topics = list(object({
       description = string

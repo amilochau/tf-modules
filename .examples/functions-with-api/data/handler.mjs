@@ -1,5 +1,5 @@
 export const get = async (event, context) => {
-    console.log(`EVENT: \n ${JSON.stringify(event, null, 2)}`)
+    console.warn({ event })
     return {
         statusCode: 200,
         headers: {

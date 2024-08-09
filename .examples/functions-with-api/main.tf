@@ -55,10 +55,10 @@ module "functions_app" {
           description = "Sample HTTP API for Lambda trigger"
           method      = "GET"
           route       = "/{proxy+}"
-          anonymous = true
+          anonymous   = true
           request_parameters = {
-            "overwrite:header.x-api-entitytype": "list"
-            "overwrite:querystring.entityType": "list"
+            "overwrite:header.x-api-entitytype" : "list"
+            "overwrite:querystring.entityType" : "list"
           }
         }]
       }

@@ -28,7 +28,7 @@ data "aws_lambda_function" "lambda_function" {
 # ===== API GATEWAY TRIGGER =====
 
 resource "aws_lambda_permission" "apigateway_permission" {
-  count         = length(var.triggers_settings.api_gateway_routes) > 0 ? 1 : 0 # @todo what if multiple routes?
+  count         = length(var.triggers_settings.api_gateway_routes) > 0 ? 1 : 0   # @todo what if multiple routes?
   statement_id  = "AllowExecutionFromAPIGateway-${var.context.application_name}" # @todo Improve that with a dedicated naming convention
   action        = "lambda:InvokeFunction"
   function_name = data.aws_lambda_function.lambda_function.function_name

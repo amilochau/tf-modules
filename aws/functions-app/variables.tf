@@ -78,11 +78,12 @@ variable "lambda_settings" {
     }))
     existing_functions = optional(map(object({
       http_triggers = optional(list(object({
-        description = optional(string, null)
-        method      = string
-        route       = string
-        anonymous   = optional(bool, false)
-        enable_cors = optional(bool, false)
+        description        = optional(string, null)
+        method             = string
+        route              = string
+        request_parameters = optional(map(string), null)
+        anonymous          = optional(bool, false)
+        enable_cors        = optional(bool, false)
       })), [])
     })), {})
   })

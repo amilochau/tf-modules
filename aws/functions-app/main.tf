@@ -71,6 +71,7 @@ module "api_gateway_api" {
     client_ids   = module.cognito_clients[0].cognito_client_ids
   }
   cloudwatch_log_group_arn = module.cloudwatch_log_group.cloudwatch_log_group_arn
+  cors_settings = var.cors_settings
 
   providers = {
     aws.workloads = aws.workloads
@@ -133,7 +134,6 @@ module "lambda_functions" {
       route              = v.route
       request_parameters = v.request_parameters
       anonymous          = v.anonymous
-      enable_cors        = v.enable_cors
     }]
     sns_topics = [for v in each.value.sns_triggers : {
       description = v.description
@@ -187,7 +187,6 @@ module "existing_lambda_functions" {
       route              = v.route
       request_parameters = v.request_parameters
       anonymous          = v.anonymous
-      enable_cors        = v.enable_cors
     }]
   }
 

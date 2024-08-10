@@ -36,7 +36,6 @@ variable "triggers_settings" {
       route              = string
       request_parameters = map(string)
       anonymous          = bool
-      enable_cors        = bool
     }))
     sns_topics = list(object({
       description = string

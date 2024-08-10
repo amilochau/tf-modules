@@ -28,15 +28,6 @@ resource "aws_apigatewayv2_integration" "apigateway_integration" {
   provider = aws.workloads
 }
 
-resource "aws_apigatewayv2_route" "apigateway_route_cors" {
-  count     = var.api_gateway_settings.enable_cors ? 1 : 0
-  api_id    = var.api_gateway_settings.api_id
-  route_key = "OPTIONS ${var.api_gateway_settings.route}"
-  target    = "integrations/${aws_apigatewayv2_integration.apigateway_integration.id}"
-
-  provider = aws.workloads
-}
-
 resource "aws_apigatewayv2_route" "apigateway_route_default" {
   api_id    = var.api_gateway_settings.api_id
   route_key = "${var.api_gateway_settings.method} ${var.api_gateway_settings.route}"

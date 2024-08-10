@@ -133,7 +133,6 @@ module "lambda_functions" {
       route              = v.route
       request_parameters = v.request_parameters
       anonymous          = v.anonymous
-      enable_cors        = v.enable_cors
     }]
     sns_topics = [for v in each.value.sns_triggers : {
       description = v.description
@@ -187,7 +186,6 @@ module "existing_lambda_functions" {
       route              = v.route
       request_parameters = v.request_parameters
       anonymous          = v.anonymous
-      enable_cors        = v.enable_cors
     }]
   }
 

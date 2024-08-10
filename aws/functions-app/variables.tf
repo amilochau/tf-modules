@@ -43,7 +43,6 @@ variable "lambda_settings" {
         route              = string
         request_parameters = optional(map(string), null)
         anonymous          = optional(bool, false)
-        enable_cors        = optional(bool, false)
       })), [])
       sns_triggers = optional(list(object({
         description = optional(string, null)
@@ -82,7 +81,6 @@ variable "lambda_settings" {
         method      = string
         route       = string
         anonymous   = optional(bool, false)
-        enable_cors = optional(bool, false)
       })), [])
     })), {})
   })
@@ -202,4 +200,12 @@ variable "sns_topics_settings" {
     ])
     error_message = "SNS topic key must use only lowercase letters, numbers and underscores ('_')"
   }
+}
+
+variable "cors_settings" {
+  description = "Settings to configure CORS on API Gateway"
+  type = object({
+    allowed_origins = optional(list(string), [])
+  })
+  default = {}
 }

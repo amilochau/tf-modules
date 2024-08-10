@@ -71,6 +71,7 @@ module "api_gateway_api" {
     client_ids   = module.cognito_clients[0].cognito_client_ids
   }
   cloudwatch_log_group_arn = module.cloudwatch_log_group.cloudwatch_log_group_arn
+  cors_settings = var.cors_settings
 
   providers = {
     aws.workloads = aws.workloads

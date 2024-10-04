@@ -90,7 +90,8 @@ data "aws_iam_policy_document" "lambda_iam_policy_document_policy" {
         "dynamodb:GetItem",
         "dynamodb:PutItem",
         "dynamodb:UpdateItem",
-        "dynamodb:DeleteItem"
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem"
       ]
       resources = local.dynamodb_tables_statement_resources
       effect    = "Allow"

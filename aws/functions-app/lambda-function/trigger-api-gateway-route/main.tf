@@ -2,14 +2,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.59.0, < 6.0.0"
+      version = ">= 5.75.0, < 6.0.0"
       configuration_aliases = [
         aws.workloads
       ]
     }
   }
 
-  required_version = ">= 1.9.2, < 2.0.0"
+  required_version = ">= 1.9.8, < 2.0.0"
 }
 
 resource "aws_apigatewayv2_integration" "apigateway_integration" {

@@ -30,7 +30,7 @@ resource "aws_apigatewayv2_integration" "apigateway_integration" {
 
 resource "aws_apigatewayv2_route" "apigateway_route_default" {
   api_id    = var.api_gateway_settings.api_id
-  route_key = "${var.api_gateway_settings.method} ${var.api_gateway_settings.route}"
+  route_key = var.api_gateway_settings.route == "$default" ? "$default" : "${var.api_gateway_settings.method} ${var.api_gateway_settings.route}"
   target    = "integrations/${aws_apigatewayv2_integration.apigateway_integration.id}"
 
   authorizer_id        = var.api_gateway_settings.anonymous ? null : var.api_gateway_settings.authorizer_id

@@ -133,6 +133,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     cache_policy_id        = module.conventions.aws_existing_conventions.cloudfront_cache_policy_disabled_id
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
+    smooth_streaming       = true
   }
 
   dynamic "ordered_cache_behavior" {
@@ -147,6 +148,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       response_headers_policy_id = local.enable_cors ? aws_cloudfront_response_headers_policy.cloudfront_response_header_api[0].id : null
       viewer_protocol_policy     = "https-only"
       compress                   = true
+      smooth_streaming           = true
     }
   }
   ordered_cache_behavior {
@@ -157,6 +159,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     cache_policy_id        = module.conventions.aws_existing_conventions.cloudfront_cache_policy_optimized_id
     viewer_protocol_policy = "https-only"
     compress               = true
+    smooth_streaming       = true
   }
 
   restrictions {

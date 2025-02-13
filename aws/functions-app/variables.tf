@@ -202,11 +202,3 @@ variable "sns_topics_settings" {
     error_message = "SNS topic key must use only lowercase letters, numbers and underscores ('_')"
   }
 }
-
-variable "cors_settings" {
-  description = "Settings to configure CORS on API Gateway"
-  type = object({
-    allowed_origins = optional(list(string), [])
-  })
-  default = {}
-}

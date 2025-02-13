@@ -25,10 +25,3 @@ variable "cloudwatch_log_group_arn" {
   description = "Cloudwatch log group ARN"
   type        = string
 }
-
-variable "cors_settings" {
-  description = "Settings to configure CORS on API Gateway"
-  type = object({
-    allowed_origins = list(string)
-  })
-}

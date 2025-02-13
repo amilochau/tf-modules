@@ -30,16 +30,6 @@ resource "aws_apigatewayv2_api" "apigateway_api" {
   name          = module.conventions.aws_naming_conventions.apigateway_api_name
   protocol_type = "HTTP"
 
-  dynamic "cors_configuration" {
-    for_each = var.cors_settings != null ? [1] : []
-    content {
-      allow_credentials = true
-      allow_headers = ["Authorization", "Content-Type"]
-      allow_methods = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
-      allow_origins = var.cors_settings.allowed_origins
-    }
-  }
-
   provider = aws.workloads
 }
 

@@ -27,7 +27,7 @@ resource "aws_ssoadmin_account_assignment" "account_assignment" {
 }
 
 resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_policy_defaultapi" {
-  name = "DefaultForApi"
+  name    = "DefaultForApi"
   comment = "Policy to forward standard parameters in viewer requests ('Authorization' header, no cookie, all query strings)"
 
   headers_config {
@@ -47,12 +47,12 @@ resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_polic
 }
 
 resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_defaultapi" {
-  name = "DefaultForApi"
+  name    = "DefaultForApi"
   comment = "Allows localhost for COST requests, including preflight requests, and adds security headers"
 
   cors_config {
     access_control_allow_credentials = true
-    origin_override = true
+    origin_override                  = true
 
     access_control_allow_headers {
       items = ["Authorization", "Content-Type"]
@@ -67,27 +67,27 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
       items = ["*"]
     }
   }
-  
+
   security_headers_config {
     strict_transport_security {
       access_control_max_age_sec = 31536000
-      override = true
+      override                   = true
     }
     xss_protection {
       mode_block = true
       protection = true
-      override = true
+      override   = true
     }
     content_type_options {
       override = true
     }
     referrer_policy {
       referrer_policy = "strict-origin-when-cross-origin"
-      override = true
+      override        = true
     }
     frame_options {
       frame_option = "SAMEORIGIN"
-      override = true
+      override     = true
     }
   }
 }

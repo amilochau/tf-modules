@@ -36,8 +36,10 @@ locals {
 
 locals {
   aws_existing = {
-    cloudfront_cache_policy_disabled_id  = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
-    cloudfront_cache_policy_optimized_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
+    cloudfront_cache_policy_cachingdisabled_id                    = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
+    cloudfront_cache_policy_cachingoptimized_id                   = "658327ea-f89d-4fab-a63d-7e88639e58f6" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-caching-disabled
+    cloudfront_origin_request_policy_allviewerexcepthostheader_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer-except-host-header
+    cloudfront_response_headers_policy_securityheaderspolicy_id   = "67f7725c-6f97-4210-82d7-5512b31e9d03" # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html#managed-response-headers-policies-security
   }
 }
 

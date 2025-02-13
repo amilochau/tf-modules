@@ -43,9 +43,6 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
     access_control_allow_origins {
       items = ["http://localhost:3000"]
     }
-    access_control_expose_headers {
-      items = ["*"]
-    }
   }
 
   security_headers_config {

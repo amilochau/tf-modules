@@ -26,6 +26,8 @@ variable "table_settings" {
       sort_key           = string
       non_key_attributes = list(string)
     }))
-    enable_stream = bool
+    enable_stream           = bool
+    max_read_request_units  = number
+    max_write_request_units = number
   })
 }

@@ -53,6 +53,8 @@ module "dynamodb_tables" {
     ttl                      = each.value.ttl
     global_secondary_indexes = each.value.global_secondary_indexes
     enable_stream            = each.value.enable_stream
+    max_read_request_units   = each.value.max_read_request_units
+    max_write_request_units  = each.value.max_write_request_units
   }
 
   providers = {

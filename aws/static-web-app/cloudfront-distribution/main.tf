@@ -166,9 +166,9 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       allowed_methods            = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
       cached_methods             = ["GET", "HEAD", "OPTIONS"]
       target_origin_id           = "api"
-      cache_policy_id            = module.conventions.aws_existing_conventions.cloudfront_cache_policy_cachingdisabled_id                       # Managed: CachingDisabled
-      origin_request_policy_id   = module.conventions.aws_existing_conventions.cloudfront_origin_request_policy_allviewerexcepthostheader_id.id # Managed: AllViewerExceptHost (host can't be forwarded to API Gateway to avoid 403)
-      response_headers_policy_id = aws_cloudfront_response_headers_policy.cloudfront_response_headers_policy_api.id                             # Custom: CORS + Security
+      cache_policy_id            = module.conventions.aws_existing_conventions.cloudfront_cache_policy_cachingdisabled_id                    # Managed: CachingDisabled
+      origin_request_policy_id   = module.conventions.aws_existing_conventions.cloudfront_origin_request_policy_allviewerexcepthostheader_id # Managed: AllViewerExceptHost (host can't be forwarded to API Gateway to avoid 403)
+      response_headers_policy_id = aws_cloudfront_response_headers_policy.cloudfront_response_headers_policy_api.id                          # Custom: CORS + Security
       viewer_protocol_policy     = "https-only"
       compress                   = true
       smooth_streaming           = true

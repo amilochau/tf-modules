@@ -31,65 +31,86 @@ resource "aws_cloudfront_origin_access_control" "cloudfront_s3_access_control" {
   provider = aws.workloads
 }
 
-resource "aws_cloudfront_cache_policy" "cloudfront_cache_api" {
-  name        = module.conventions.aws_naming_conventions.cloudfront_cache_policy_name
-  comment     = "Cache policy for API"
-  min_ttl     = 0
-  default_ttl = 0
-  max_ttl     = 1 # Does not work if caching is disabled
-
-  parameters_in_cache_key_and_forwarded_to_origin {
-    cookies_config {
-      cookie_behavior = "none"
-    }
-    headers_config {
-      header_behavior = "whitelist"
-      headers {
-        items = ["Authorization"] # https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-authorization-header
-      }
-    }
-    query_strings_config {
-      query_string_behavior = "none"
-    }
-  }
-
-  provider = aws.workloads
-}
-
-resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_api" {
-  name    = module.conventions.aws_naming_conventions.cloudfront_origin_request_policy_name
-  comment = "Origin request policy for API"
-
-  cookies_config {
-    cookie_behavior = "none"
-  }
-  headers_config {
-    header_behavior = "none"
-  }
-  query_strings_config {
-    query_string_behavior = "all"
-  }
-
-  provider = aws.workloads
-}
-
-resource "aws_cloudfront_response_headers_policy" "cloudfront_response_header_api" {
-  count   = local.enable_cors ? 1 : 0
-  name    = module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name
+resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_api" {
+  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name}-api"
   comment = "Response header policy for API"
 
-  cors_config {
-    access_control_allow_credentials = true
-    origin_override                  = true
+  dynamic "cors_config" {
+    for_each = local.enable_cors ? [1] : []
+    content {
+      access_control_allow_credentials = true
+      origin_override                  = true
 
-    access_control_allow_headers {
-      items = ["Authorization", "Content-Type"]
+      access_control_allow_headers {
+        items = ["Authorization", "Content-Type"]
+      }
+      access_control_allow_methods {
+        items = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
+      }
+      access_control_allow_origins {
+        items = var.distribution_settings.origin_api.allowed_origins
+      }
     }
-    access_control_allow_methods {
-      items = ["GET", "HEAD", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"]
+  }
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      override                   = true
     }
-    access_control_allow_origins {
-      items = var.distribution_settings.origin_api.allowed_origins
+    xss_protection {
+      mode_block = true
+      protection = true
+      override   = true
+    }
+    content_type_options {
+      override = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    frame_options {
+      frame_option = "SAMEORIGIN"
+      override     = true
+    }
+  }
+
+  provider = aws.workloads
+}
+
+resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_assets" {
+  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name}-assets"
+  comment = "Response header policy for assets"
+
+  custom_headers_config {
+    items {
+      header   = "Cache-Control"
+      value    = "max-age=31536000, immutable"
+      override = true
+    }
+  }
+
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      override                   = true
+    }
+    xss_protection {
+      mode_block = true
+      protection = true
+      override   = true
+    }
+    content_type_options {
+      override = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    frame_options {
+      frame_option = "SAMEORIGIN"
+      override     = true
     }
   }
 
@@ -127,13 +148,15 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   }
 
   default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = "client"
-    cache_policy_id        = module.conventions.aws_existing_conventions.cloudfront_cache_policy_disabled_id
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
-    smooth_streaming       = true
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id           = "client"
+    cache_policy_id            = module.conventions.aws_existing_conventions.cloudfront_cache_policy_cachingdisabled_id                  # Managed: CachingOptimized
+    origin_request_policy_id   = null                                                                                                    # [Nothing included by default]
+    response_headers_policy_id = module.conventions.aws_existing_conventions.cloudfront_response_headers_policy_securityheaderspolicy_id # Managed: SecurityHeadersPolicy
+    viewer_protocol_policy     = "redirect-to-https"
+    compress                   = true
+    smooth_streaming           = true
   }
 
   dynamic "ordered_cache_behavior" {
@@ -143,23 +166,25 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       allowed_methods            = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
       cached_methods             = ["GET", "HEAD", "OPTIONS"]
       target_origin_id           = "api"
-      cache_policy_id            = aws_cloudfront_cache_policy.cloudfront_cache_api.id
-      origin_request_policy_id   = aws_cloudfront_origin_request_policy.cloudfront_origin_request_api.id
-      response_headers_policy_id = local.enable_cors ? aws_cloudfront_response_headers_policy.cloudfront_response_header_api[0].id : null
+      cache_policy_id            = module.conventions.aws_existing_conventions.cloudfront_cache_policy_cachingdisabled_id                       # Managed: CachingDisabled
+      origin_request_policy_id   = module.conventions.aws_existing_conventions.cloudfront_origin_request_policy_allviewerexcepthostheader_id.id # Managed: AllViewerExceptHost (host can't be forwarded to API Gateway to avoid 403)
+      response_headers_policy_id = aws_cloudfront_response_headers_policy.cloudfront_response_headers_policy_defaultapi.id                      # Custom: CORS + Security
       viewer_protocol_policy     = "https-only"
       compress                   = true
       smooth_streaming           = true
     }
   }
   ordered_cache_behavior {
-    path_pattern           = "/assets/*"
-    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
-    cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = "client"
-    cache_policy_id        = module.conventions.aws_existing_conventions.cloudfront_cache_policy_optimized_id
-    viewer_protocol_policy = "https-only"
-    compress               = true
-    smooth_streaming       = true
+    path_pattern               = "/assets/*"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id           = "client"
+    cache_policy_id            = module.conventions.aws_existing_conventions.cloudfront_cache_policy_cachingoptimized_id # Managed: CachingOptimized
+    origin_request_policy_id   = null                                                                                    # [Nothing included by default]
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.cloudfront_response_headers_policy_assets.id     # Custom: Cache + Security
+    viewer_protocol_policy     = "https-only"
+    compress                   = true
+    smooth_streaming           = true
   }
 
   restrictions {

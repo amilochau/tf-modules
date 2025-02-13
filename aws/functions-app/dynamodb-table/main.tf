@@ -43,6 +43,11 @@ resource "aws_dynamodb_table" "dynamodb_table" {
   stream_enabled              = var.table_settings.enable_stream
   stream_view_type            = "NEW_AND_OLD_IMAGES"
 
+  on_demand_throughput {
+    max_read_request_units  = var.table_settings.max_read_request_units
+    max_write_request_units = var.table_settings.max_write_request_units
+  }
+
   dynamic "attribute" {
     for_each = local.attributes
     content {
@@ -71,6 +76,11 @@ resource "aws_dynamodb_table" "dynamodb_table" {
       range_key          = global_secondary_index.value.sort_key
       projection_type    = length(global_secondary_index.value.non_key_attributes) > 0 ? "INCLUDE" : "KEYS_ONLY"
       non_key_attributes = global_secondary_index.value.non_key_attributes
+
+      on_demand_throughput {
+        max_read_request_units  = var.table_settings.max_read_request_units
+        max_write_request_units = var.table_settings.max_write_request_units
+      }
     }
   }
 

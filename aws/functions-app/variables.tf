@@ -177,7 +177,9 @@ variable "dynamodb_tables_settings" {
       sort_key           = string
       non_key_attributes = list(string)
     })), {})
-    enable_stream = optional(bool, false)
+    enable_stream           = optional(bool, false)
+    max_read_request_units  = optional(number, 1000)
+    max_write_request_units = optional(number, 1000)
   }))
   default = {}
 

@@ -26,26 +26,6 @@ resource "aws_ssoadmin_account_assignment" "account_assignment" {
   target_type = "AWS_ACCOUNT"
 }
 
-resource "aws_cloudfront_origin_request_policy" "cloudfront_origin_request_policy_defaultapi" {
-  name    = "DefaultForApi"
-  comment = "Policy to forward standard parameters in viewer requests ('Authorization' header, no cookie, all query strings)"
-
-  headers_config {
-    header_behavior = "whitelist"
-    headers {
-      items = ["Authorization", "Content-Type"]
-    }
-  }
-
-  cookies_config {
-    cookie_behavior = "none"
-  }
-
-  query_strings_config {
-    query_string_behavior = "all"
-  }
-}
-
 resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_defaultapi" {
   name    = "DefaultForApi"
   comment = "Allows localhost for COST requests, including preflight requests, and adds security headers"

@@ -85,13 +85,13 @@ module "cloudfront_distribution" {
 
   context = var.context
   distribution_settings = {
-    default_root_object = var.client_settings.default_root_object
     origin_api = var.api_settings != null ? {
       domain_name     = var.api_settings.domain_name
       origin_path     = var.api_settings.origin_path
       allowed_origins = var.api_settings.allowed_origins
     } : null
     origin_client = {
+      client_type = var.client_settings.client_type
       domain_name = aws_s3_bucket.s3_bucket.bucket_regional_domain_name
     }
     domains = var.client_settings.domains != null ? {

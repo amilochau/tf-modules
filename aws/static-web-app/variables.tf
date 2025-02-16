@@ -26,8 +26,8 @@ variable "context" {
 variable "client_settings" {
   description = "Settings to configure the client"
   type = object({
+    client_type           = optional(string, "spa")
     package_source_file   = string
-    default_root_object   = optional(string, "index.html")
     s3_bucket_name_suffix = optional(string, "")
     domains = optional(object({
       zone_name                 = string
@@ -39,6 +39,11 @@ variable "client_settings" {
   validation {
     condition     = var.client_settings.s3_bucket_name_suffix == "" || length(var.client_settings.s3_bucket_name_suffix) <= 8 && can(regex("^[a-z0-9]+$", var.client_settings.s3_bucket_name_suffix))
     error_message = "S3 bucket name suffix must use less than 8 characters, only lowercase letters and numbers"
+  }
+
+  validation {
+    condition     = contains(["spa", "ssg"], var.client_settings.client_type)
+    error_message = "Client type must be 'spa' or 'ssg'"
   }
 }
 

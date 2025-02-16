@@ -51,7 +51,7 @@ resource "aws_iam_role" "iam_role" {
 
 data "aws_iam_policy_document" "iam_policy_document_github" {
   statement {
-    actions = ["*"]
+    actions   = ["*"]
     resources = ["*"]
     dynamic "condition" {
       for_each = length(var.aws_accounts) > 0 ? [1] : []
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
   }
 
   statement {
-    actions = [ 
+    actions = [
       "cloudfront:*"
     ]
     resources = ["*"]
@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "iam_policy_document_github" {
         values   = [for account in var.aws_accounts : "arn:aws:iam::${account}:role/*"]
       }
     }
-    effect    = "Allow"
+    effect = "Allow"
   }
 }
 

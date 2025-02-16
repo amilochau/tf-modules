@@ -118,11 +118,11 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
 }
 
 resource "aws_cloudfront_function" "cloudfront_function_viewer_request_client_ssg" {
-  for_each = var.distribution_settings.origin_client.client_type == "ssg" ? { enabled : true } : {}
-  name     = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
-  comment  = "var.function_settings.comment"
-  runtime  = "cloudfront-js-2.0"
-  code     = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
+  count   = var.distribution_settings.origin_client.client_type == "ssg" ? 1 : 0
+  name    = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
+  comment = "var.function_settings.comment"
+  runtime = "cloudfront-js-2.0"
+  code    = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
 }
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {

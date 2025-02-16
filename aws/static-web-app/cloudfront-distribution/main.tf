@@ -32,7 +32,7 @@ resource "aws_cloudfront_origin_access_control" "cloudfront_s3_access_control" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_api" {
-  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name}-api"
+  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name_prefix}-api"
   comment = "Response header policy for API"
 
   dynamic "cors_config" {
@@ -80,7 +80,7 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
 }
 
 resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_policy_assets" {
-  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name}-assets"
+  name    = "${module.conventions.aws_naming_conventions.cloudfront_response_header_policy_name_prefix}-assets"
   comment = "Response header policy for assets"
 
   custom_headers_config {
@@ -117,6 +117,14 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
   provider = aws.workloads
 }
 
+resource "aws_cloudfront_function" "cloudfront_function_viewer_request_client_ssg" {
+  for_each = var.client_settings.client_type == "ssg" ? [1] : [0]
+  name = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
+  comment = "var.function_settings.comment"
+  runtime = "cloudfront-js-2.0"
+  code = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
+}
+
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   comment             = module.conventions.aws_naming_conventions.cloudfront_distribution_comment
   enabled             = true
@@ -124,7 +132,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   http_version        = "http2and3"
   price_class         = "PriceClass_100"
   wait_for_deployment = false
-  default_root_object = var.distribution_settings.default_root_object
+  default_root_object = "index.html"
   aliases             = var.distribution_settings.domains != null ? var.distribution_settings.domains.alternate_domain_names : []
 
   dynamic "origin" {
@@ -157,6 +165,14 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     viewer_protocol_policy     = "redirect-to-https"
     compress                   = true
     smooth_streaming           = true
+
+    dynamic "function_association" {
+      for_each = var.client_settings.client_app == "ssg" ? [1] : []
+      content {
+        event_type = "viewer-request"
+        function_arn = aws_cloudfront_function.cloudfront_function_viewer_request_client_ssg[0].arn
+      }
+    }
   }
 
   dynamic "ordered_cache_behavior" {
@@ -197,14 +213,14 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   custom_error_response {
     error_code            = 403
     response_code         = 200
-    response_page_path    = "/${var.distribution_settings.default_root_object}"
+    response_page_path    = "/index.html"
     error_caching_min_ttl = 0
   }
 
   custom_error_response {
     error_code            = 404
     response_code         = 200
-    response_page_path    = "/${var.distribution_settings.default_root_object}"
+    response_page_path    = "/index.html"
     error_caching_min_ttl = 0
   }
 

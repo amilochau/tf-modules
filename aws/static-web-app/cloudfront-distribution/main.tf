@@ -123,6 +123,8 @@ resource "aws_cloudfront_function" "cloudfront_function_viewer_request_client_ss
   comment = "var.function_settings.comment"
   runtime = "cloudfront-js-2.0"
   code    = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
+
+  provider = aws.workloads
 }
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {

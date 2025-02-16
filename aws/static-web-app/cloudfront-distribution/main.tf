@@ -118,7 +118,7 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
 }
 
 resource "aws_cloudfront_function" "cloudfront_function_viewer_request_client_ssg" {
-  for_each = var.client_settings.client_type == "ssg" ? [1] : [0]
+  for_each = var.distribution_settings.origin_client.client_type == "ssg" ? { enabled : true } : {}
   name     = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
   comment  = "var.function_settings.comment"
   runtime  = "cloudfront-js-2.0"
@@ -167,7 +167,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     smooth_streaming           = true
 
     dynamic "function_association" {
-      for_each = var.client_settings.client_app == "ssg" ? [1] : []
+      for_each = var.distribution_settings.origin_client.client_type == "ssg" ? [1] : []
       content {
         event_type   = "viewer-request"
         function_arn = aws_cloudfront_function.cloudfront_function_viewer_request_client_ssg[0].arn

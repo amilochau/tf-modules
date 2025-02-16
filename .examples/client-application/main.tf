@@ -70,7 +70,7 @@ module "client_app" {
   context = var.context
 
   client_settings = {
-    client_type = "spa"
+    client_type           = "spa"
     package_source_file   = "./dist"
     s3_bucket_name_suffix = "1"
   }

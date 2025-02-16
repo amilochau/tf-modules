@@ -26,7 +26,7 @@ variable "context" {
 variable "client_settings" {
   description = "Settings to configure the client"
   type = object({
-    client_type = optional(string, "spa")
+    client_type           = optional(string, "spa")
     package_source_file   = string
     s3_bucket_name_suffix = optional(string, "")
     domains = optional(object({

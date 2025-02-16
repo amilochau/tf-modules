@@ -119,10 +119,10 @@ resource "aws_cloudfront_response_headers_policy" "cloudfront_response_headers_p
 
 resource "aws_cloudfront_function" "cloudfront_function_viewer_request_client_ssg" {
   for_each = var.client_settings.client_type == "ssg" ? [1] : [0]
-  name = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
-  comment = "var.function_settings.comment"
-  runtime = "cloudfront-js-2.0"
-  code = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
+  name     = "${module.conventions.aws_naming_conventions.cloudfront_function__viewer_request_name_prefix}-client"
+  comment  = "var.function_settings.comment"
+  runtime  = "cloudfront-js-2.0"
+  code     = file("${path.module}/cloudfront-functions/viewer-request-ssg.js")
 }
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
@@ -169,7 +169,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     dynamic "function_association" {
       for_each = var.client_settings.client_app == "ssg" ? [1] : []
       content {
-        event_type = "viewer-request"
+        event_type   = "viewer-request"
         function_arn = aws_cloudfront_function.cloudfront_function_viewer_request_client_ssg[0].arn
       }
     }

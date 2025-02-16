@@ -26,9 +26,9 @@ locals {
     eventbridge_schedule_name_prefix    = "${local.aws_default_base.prefix}-schedule"          # aws_scheduler_schedule
     cloudwatch_log_group_name           = "/aws/${local.aws_default_base.prefix}"
 
-    cloudfront_distribution_comment        = "${local.aws_default_base.prefix}-cf"                 # aws_cloudfront_distribution
-    cloudfront_origin_access_control_name  = "${local.aws_default_base.prefix}-cf-oac"             # aws_cloudfront_origin_access_control
-    cloudfront_cache_policy_name           = "${local.aws_default_base.prefix}-cf-cache-policy"    # aws_cloudfront_cache_policy
+    cloudfront_distribution_comment               = "${local.aws_default_base.prefix}-cf"                 # aws_cloudfront_distribution
+    cloudfront_origin_access_control_name         = "${local.aws_default_base.prefix}-cf-oac"             # aws_cloudfront_origin_access_control
+    cloudfront_cache_policy_name                  = "${local.aws_default_base.prefix}-cf-cache-policy"    # aws_cloudfront_cache_policy
     cloudfront_origin_request_policy_name_prefix  = "${local.aws_default_base.prefix}-cf-request-policy"  # aws_cloudfront_origin_request_policy
     cloudfront_response_header_policy_name_prefix = "${local.aws_default_base.prefix}-cf-response-policy" # aws_cloudfront_response_headers_policy
 
